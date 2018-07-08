@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp">
+
+    </FrameLayout>
+
+    <View style="@style/h_line"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.steven.oschina.widget.NavigationButton
+            android:id="@+id/nav_item_news"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/lay_12"
+            android:paddingRight="@dimen/lay_12"/>
+
+        <com.steven.oschina.widget.NavigationButton
+            android:id="@+id/nav_item_tweet"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/lay_12"
+            android:paddingRight="@dimen/lay_12"/>
+
+        <ImageView
+            android:id="@+id/nav_item_tweet_pub"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_nav_selector"/>
+
+        <com.steven.oschina.widget.NavigationButton
+            android:id="@+id/nav_item_explore"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/lay_12"
+            android:paddingRight="@dimen/lay_12"/>
+
+        <com.steven.oschina.widget.NavigationButton
+            android:id="@+id/nav_item_me"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/lay_12"
+            android:paddingRight="@dimen/lay_12"/>
+    </LinearLayout>
+
+</LinearLayout>
