@@ -37,6 +37,7 @@ public class SyntheticalPagerFragment extends BasePagerFragment {
     @Override
     public void initData() {
         super.initData();
+        mViewPager.setCurrentItem(1);
     }
 
     public List<Fragment> getFragments() {

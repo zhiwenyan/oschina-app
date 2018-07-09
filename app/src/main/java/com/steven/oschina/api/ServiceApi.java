@@ -1,5 +1,6 @@
 package com.steven.oschina.api;
 
+import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.base.ResultBean;
 import com.steven.oschina.bean.sub.Article;
@@ -36,6 +37,10 @@ public interface ServiceApi {
     //动弹
     @GET("tweet_list?")
     Call<ResultBean<PageBean<Tweet>>> getTweetList(@QueryMap Map<String, Object> params);
+
+    //banner
+    @GET("banner?")
+    Call<ResultBean<PageBean<Banner>>> getBanner(@Query("catalog") int catalog);
 
 
 }

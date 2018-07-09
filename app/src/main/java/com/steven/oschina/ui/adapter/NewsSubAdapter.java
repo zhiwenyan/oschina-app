@@ -33,14 +33,17 @@ public class NewsSubAdapter extends CommonRecyclerAdapter<SubBean> {
     @Override
     public void convert(ViewHolder holder, SubBean item) {
         TextView titleTv = holder.getView(R.id.tv_title);
-        String text = "[icon] " + item.getTitle();
-        Drawable drawable = mContext.getResources().getDrawable(R.mipmap.ic_label_today);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
-        SpannableString spannable = new SpannableString(text);
-        spannable.setSpan(imageSpan, 0, 6, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        titleTv.setText(spannable);
-
+        if (StringUtils.isToday(item.getPubDate()) && item.getType() != 2 && item.getType() != 7) {
+            String text = "[icon] " + item.getTitle();
+            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.ic_label_today);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
+            SpannableString spannable = new SpannableString(text);
+            spannable.setSpan(imageSpan, 0, 6, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            titleTv.setText(spannable);
+        } else {
+            titleTv.setText(item.getTitle());
+        }
         holder.setText(R.id.tv_description, item.getBody())
                 .setText(R.id.tv_time, "@" + item.getAuthor().getName() + " "
                         + StringUtils.formatSomeDay(item.getPubDate()))

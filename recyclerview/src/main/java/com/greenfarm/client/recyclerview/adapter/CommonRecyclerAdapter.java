@@ -94,7 +94,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<View
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData == null ? 0 : mData.size();
     }
 
     /***************

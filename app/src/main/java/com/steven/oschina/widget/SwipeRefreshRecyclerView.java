@@ -131,11 +131,11 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
     public int getLastVisiblePosition() {
         int position;
         if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-            position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+            position = (( LinearLayoutManager ) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
         } else if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
-            position = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+            position = (( GridLayoutManager ) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
         } else if (mRecyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
-            StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) mRecyclerView.getLayoutManager();
+            StaggeredGridLayoutManager layoutManager = ( StaggeredGridLayoutManager ) mRecyclerView.getLayoutManager();
             int[] lastPositions = layoutManager.findLastVisibleItemPositions(new int[layoutManager.getSpanCount()]);
             position = getMaxPosition(lastPositions);
         } else {

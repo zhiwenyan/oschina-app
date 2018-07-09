@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,26 +23,15 @@ import java.util.List;
  * @author yanzhiwen
  */
 public class BannerViewPager extends ViewPager {
-    private static final String TAG = BannerViewPager.class.getSimpleName();
     private static final int SCROLL_MSG = 0x011;
     private BannerAdapter mBannerAdapter;
     private int mCutDownTime = 3000;
     private BannerScroller mBannerScroller;
+    private boolean mScrollAble = true;
     //内存优化界面复用
     private List<View> mConvertView;
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case SCROLL_MSG:
-                    setCurrentItem(getCurrentItem() + 1);
-                    startLoop();
-                    break;
-            }
-        }
-    };
+    private Handler mHandler;
+
 
     public BannerViewPager(Context context) {
         this(context, null);
@@ -61,47 +48,58 @@ public class BannerViewPager extends ViewPager {
             field.setAccessible(true);
             //设置参数 第一个参数object当前属性的那个类 第二参数需要设置的值
             field.set(this, mBannerScroller);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
         mConvertView = new ArrayList<>();
+        initHandler();
     }
 
-    /**
-     * 设置切换页面的持续时间
-     *
-     * @param scrollerDuration
-     */
+
     public void setScrollerDuration(int scrollerDuration) {
         mBannerScroller.setScrollerDuration(scrollerDuration);
     }
 
+
     public void setAdapter(BannerAdapter adapter) {
         this.mBannerAdapter = adapter;
         setAdapter(new BannerPagerAdapter());
+        this.setCurrentItem(0);
         //管理Activity的生命周期
         (( Activity ) (getContext())).getApplication().registerActivityLifecycleCallbacks(mDefaultActivityLifecycleCallbacks);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void initHandler() {
+        if (mHandler == null) {
+            mHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case SCROLL_MSG:
+                            setCurrentItem(getCurrentItem() + 1);
+                            startLoop();
+                            break;
+                    }
+                    super.handleMessage(msg);
+                }
+            };
+        }
     }
 
     /**
      * 开启轮播
      */
     public void startLoop() {
-        mHandler.removeMessages(SCROLL_MSG);
-        mHandler.sendEmptyMessageDelayed(SCROLL_MSG, mCutDownTime);
-    }
-
-    /**
-     * 销毁Handler
-     */
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mHandler.removeMessages(SCROLL_MSG);
-        mHandler = null;
-
+        if (mBannerAdapter == null) {
+            return;
+        }
+        // 判断是不是只有一条数据
+        mScrollAble = mBannerAdapter.getCount() != 1;
+        if (mScrollAble && mHandler != null) {
+            mHandler.removeMessages(SCROLL_MSG);
+            mHandler.sendEmptyMessageDelayed(SCROLL_MSG, mCutDownTime);
+        }
     }
 
     private class BannerPagerAdapter extends PagerAdapter {
@@ -118,11 +116,12 @@ public class BannerViewPager extends ViewPager {
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             //Adapter设计模式为了完全让用户自定义
-            //position 0-2的31次方
-            Log.i(TAG, "instantiateItem:position=" + position + "mBannerAdapter.getCount()=" + mBannerAdapter.getCount());
             //position % mBannerAdapter.getCount() 求模
             View bannerItemView = mBannerAdapter.getView(position % mBannerAdapter.getCount(), getConvertView());
             container.addView(bannerItemView);
+            if (mListener != null) {
+                mListener.click(position % mBannerAdapter.getCount());
+            }
             return bannerItemView;
         }
 
@@ -138,31 +137,6 @@ public class BannerViewPager extends ViewPager {
         }
     }
 
-    private float mDownX;
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mDownX = ev.getX();
-                mHandler.removeMessages(SCROLL_MSG);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-            case MotionEvent.ACTION_UP:
-                //左滑动到第一张，跳转到最后一张
-                if (this.getCurrentItem() == 0) {
-                    if (ev.getX() - mDownX > 0) {
-                        this.setCurrentItem(mBannerAdapter.getCount() - 1);
-                        Log.i(TAG, "onTouchEvent: " + this.getCurrentItem());
-                    }
-                }
-                mHandler.sendEmptyMessageDelayed(SCROLL_MSG, mCutDownTime);
-
-                break;
-        }
-        return super.onTouchEvent(ev);
-    }
 
     /**
      * 处理页面复用
@@ -200,4 +174,14 @@ public class BannerViewPager extends ViewPager {
             }
         }
     };
+
+    private BannerItemClickListener mListener;
+
+    public void setOnBannerItemClickListener(BannerItemClickListener listener) {
+        this.mListener = listener;
+    }
+
+    public interface BannerItemClickListener {
+        void click(int position);
+    }
 }

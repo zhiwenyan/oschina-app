@@ -1,6 +1,7 @@
 package com.steven.oschina.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import butterknife.Unbinder;
  */
 public abstract class BaseFragment extends Fragment {
     private View mRootView;
+    protected Context mContext;
     private Unbinder mUnbinder;
 
     @Override
@@ -37,8 +39,9 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mContext = getActivity();
         if (mRootView != null) {
-            ViewGroup parent = (ViewGroup) mRootView.getParent();
+            ViewGroup parent = ( ViewGroup ) mRootView.getParent();
             if (parent != null)
                 parent.removeView(mRootView);
         } else {

@@ -13,7 +13,7 @@ public class ImageLoader {
     public static void load(Context context, ImageView imageView, String imagePath) {
         GlideApp.with(context)
                 .load(imagePath)
-                .fitCenter()
+                .centerCrop()
                 .into(imageView);
     }
 }

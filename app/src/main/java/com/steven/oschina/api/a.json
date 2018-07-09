@@ -1,0 +1,55 @@
+{
+  "message": "success",
+  "result": {
+    "discoverBanner": [
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20180709145457529.png",
+        "info": "",
+        "url": "http:\/\/192.168.10.115:8080\/oil\/index\/tuijian?invite=21031142?app"
+      },
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20180615112237557.jpg",
+        "info": "",
+        "url": "http:\/\/192.168.10.115:8080oil\/activity\/shijiebei_h5?app"
+      },
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20171220092415922.png",
+        "info": "",
+        "url": "http:\/\/192.168.10.115:8080\/oil\/activity\/borrow?app"
+      },
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20171220092416971.jpg",
+        "info": "",
+        "url": ""
+      }
+    ],
+    "discoverPic": [
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20180709145407665.png",
+        "info": "",
+        "url": ""
+      },
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20171220093214911.png",
+        "info": "\u9650\u65f6\u4f18\u60e0",
+        "url": "http:\/\/192.168.10.115:8080\/oil\/index\/xianshiyouhui?app"
+      },
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20171220093215656.png",
+        "info": "\u6211\u8981\u8d37\u6b3e",
+        "url": "http:\/\/192.168.10.115:8080\/oil\/activity\/borrow?app"
+      },
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/20171220093217273.png",
+        "info": "\u8fdd\u7ae0\u67e5\u8be2",
+        "url": "http:\/\/192.168.10.115:8080\/oil\/Traffic\/index?app"
+      },
+      {
+        "img": "http:\/\/192.168.10.115:8080\/UF\/Uploads\/Ad\/201712200932182.png",
+        "info": "\u656c\u8bf7\u671f\u5f85",
+        "url": ""
+      }
+    ]
+  },
+  "status": 200
+}

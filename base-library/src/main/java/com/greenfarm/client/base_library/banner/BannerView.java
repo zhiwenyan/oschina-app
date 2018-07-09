@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.greenfarm.client.base_library.R;
 import com.greenfarm.client.base_library.utils.DensityUtil;
@@ -44,6 +45,7 @@ public class BannerView extends RelativeLayout {
     //底部颜色默认透明
     private int mBottomColor = Color.TRANSPARENT;
     private View mBannerBottomView;
+    private TextView mBannerTitleTv;
 
     public BannerView(Context context) {
         this(context, null);
@@ -92,6 +94,7 @@ public class BannerView extends RelativeLayout {
         mBannerViewPager = findViewById(R.id.bannerViewPager);
         mDotContainerView = findViewById(R.id.dot_container);
         mBannerBottomView = findViewById(R.id.bannerBottomView);
+        mBannerTitleTv = findViewById(R.id.tv_ad_desc);
         mBannerBottomView.setBackgroundColor(mBottomColor);
     }
 
@@ -117,17 +120,24 @@ public class BannerView extends RelativeLayout {
                 DotIndicatorView mCurrentIndicatorView = ( DotIndicatorView ) mDotContainerView.
                         getChildAt(mCurrentPosition);
                 mCurrentIndicatorView.setDrawable(mIndicatorFocusDrawable);
+                mBannerTitleTv.setText(mAdapter.getBannerDesc(mCurrentPosition));
             }
         });
     }
+
 
     public void startLoop() {
         mBannerViewPager.startLoop();
     }
 
+    public void setBannerTitle(String bannerTitle) {
+        this.mBannerTitleTv.setText(bannerTitle);
+    }
+
     public void setScrollerDuration(int scrollerDuration) {
         mBannerViewPager.setScrollerDuration(scrollerDuration);
     }
+
 
     /**
      * 初始化指示器
@@ -140,7 +150,7 @@ public class BannerView extends RelativeLayout {
         for (int i = 0; i < count; i++) {
             DotIndicatorView dot = new DotIndicatorView(mContext);
             //设置指示器的形状
-            dot.setShape(1);
+            dot.setShape(2);
             LinearLayout.LayoutParams param = null;
             //矩形
             if (dot.getShape() == 1) {
@@ -172,5 +182,9 @@ public class BannerView extends RelativeLayout {
                 return Gravity.LEFT;
         }
         return Gravity.RIGHT;
+    }
+
+    public void setOnBannerItemClickListener(BannerViewPager.BannerItemClickListener listener) {
+        mBannerViewPager.setOnBannerItemClickListener(listener);
     }
 }

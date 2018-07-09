@@ -75,12 +75,12 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
             case CATALOG_NEW:
                 params.put("type", 1);
                 params.put("order", 1);
-                params.put("pageToken", mNextPageToken);
+                params.put("pageToken", nextPageToken);
                 break;
             case CATALOG_HOT:
                 params.put("type", 1);
                 params.put("order", 2);
-                params.put("pageToken", mNextPageToken);
+                params.put("pageToken", nextPageToken);
                 break;
             case CATALOG_MYSELF:
                 break;
@@ -88,12 +88,12 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
         HttpUtils.get(RetrofitClient.getServiceApi().getTweetList(params), new HttpCallback<Tweet>() {
             @Override
             public void onSuccess(List<Tweet> tweets, String nextPageToken) {
-                if (mSwipeRefreshRecyclerView.isRefreshing()) {
-                    mSwipeRefreshRecyclerView.setRefreshing(false);
+                if (mSwipeRefreshRv.isRefreshing()) {
+                    mSwipeRefreshRv.setRefreshing(false);
                 }
                 mNextPageToken = nextPageToken;
                 if (tweets.size() == 0) {
-                    mSwipeRefreshRecyclerView.showLoadComplete();
+                    mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
                 showTweetList(tweets);
@@ -102,13 +102,13 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
     }
 
     private void showTweetList(List<Tweet> tweets) {
-        if (mSwipeRefreshRecyclerView.getStatus() == 1) {
+        if (mSwipeRefreshRv.getStatus() == 1) {
             mTweets.clear();
         }
         mTweets.addAll(tweets);
         if (mAdapter == null) {
             mAdapter = new TweetAdapter(getActivity(), mTweets, R.layout.item_list_tweet);
-            mSwipeRefreshRecyclerView.setAdapter(mAdapter);
+            mSwipeRefreshRv.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }

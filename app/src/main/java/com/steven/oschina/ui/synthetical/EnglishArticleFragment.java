@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 英文
+ * 英文类型的文章
  */
 public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
-    //获取英文
+    //英文类型的文章
     private static final int TYPE_ENGLISH = 8000;
     private List<Article> mArticles;
 
@@ -47,15 +47,15 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
         HttpUtils.get(RetrofitClient.getServiceApi().getEnglishArticles(OSCSharedPreference.getInstance().getDeviceUUID(),
-                TYPE_ENGLISH, mNextPageToken), new HttpCallback<Article>() {
+                TYPE_ENGLISH, nextPageToken), new HttpCallback<Article>() {
             @Override
             public void onSuccess(List<Article> articles, String nextPageToken) {
-                if (mSwipeRefreshRecyclerView.isRefreshing()) {
-                    mSwipeRefreshRecyclerView.setRefreshing(false);
+                if (mSwipeRefreshRv.isRefreshing()) {
+                    mSwipeRefreshRv.setRefreshing(false);
                 }
                 mNextPageToken = nextPageToken;
                 if (articles.size() == 0) {
-                    mSwipeRefreshRecyclerView.showLoadComplete();
+                    mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
                 showArticleList(articles);
@@ -65,7 +65,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
     }
 
     private void showArticleList(List<Article> articles) {
-        if (mSwipeRefreshRecyclerView.getStatus() == 1) {
+        if (mSwipeRefreshRv.getStatus() == 1) {
             mArticles.clear();
 
         }
@@ -80,7 +80,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
                     return R.layout.item_article_one_img;
                 return R.layout.item_article_three_img;
             });
-            mSwipeRefreshRecyclerView.setAdapter(mAdapter);
+            mSwipeRefreshRv.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }

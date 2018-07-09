@@ -24,4 +24,9 @@ public abstract class BannerAdapter {
      * @return
      */
     public abstract int getCount();
+
+
+    public String getBannerDesc(int position) {
+        return "";
+    }
 }
