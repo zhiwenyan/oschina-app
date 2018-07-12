@@ -4,8 +4,6 @@ import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.R;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
 
-import butterknife.BindView;
-
 /**
  * Description:
  * Data：7/4/2018-3:52 PM
@@ -13,11 +11,11 @@ import butterknife.BindView;
  * @author yanzhiwen
  */
 public class BaseRecyclerFragment<T> extends BaseFragment implements SwipeRefreshRecyclerView.OnRefreshLoadListener {
-    @BindView(R.id.swipe_refresh_recycler)
     public SwipeRefreshRecyclerView mSwipeRefreshRv;
     //上拉加载下一个页面的Token
     protected String mNextPageToken = "";
     protected CommonRecyclerAdapter<T> mAdapter;
+    public boolean mRefreshing = true;
 
     @Override
     public int getLayoutId() {
@@ -26,12 +24,13 @@ public class BaseRecyclerFragment<T> extends BaseFragment implements SwipeRefres
 
     @Override
     public void initData() {
-        mSwipeRefreshRv.setRefreshing(true);
+        mSwipeRefreshRv = mRootView.findViewById(R.id.swipe_refresh_recycler);
         mSwipeRefreshRv.setOnRefreshLoadListener(this);
         onRequestData(mNextPageToken);
     }
 
     public void onRequestData(String nextPageToken) {
+        mSwipeRefreshRv.setRefreshing(mRefreshing);
     }
 
     /**
@@ -39,6 +38,7 @@ public class BaseRecyclerFragment<T> extends BaseFragment implements SwipeRefres
      */
     @Override
     public void onRefresh() {
+        mRefreshing = true;
     }
 
     /**
@@ -46,5 +46,6 @@ public class BaseRecyclerFragment<T> extends BaseFragment implements SwipeRefres
      */
     @Override
     public void onLoadMore() {
+        mRefreshing = false;
     }
 }

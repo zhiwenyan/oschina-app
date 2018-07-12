@@ -105,7 +105,7 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
                 nextPageToken), new HttpCallback<Article>() {
             @Override
             public void onSuccess(List<Article> articles, String nextPageToken) {
-                if (mSwipeRefreshRv.isRefreshing()) {
+                if (mRefreshing) {
                     mSwipeRefreshRv.setRefreshing(false);
                 }
                 mNextPageToken = nextPageToken;
@@ -119,9 +119,8 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
     }
 
     private void showArticleList(List<Article> articles) {
-        if (mSwipeRefreshRv.getStatus() == 1) {
+        if (mRefreshing) {
             mArticles.clear();
-
         }
         mArticles.addAll(articles);
         if (mAdapter == null) {

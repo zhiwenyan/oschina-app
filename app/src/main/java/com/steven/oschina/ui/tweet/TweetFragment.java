@@ -88,7 +88,7 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
         HttpUtils.get(RetrofitClient.getServiceApi().getTweetList(params), new HttpCallback<Tweet>() {
             @Override
             public void onSuccess(List<Tweet> tweets, String nextPageToken) {
-                if (mSwipeRefreshRv.isRefreshing()) {
+                if (mRefreshing) {
                     mSwipeRefreshRv.setRefreshing(false);
                 }
                 mNextPageToken = nextPageToken;
@@ -102,15 +102,18 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
     }
 
     private void showTweetList(List<Tweet> tweets) {
-        if (mSwipeRefreshRv.getStatus() == 1) {
+        if (mRefreshing) {
             mTweets.clear();
         }
         mTweets.addAll(tweets);
         if (mAdapter == null) {
-            mAdapter = new TweetAdapter(getActivity(), mTweets, R.layout.item_list_tweet);
+            mAdapter = new TweetAdapter(mContext, mTweets, R.layout.item_list_tweet);
             mSwipeRefreshRv.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        mAdapter.setOnItemClickListener(position -> {
+
+        });
     }
 }

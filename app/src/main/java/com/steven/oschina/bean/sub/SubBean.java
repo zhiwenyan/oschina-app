@@ -4,7 +4,10 @@ import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.steven.oschina.bean.simple.About;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +17,7 @@ import java.util.List;
  *
  * @author yanzhiwen
  */
-public class SubBean implements Serializable ,Comparable<SubBean>{
+public class SubBean implements Serializable, Comparable<SubBean> {
     private static final long serialVersionUID = -5343222344464021662L;
     private String cacheKey;
 
@@ -32,8 +35,8 @@ public class SubBean implements Serializable ,Comparable<SubBean>{
     private String[] tags;
     private Tag[] iTags;
     private Statistics statistics;
-//    private ArrayList<About> abouts;
-//    private Software software;
+    private ArrayList<About> abouts;
+    private Software software;
     private long newsId;
 
     public boolean isOriginal() {
@@ -184,13 +187,13 @@ public class SubBean implements Serializable ,Comparable<SubBean>{
         this.extra = extra;
     }
 
-//    public ArrayList<About> getAbouts() {
-//        return abouts;
-//    }
-//
-//    public void setAbouts(ArrayList<About> abouts) {
-//        this.abouts = abouts;
-//    }
+    public ArrayList<About> getAbouts() {
+        return abouts;
+    }
+
+    public void setAbouts(ArrayList<About> abouts) {
+        this.abouts = abouts;
+    }
 
     public String[] getTags() {
         return tags;
@@ -208,13 +211,13 @@ public class SubBean implements Serializable ,Comparable<SubBean>{
         this.statistics = statistics;
     }
 
-//    public Software getSoftware() {
-//        return software;
-//    }
-//
-//    public void setSoftware(Software software) {
-//        this.software = software;
-//    }
+    public Software getSoftware() {
+        return software;
+    }
+
+    public void setSoftware(Software software) {
+        this.software = software;
+    }
 
     public String getKey() {
         if (cacheKey == null)
@@ -224,16 +227,16 @@ public class SubBean implements Serializable ,Comparable<SubBean>{
 
     @Override
     public int compareTo(@NonNull SubBean o) {
-        if(TextUtils.isEmpty(o.getPubDate()))
+        if (TextUtils.isEmpty(o.getPubDate()))
             return 1;
-        if(TextUtils.isEmpty(pubDate)){
+        if (TextUtils.isEmpty(pubDate)) {
             return -1;
         }
         int c = pubDate.compareTo(o.getPubDate());//倒序排序
-        if(c >= 1){
+        if (c >= 1) {
             return -1;
         }
-        if(c < 0){
+        if (c < 0) {
             return 1;
         }
         return 0;

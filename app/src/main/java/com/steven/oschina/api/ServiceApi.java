@@ -3,6 +3,7 @@ package com.steven.oschina.api;
 import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.base.ResultBean;
+import com.steven.oschina.bean.search.SearchBean;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.tweet.Tweet;
@@ -10,7 +11,10 @@ import com.steven.oschina.bean.tweet.Tweet;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
@@ -42,5 +46,20 @@ public interface ServiceApi {
     @GET("banner?")
     Call<ResultBean<PageBean<Banner>>> getBanner(@Query("catalog") int catalog);
 
+    //搜索
+    @FormUrlEncoded
+    @POST("search_articles?")
+    Call<ResultBean<SearchBean>> searchArticles(@FieldMap Map<String, Object> params);
+
+
+    //banner
+    @GET("detail?")
+    Call<ResultBean<SubBean>> getDetail(@QueryMap Map<String, Object> params);
+
+    @GET("getArticleDetail?")
+    Call<ResultBean<Article>> getArticleDetail(@Query("ident") String ident, @Query("key") String key);
+
+    @GET("get_article_recommends?")
+    Call<ResultBean<PageBean<Article>>> getArticleRecommends(@QueryMap Map<String, Object> params);
 
 }

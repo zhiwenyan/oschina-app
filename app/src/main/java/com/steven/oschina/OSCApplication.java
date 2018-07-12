@@ -15,7 +15,7 @@ import java.util.UUID;
  *
  * @author yanzhiwen
  */
-public class OSCApplication extends Application {
+public class OSCApplication extends AppContext {
     @Override
     public void onCreate() {
         super.onCreate();

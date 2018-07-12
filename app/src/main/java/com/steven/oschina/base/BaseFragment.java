@@ -1,6 +1,5 @@
 package com.steven.oschina.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 
 import com.greenfarm.client.base_library.utils.ToastUtil;
 
-import java.util.Objects;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -25,7 +22,7 @@ import butterknife.Unbinder;
  * @author yanzhiwen
  */
 public abstract class BaseFragment extends Fragment {
-    private View mRootView;
+    protected View mRootView;
     protected Context mContext;
     private Unbinder mUnbinder;
 
@@ -62,10 +59,10 @@ public abstract class BaseFragment extends Fragment {
 
 
     public void showToast(String message) {
-        ToastUtil.toast(Objects.requireNonNull(this.getActivity()).getApplicationContext(), message);
+        ToastUtil.toast(mContext.getApplicationContext(), message);
     }
 
-    public void startActivity(Class<? extends Activity> activity) {
+    public void startActivity(Class<?> activity) {
         Intent intent = new Intent(this.getActivity(), activity);
         startActivity(intent);
     }

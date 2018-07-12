@@ -7,8 +7,10 @@ import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerFragment;
 import com.steven.oschina.bean.sub.Article;
+import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
+import com.steven.oschina.ui.synthetical.detail.EnglishArticleDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +52,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
                 TYPE_ENGLISH, nextPageToken), new HttpCallback<Article>() {
             @Override
             public void onSuccess(List<Article> articles, String nextPageToken) {
-                if (mSwipeRefreshRv.isRefreshing()) {
+                if (mRefreshing) {
                     mSwipeRefreshRv.setRefreshing(false);
                 }
                 mNextPageToken = nextPageToken;
@@ -65,9 +67,8 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
     }
 
     private void showArticleList(List<Article> articles) {
-        if (mSwipeRefreshRv.getStatus() == 1) {
+        if (mRefreshing) {
             mArticles.clear();
-
         }
         mArticles.addAll(articles);
         if (mAdapter == null) {
@@ -85,7 +86,35 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {
-
+            Article article=mArticles.get(position);
+            int type = article.getType();
+            long id = article.getOscId();
+            switch (type) {
+                case News.TYPE_SOFTWARE:
+                //    SoftwareDetailActivity.show(mContext, id);
+                    break;
+                case News.TYPE_QUESTION:
+                 //   QuestionDetailActivity.show(mContext, id);
+                    break;
+                case News.TYPE_BLOG:
+               //     BlogDetailActivity.show(mContext, id);
+                    break;
+                case News.TYPE_TRANSLATE:
+            //        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                    break;
+                case News.TYPE_EVENT:
+            //        EventDetailActivity.show(mContext, id);
+                    break;
+                case News.TYPE_NEWS:
+          //          NewsDetailActivity.show(mContext, id);
+                    break;
+                case Article.TYPE_ENGLISH:
+                    EnglishArticleDetailActivity.show(mContext, article);
+                    break;
+                default:
+          //          UIHelper.showUrlRedirect(mContext, top.getUrl());
+                    break;
+            }
         });
     }
 }

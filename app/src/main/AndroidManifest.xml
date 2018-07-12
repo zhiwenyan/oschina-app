@@ -16,7 +16,6 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/App.Theme.Main">
-
         </activity>
         <activity
             android:name=".SplashActivity"
@@ -26,7 +25,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:label="搜索"
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Search"/>
+        <activity
+            android:name=".ui.PubActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PubTheme">
+        </activity>
+        <activity android:name=".ui.synthetical.detail.EnglishArticleDetailActivity">
+        </activity>
+        <activity android:name=".ui.synthetical.detail.BlogDetailActivity">
+        </activity>
+        <activity android:name=".ui.synthetical.detail.QuestionDetailActivity">
+        </activity>
+        <activity android:name=".ui.synthetical.detail.DetailActivity">
         </activity>
     </application>
 

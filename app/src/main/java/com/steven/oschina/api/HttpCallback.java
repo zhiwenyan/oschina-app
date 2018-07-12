@@ -9,11 +9,12 @@ import java.util.List;
  * @author yanzhiwen
  */
 public abstract class HttpCallback<T> {
-    public void onSuccess(List<T> result,String nextPageToken) {
+    public void onSuccess(List<T> result, String nextPageToken) {
 
     }
+    public void onSuccess(T result){
 
-    public void onFailure(Throwable t){
-
+    }
+    public void onFailure(Throwable t) {
     }
 }

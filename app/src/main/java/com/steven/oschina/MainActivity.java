@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
 import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.base.BaseActivity;
+import com.steven.oschina.ui.PubActivity;
 import com.steven.oschina.ui.explore.ExploreFragment;
 import com.steven.oschina.ui.synthetical.SyntheticalPagerFragment;
 import com.steven.oschina.ui.tweet.TweetPagerFragment;
@@ -87,8 +88,10 @@ public class MainActivity extends BaseActivity {
                 if (mUserInfoFragment == null) {
                     mUserInfoFragment = UserInfoFragment.newInstance();
                 }
-                mFragmentManagerHelper.switchFragment(mExploreFragment);
-
+                mFragmentManagerHelper.switchFragment(mUserInfoFragment);
+                break;
+            case R.id.nav_item_tweet_pub:
+                startActivity(PubActivity.class);
                 break;
         }
     }

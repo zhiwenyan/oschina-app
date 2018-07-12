@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.steven.oschina.R;
-import com.steven.oschina.base.BasePagerFragment;
+import com.steven.oschina.base.BaseViewPagerFragment;
 import com.steven.oschina.bean.sub.SubTab;
 import com.steven.oschina.ui.synthetical.sub.SubFragment;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TweetPagerFragment extends BasePagerFragment {
+public class TweetPagerFragment extends BaseViewPagerFragment {
 
     public static TweetPagerFragment newInstance() {
         return new TweetPagerFragment();
@@ -43,7 +43,6 @@ public class TweetPagerFragment extends BasePagerFragment {
     public String[] getPageTitles() {
         return getResources().getStringArray(R.array.tweet_titles);
     }
-
 
     private SubFragment getSubFragment() {
         SubTab tab = new SubTab();

@@ -2,12 +2,17 @@ package com.steven.oschina.ui.synthetical;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.steven.oschina.R;
-import com.steven.oschina.base.BasePagerFragment;
+import com.steven.oschina.base.BaseViewPagerFragment;
 import com.steven.oschina.bean.sub.SubTab;
+import com.steven.oschina.ui.search.SearchActivity;
 import com.steven.oschina.ui.synthetical.sub.SubFragment;
 
 import java.util.ArrayList;
@@ -19,7 +24,7 @@ import butterknife.OnClick;
 /**
  * 综合
  */
-public class SyntheticalPagerFragment extends BasePagerFragment {
+public class SyntheticalPagerFragment extends BaseViewPagerFragment {
 
 
     @BindView(R.id.iv_search)
@@ -66,9 +71,40 @@ public class SyntheticalPagerFragment extends BasePagerFragment {
         return getResources().getStringArray(R.array.synthesize_titles);
     }
 
+    @Override
+    public void setupTabView() {
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(getTabView(i));
+                if (tab.getCustomView() != null) {
+                    View tabView = ( View ) tab.getCustomView().getParent();
+                    tabView.setTag(i);
+                    tabView.setOnClickListener(v -> {
+
+                    });
+                }
+            }
+        }
+    }
+
+    private View getTabView(int position) {
+        View tabView = LayoutInflater.from(mContext).inflate(R.layout.tab_synthesize_layout, null);
+        TextView tv_title = tabView.findViewById(R.id.tv_title);
+        TextView tv_count = tabView.findViewById(R.id.tv_count);
+//        if (position == 0) {
+//            tv_title.setTextColor(0xff24cf5f);
+//        }
+//        if (position == 2) {
+//            mTextCount = tv_count;
+//        }
+        tv_title.setText(mAdapter.getPageTitle(position));
+        return tabView;
+    }
 
     @OnClick(R.id.iv_search)
     public void onViewClicked() {
+        startActivity(SearchActivity.class);
     }
 
     private SubFragment getSubFragment(int type, String title, String url, int subType, String token) {

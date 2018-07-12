@@ -34,10 +34,10 @@ public class FragmentManagerHelper {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         if (fragment.isAdded()) {
             switchFragment(fragment);
-        } else {
-            fragmentTransaction.add(mContainerViewId, fragment);
-            fragmentTransaction.commit();
+            return;
         }
+        fragmentTransaction.add(mContainerViewId, fragment);
+        fragmentTransaction.commit();
     }
 
 
@@ -63,5 +63,4 @@ public class FragmentManagerHelper {
         }
         fragmentTransaction.commit();
     }
-
 }

@@ -17,6 +17,7 @@ import com.steven.oschina.header.HeaderView;
 import com.steven.oschina.ui.adapter.BlogSubAdapter;
 import com.steven.oschina.ui.adapter.NewsSubAdapter;
 import com.steven.oschina.ui.adapter.QuestionSubAdapter;
+import com.steven.oschina.ui.synthetical.detail.BlogDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,7 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
         HttpUtils.get(RetrofitClient.getServiceApi().getSubList(mSubTab.getToken(), nextPageToken), new HttpCallback<SubBean>() {
             @Override
             public void onSuccess(List<SubBean> list, String nextPageToken) {
-                if (mSwipeRefreshRv.isRefreshing()) {
+                if (mRefreshing) {
                     mSwipeRefreshRv.setRefreshing(false);
                 }
                 mNextPageToken = nextPageToken;
@@ -98,7 +99,7 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
 
 
     private void showSubList(List<SubBean> subBeans) {
-        if (mSwipeRefreshRv.getStatus() == 1) {
+        if (mRefreshing) {
             mSubBeans.clear();
         }
         mSubBeans.addAll(subBeans);
@@ -110,6 +111,30 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {
+            SubBean subBean = subBeans.get(position - 1);
+            switch (mSubTab.getType()) {
+                case News.TYPE_SOFTWARE:
+                    //          SoftwareDetailActivity.show(mContext, subBean);
+                    break;
+                case News.TYPE_QUESTION:
+                    //QuestionDetailActivity.show(mContext, subBean);
+                    break;
+                case News.TYPE_BLOG:
+                    BlogDetailActivity.show(mContext, subBean);
+                    break;
+                case News.TYPE_TRANSLATE:
+                    //             NewsDetailActivity.show(mContext, subBean);
+                    break;
+                case News.TYPE_EVENT:
+                    //            EventDetailActivity.show(mContext, subBean);
+                    break;
+                case News.TYPE_NEWS:
+                    //        NewsDetailActivity.show(mContext, subBean);
+                    break;
+                default:
+                    //     UIHelper.showUrlRedirect(mContext, mSubTab.getHref());
+                    break;
+            }
         });
     }
 
