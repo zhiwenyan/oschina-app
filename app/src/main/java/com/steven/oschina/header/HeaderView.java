@@ -46,6 +46,11 @@ public abstract class HeaderView extends LinearLayout implements OnItemClickList
         mRecyclerView.setLayoutManager(getLayoutManager());
     }
 
+    /**
+     * 请求banner
+     *
+     * @param catalog banner的类型
+     */
     public void requestBanner(int catalog) {
         HttpUtils.get(RetrofitClient.getServiceApi().getBanner(catalog), new HttpCallback<Banner>() {
             @Override
@@ -72,6 +77,7 @@ public abstract class HeaderView extends LinearLayout implements OnItemClickList
     }
 
     public abstract CommonRecyclerAdapter<Banner> getAdapter();
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(Util.getScreenWidth(getContext()), MeasureSpec.EXACTLY);

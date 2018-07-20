@@ -1,6 +1,7 @@
 package com.greenfarm.client.recyclerview.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,9 @@ import java.util.List;
 
 public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
 
-    protected Context mContext;
-    protected LayoutInflater mInflater;
-    //数据怎么办？
-    protected List<T> mData;
-    // 布局怎么办？
+    private Context mContext;
+    private LayoutInflater mInflater;
+    private List<T> mData;
     private int mLayoutId;
 
     // 多布局支持
@@ -48,8 +47,9 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<View
         return super.getItemViewType(position);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // 多布局支持
         if (mMultiTypeSupport != null) {
             mLayoutId = viewType;
@@ -57,18 +57,17 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<View
         // 先inflate数据
         View itemView = mInflater.inflate(mLayoutId, parent, false);
         // 返回ViewHolder
-        ViewHolder holder = new ViewHolder(itemView);
-        return holder;
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull  ViewHolder holder, final int position) {
         // 设置点击和长按事件
         if (mItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mItemClickListener.onItemClick(holder.getAdapterPosition());
+                    mItemClickListener.onItemClick(position);
                 }
             });
         }
@@ -76,7 +75,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<View
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    return mLongClickListener.onLongClick(holder.getAdapterPosition());
+                    return mLongClickListener.onLongClick(position);
                 }
             });
         }

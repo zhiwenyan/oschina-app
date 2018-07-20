@@ -111,7 +111,7 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {
-            SubBean subBean = subBeans.get(position - 1);
+            SubBean subBean = subBeans.get(position);
             switch (mSubTab.getType()) {
                 case News.TYPE_SOFTWARE:
                     //          SoftwareDetailActivity.show(mContext, subBean);

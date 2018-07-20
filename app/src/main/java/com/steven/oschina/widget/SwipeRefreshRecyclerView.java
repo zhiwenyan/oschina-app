@@ -11,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,6 +35,9 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
     private final int STATUS_LOAD = 2, STATUS_REFRESH = 1;
     private int mStatus = STATUS_REFRESH;
     private int mBottomCount;
+    private int mYDown;
+    private int mLastY;
+    private int mTouchSlop;
 
     public SwipeRefreshRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -40,6 +45,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
 
     public SwipeRefreshRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mRecyclerView = new WrapRecyclerView(context);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         addView(mRecyclerView);
@@ -47,6 +53,22 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                /*
+                 * The RecyclerView is not currently scrolling.（静止没有滚动）
+                 */
+                //  public static final int SCROLL_STATE_IDLE = 0;
+
+                /*
+                 * The RecyclerView is currently being dragged by outside input such as user touch input.
+                 *（正在被外部拖拽,一般为用户正在用手指滚动）
+                 */
+                //  public static final int SCROLL_STATE_DRAGGING = 1;
+
+                /*
+                 * The RecyclerView is currently animating to a final position while not under outside control.
+                 *（自动滚动）
+                 */
+                // public static final int SCROLL_STATE_SETTLING = 2;
             }
 
             @Override
@@ -56,6 +78,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
                 if (mListener != null && isScrollBottom() && mLoadEnable) {
                     mListener.onLoadMore();
                     mStatus = STATUS_LOAD;
+                    System.out.println("---------sdasdfsaf=" + mBottomCount);
 
                 }
             }
@@ -85,6 +108,22 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
         mBottomCount++;
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        final int action = event.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mYDown = ( int ) event.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mLastY = ( int ) event.getRawY();
+                break;
+            default:
+                break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
     /**
      * 显示加载完成
      */
@@ -93,7 +132,6 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
         mLoadMorePb.setVisibility(View.GONE);
         mLoadMoreTv.setText("已全部加载完毕");
     }
-
 
     /**
      * 显示加载
@@ -118,10 +156,20 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
      * 判断RecyclerView是否到了最底部
      */
     private boolean isScrollBottom() {
+        //第一个可见item的位置 + 当前可见的item个数 >= item的总个数-头部底部的View的个数
+        //这样就可以判断出来，是在底部了。
         return (mRecyclerView != null && mRecyclerView.getAdapter() != null)
                 && getLastVisiblePosition() == (mRecyclerView.getAdapter().getItemCount() - mBottomCount);
     }
 
+    /**
+     * 是否是上拉操作
+     *
+     * @return isPullUp
+     */
+    private boolean isPullUp() {
+        return (mYDown - mLastY) >= mTouchSlop;
+    }
 
     /**
      * 获取RecyclerView可见的最后一项

@@ -2,6 +2,7 @@ package com.steven.oschina.bean.tweet;
 
 import android.text.TextUtils;
 
+import com.steven.oschina.bean.simple.About;
 import com.steven.oschina.bean.sub.Author;
 import com.steven.oschina.utils.CollectionUtil;
 
@@ -30,7 +31,7 @@ public class Tweet implements Serializable {
     private Audio[] audio;
     private Image[] images;
     private Statistics statistics;
-
+    private About about;
 
     public long getId() {
         return id;
@@ -134,6 +135,14 @@ public class Tweet implements Serializable {
 
     public void setStatistics(Statistics statistics) {
         this.statistics = statistics;
+    }
+
+    public void setAbout(About about) {
+        this.about = about;
+    }
+
+    public About getAbout() {
+        return about;
     }
 
     public static class Code implements Serializable {

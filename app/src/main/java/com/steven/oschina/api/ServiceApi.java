@@ -7,6 +7,8 @@ import com.steven.oschina.bean.search.SearchBean;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.tweet.Tweet;
+import com.steven.oschina.bean.tweet.TweetComment;
+import com.steven.oschina.bean.tweet.TweetLike;
 
 import java.util.Map;
 
@@ -61,5 +63,15 @@ public interface ServiceApi {
 
     @GET("get_article_recommends?")
     Call<ResultBean<PageBean<Article>>> getArticleRecommends(@QueryMap Map<String, Object> params);
+
+    @GET("tweet?")
+    Call<ResultBean<Tweet>> getTweetDetail(@Query("id") long id);
+
+    @GET("tweet_likes?")
+    Call<ResultBean<PageBean<TweetLike>>> getTweetLikeList(@Query("sourceId") long sourceId, @Query("pageToken") String pageToken);
+
+    @GET("tweet_comments?")
+    Call<ResultBean<PageBean<TweetComment>>> getTweetCommentList(@Query("sourceId") long sourceId, @Query("pageToken") String pageToken);
+
 
 }

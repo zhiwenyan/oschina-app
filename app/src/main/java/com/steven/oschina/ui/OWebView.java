@@ -56,10 +56,6 @@ public class OWebView extends WebView {
         init();
     }
 
-    public OWebView(Context context, AttributeSet attrs, int defStyleAttr, boolean privateBrowsing) {
-        super(context, attrs, defStyleAttr, privateBrowsing);
-        init();
-    }
 
     @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
     private void init() {

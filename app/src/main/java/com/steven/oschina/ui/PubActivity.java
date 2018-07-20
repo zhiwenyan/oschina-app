@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +41,8 @@ public class PubActivity extends BaseActivity {
     @Override
     protected void initData() {
         StatusBarUtil.statusBarTranslucent(this);
+        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
     }
 
     @Override
@@ -120,7 +123,7 @@ public class PubActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_main:
-               dismiss();
+                dismiss();
                 break;
             case R.id.ll_pub_tweet:
                 break;
@@ -129,5 +132,10 @@ public class PubActivity extends BaseActivity {
             case R.id.ll_pub_blog:
                 break;
         }
+    }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
     }
 }

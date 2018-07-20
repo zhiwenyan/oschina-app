@@ -10,7 +10,10 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new Handler().postDelayed(() -> startActivity(MainActivity.class), 2000);
+        new Handler().postDelayed(() -> {
+            startActivity(MainActivity.class);
+            finish();
+        }, 1888);
     }
 
     @Override

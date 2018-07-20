@@ -4,8 +4,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/lay_8"
               android:background="@drawable/ic_item_material"
+              android:layout_marginBottom="@dimen/lay_8"
               android:descendantFocusability="afterDescendants"
               android:orientation="vertical">
 
@@ -52,11 +52,15 @@
 
                 <TextView
                     android:id="@+id/identityView"
+                    android:padding="2dp"
+                    android:textColor="@color/main_green"
+                    android:background="@drawable/item_official_bg"
                     android:text="官方人员"
+                    android:visibility="gone"
+                    android:layout_marginLeft="4dp"
+                    android:textSize="@dimen/font_12"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/lay_4"
-                    android:layout_marginRight="16dp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

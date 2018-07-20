@@ -226,4 +226,6 @@
         <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
     </style>
 
+
+
 </resources>

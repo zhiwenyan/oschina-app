@@ -1,6 +1,5 @@
 package com.steven.oschina.osc;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -13,7 +12,6 @@ public class SharedPreferenceUtil {
     private SharedPreferences mSp;
     private SharedPreferences.Editor mEditor;
 
-    @SuppressLint("CommitPrefEdits")
     SharedPreferenceUtil(Context context, String name) {
         this.mSp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
         this.mEditor = mSp.edit();

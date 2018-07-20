@@ -33,16 +33,27 @@
             android:theme="@style/App.Theme.Search"/>
         <activity
             android:name=".ui.PubActivity"
-            android:screenOrientation="portrait"
+            android:label="发布选择"
             android:theme="@style/PubTheme">
         </activity>
         <activity android:name=".ui.synthetical.detail.EnglishArticleDetailActivity">
         </activity>
-        <activity android:name=".ui.synthetical.detail.BlogDetailActivity">
+        <activity
+            android:name=".ui.synthetical.detail.BlogDetailActivity"
+            android:screenOrientation="portrait"
+            android:label="博客详情"
+            android:theme="@style/App.Theme.Main">
         </activity>
         <activity android:name=".ui.synthetical.detail.QuestionDetailActivity">
         </activity>
-        <activity android:name=".ui.synthetical.detail.DetailActivity">
+
+        <activity
+            android:name=".ui.tweet.TweetDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:label="动弹详情"
+            android:theme="@style/App.Theme.Tweet.Main">
         </activity>
     </application>
 

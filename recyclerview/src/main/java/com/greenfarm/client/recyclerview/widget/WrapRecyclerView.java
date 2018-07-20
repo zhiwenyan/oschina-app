@@ -180,8 +180,6 @@ public class WrapRecyclerView extends RecyclerView {
             // 没有数据
             if (mEmptyView != null) {
                 mEmptyView.setVisibility(VISIBLE);
-            } else {
-                mEmptyView.setVisibility(GONE);
             }
         }
     }

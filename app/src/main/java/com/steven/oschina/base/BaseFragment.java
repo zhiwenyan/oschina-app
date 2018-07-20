@@ -37,6 +37,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = getActivity();
+        //针对fragment多次调用onCreateView的问题
         if (mRootView != null) {
             ViewGroup parent = ( ViewGroup ) mRootView.getParent();
             if (parent != null)

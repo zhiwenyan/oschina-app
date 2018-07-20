@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity {
         mSyntheticalFragment = SyntheticalPagerFragment.newInstance();
         mFragmentManagerHelper.add(mSyntheticalFragment);
 
+
     }
 
 

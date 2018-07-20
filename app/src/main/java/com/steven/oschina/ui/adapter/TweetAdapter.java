@@ -27,7 +27,7 @@ public class TweetAdapter extends CommonRecyclerAdapter<Tweet> {
 
     @Override
     public void convert(ViewHolder holder, Tweet item) {
-        TextView tweetContentTv=holder.getView(R.id.tv_tweet_content);
+        TextView tweetContentTv = holder.getView(R.id.tv_tweet_content);
         holder.setText(R.id.tv_tweet_name, TextUtils.isEmpty(item.getAuthor().getName()) ? "匿名用户" : item.getAuthor().getName())
                 .setText(R.id.tv_tweet_time, StringUtils.formatSomeAgo(item.getPubDate()))
                 .setText(R.id.tv_tweet_content, item.getContent())
@@ -45,6 +45,7 @@ public class TweetAdapter extends CommonRecyclerAdapter<Tweet> {
                     .setText(R.id.tv_dispatch_count, item.getStatistics().getTransmit() > 0
                             ? item.getStatistics().getTransmit() + "" : "转发");
         }
+        // TODO: 7/17/2018  
         if (!TextUtils.isEmpty(item.getContent())) {
             String content = item.getContent().replaceAll("[\n\\s]+", " ");
             //holder.mViewContent.setText(AssimilateUtils.assimilate(mContext, content));
@@ -54,5 +55,8 @@ public class TweetAdapter extends CommonRecyclerAdapter<Tweet> {
 //            tweetContentTv.setDispatchToParent(true);
 //            tweetContentTv.setLongClickable(false);
         }
+
+
+
     }
 }

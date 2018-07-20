@@ -1,5 +1,6 @@
 package com.greenfarm.client.recyclerview.widget;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -38,8 +39,9 @@ public class WrapRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mFooterViews = new SparseArray<>();
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         // viewType 可能就是 SparseArray 的key
         if (isHeaderViewType(viewType)) {
@@ -80,20 +82,20 @@ public class WrapRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (isHeaderPosition(position) || isFooterPosition(position)) {
             return;
         }
         // 计算一下位置
         final int adapterPosition = position - mHeaderViews.size();
         mAdapter.onBindViewHolder(holder, adapterPosition);
-
         // 设置点击和长按事件
         if (mItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mItemClickListener.onItemClick(adapterPosition);
+
                 }
             });
         }
