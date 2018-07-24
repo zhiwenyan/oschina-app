@@ -421,8 +421,8 @@
     <string-array name="tweet_titles">
         <item>最新动弹</item>
         <item>热门动弹</item>
+        <!--<item>热门话题</item>-->
         <item>每日乱弹</item>
-        <item>我的动弹</item>
     </string-array>
 
     <string name="share_wechat">微信</string>

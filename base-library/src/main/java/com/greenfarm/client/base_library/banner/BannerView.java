@@ -143,6 +143,7 @@ public class BannerView extends RelativeLayout {
      * 初始化指示器
      */
     private void initDotIndicator() {
+        mDotContainerView.removeAllViews();
         //获取广告位的数量
         int count = mAdapter.getCount();
         //设置指示器的位置

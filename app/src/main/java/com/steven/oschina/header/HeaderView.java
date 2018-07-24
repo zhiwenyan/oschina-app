@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.greenfarm.client.recyclerview.adapter.OnItemClickListener;
+import com.steven.oschina.CacheManager;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
@@ -56,14 +57,20 @@ public abstract class HeaderView extends LinearLayout implements OnItemClickList
             @Override
             public void onSuccess(List<Banner> result, String nextPageToken) {
                 super.onSuccess(result, nextPageToken);
-                mBanners = result;
-                mAdapter = getAdapter();
-                mRecyclerView.setAdapter(mAdapter);
-                mAdapter.setOnItemClickListener(HeaderView.this);
+                showBanners(result);
+                CacheManager.saveToJson(getContext(), mCacheName, result);
             }
         });
     }
 
+    public void showBanners(List<Banner> banners) {
+        mBanners = banners;
+        if (mAdapter == null) {
+            mAdapter = getAdapter();
+        }
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(HeaderView.this);
+    }
 
     public abstract int getLayoutId();
 

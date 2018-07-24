@@ -42,10 +42,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 actionBar.setHomeButtonEnabled(false);
             }
         }
+        initBundle(getIntent().getExtras());
         initData();
 
     }
 
+    protected void initBundle(Bundle bundle) {
+
+    }
 
     @SuppressWarnings("ConstantConditions")
     protected void setDarkToolBar() {

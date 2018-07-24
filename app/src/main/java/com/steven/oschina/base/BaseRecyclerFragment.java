@@ -1,5 +1,6 @@
 package com.steven.oschina.base;
 
+import com.greenfarm.client.base_library.utils.NetworkUtils;
 import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.R;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
@@ -26,10 +27,20 @@ public class BaseRecyclerFragment<T> extends BaseFragment implements SwipeRefres
     public void initData() {
         mSwipeRefreshRv = mRootView.findViewById(R.id.swipe_refresh_recycler);
         mSwipeRefreshRv.setOnRefreshLoadListener(this);
+        requestCacheData();
         onRequestData(mNextPageToken);
     }
 
+    public void requestCacheData() {
+
+    }
+
     public void onRequestData(String nextPageToken) {
+        if (!NetworkUtils.isConnectedByState(mContext)) {
+            showToast("请检查你的网络！！！");
+            mSwipeRefreshRv.setRefreshing(false);
+            return;
+        }
         mSwipeRefreshRv.setRefreshing(mRefreshing);
     }
 

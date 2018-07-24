@@ -2,8 +2,11 @@ package com.steven.oschina.ui.tweet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,12 +25,15 @@ import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
+import com.steven.oschina.api.ServiceApi;
 import com.steven.oschina.base.BaseActivity;
+import com.steven.oschina.bean.simple.About;
 import com.steven.oschina.bean.sub.Author;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.comment.CommentBar;
 import com.steven.oschina.utils.PlatformUtil;
 import com.steven.oschina.utils.StringUtils;
+import com.steven.oschina.widget.TweetPicturesLayout;
 import com.steven.oschina.widget.TweetTextView;
 
 import butterknife.BindView;
@@ -54,10 +60,6 @@ public class TweetDetailActivity extends BaseActivity {
     TextView mTweetTvRecord;
     @BindView(R.id.tweet_bg_record)
     RelativeLayout mTweetBgRecord;
-    @BindView(R.id.tv_ref_title)
-    TextView mTvRefTitle;
-    @BindView(R.id.tv_ref_content)
-    TextView mTvRefContent;
     @BindView(R.id.layout_ref)
     LinearLayout mLayoutRef;
     @BindView(R.id.layout_container)
@@ -66,6 +68,14 @@ public class TweetDetailActivity extends BaseActivity {
     FrameLayout mContainer;
     @BindView(R.id.fl_footer)
     FrameLayout mCommentView;
+    @BindView(R.id.tweet_pics_layout)
+    TweetPicturesLayout mTweetPics;
+    @BindView(R.id.layout_ref_images)
+    TweetPicturesLayout mLayoutRefImages;
+    @BindView(R.id.tv_ref_title)
+    TextView mViewRefTitle;
+    @BindView(R.id.tv_ref_content)
+    TextView mViewRefContent;
     private CommentBar mDelegation;
 
     @Override
@@ -89,39 +99,27 @@ public class TweetDetailActivity extends BaseActivity {
         mDelegation.hideCommentCount();
         mDelegation.showLike();
         mDelegation.showDispatch();
-        mDelegation.setLikeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //  onClickThumbUp();
-            }
+        mDelegation.setLikeListener(v -> {
+            //  onClickThumbUp();
         });
-        mDelegation.setDispatchListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // onClickTransmit();
-            }
+        mDelegation.setDispatchListener(v -> {
+            // onClickTransmit();
         });
-        mDelegation.getBottomSheet().getEditText().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    //    handleKeyDel();
-                }
-                return false;
+        mDelegation.getBottomSheet().getEditText().setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                //    handleKeyDel();
             }
+            return false;
         });
 
         mDelegation.hideCommentCount();
         mDelegation.hideFav();
 
-        mDelegation.getBottomSheet().setMentionListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mDelegation.getBottomSheet().setMentionListener(v -> {
 //                if (AccountHelper.isLogin()) {
 //                    UserSelectFriendsActivity.show(TweetDetailActivity.this, mDelegation.getBottomSheet().getEditText());
 //                } else
 //                    LoginActivity.show(TweetDetailActivity.this);
-            }
         });
 
         mDelegation.getBottomSheet().getEditText().setOnKeyArrivedListener(new OnKeyArrivedListenerAdapterV2(this));
@@ -180,6 +178,7 @@ public class TweetDetailActivity extends BaseActivity {
 
     private void showTweetDetail(Tweet tweet) {
         Author author = tweet.getAuthor();
+        mTweetPics.setImage(tweet.getImages());
         ImageLoader.load(this, mIvPortrait, author.getPortrait());
         mTvNick.setText(TextUtils.isEmpty(author.getName()) ? "匿名用户" : author.getName());
         if (!TextUtils.isEmpty(tweet.getPubDate()))
@@ -190,7 +189,39 @@ public class TweetDetailActivity extends BaseActivity {
             mTvContent.setText(content);
             mTvContent.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        // TODO: 7/18/2018  
+
+        /* -- about reference -- */
+        if (tweet.getAbout() != null) {
+            mLayoutRef.setVisibility(View.VISIBLE);
+            About about = tweet.getAbout();
+            mLayoutRefImages.setImage(about.getImages());
+
+            if (!About.check(about)) {
+                mViewRefTitle.setVisibility(View.VISIBLE);
+                mViewRefTitle.setText("不存在或已删除的内容");
+                mViewRefContent.setText("抱歉，该内容不存在或已被删除");
+            } else {
+                if (about.getType() == ServiceApi.COMMENT_TWEET) {
+                    mViewRefTitle.setVisibility(View.GONE);
+                    String aName = "@" + about.getTitle();
+                    String cnt = about.getContent();
+                    //  Spannable spannable = TweetParser.getInstance().parse(this, cnt);
+                    SpannableStringBuilder builder = new SpannableStringBuilder();
+                    builder.append(aName).append(": ");
+                    //   builder.append(spannable);
+                    ForegroundColorSpan span = new ForegroundColorSpan(
+                            getResources().getColor(R.color.day_colorPrimary));
+                    builder.setSpan(span, 0, aName.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    mViewRefContent.setText(cnt);
+                } else {
+                    mViewRefTitle.setVisibility(View.VISIBLE);
+                    mViewRefTitle.setText(about.getTitle());
+                    mViewRefContent.setText(about.getContent());
+                }
+            }
+        } else {
+            mLayoutRef.setVisibility(View.GONE);
+        }
     }
 
 

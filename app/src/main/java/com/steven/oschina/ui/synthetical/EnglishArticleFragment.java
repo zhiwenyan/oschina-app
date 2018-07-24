@@ -1,6 +1,7 @@
 package com.steven.oschina.ui.synthetical;
 
 
+import com.steven.oschina.CacheManager;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
@@ -22,6 +23,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
     //英文类型的文章
     private static final int TYPE_ENGLISH = 8000;
     private List<Article> mArticles;
+    private static final String CACHE_NAME = "english_article_list";
 
     public static EnglishArticleFragment newInstance() {
         return new EnglishArticleFragment();
@@ -31,6 +33,14 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
     public void initData() {
         mArticles = new ArrayList<>();
         super.initData();
+    }
+
+    @Override
+    public void requestCacheData() {
+        List<Article> articles = CacheManager.readListJson(mContext, CACHE_NAME, Article.class);
+        if (articles != null) {
+            showArticleList(articles);
+        }
     }
 
     @Override
@@ -60,6 +70,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
+                CacheManager.saveToJson(mContext, CACHE_NAME, articles);
                 showArticleList(articles);
             }
         });
@@ -86,33 +97,33 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {
-            Article article=mArticles.get(position);
+            Article article = mArticles.get(position);
             int type = article.getType();
             long id = article.getOscId();
             switch (type) {
                 case News.TYPE_SOFTWARE:
-                //    SoftwareDetailActivity.show(mContext, id);
+                    //    SoftwareDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_QUESTION:
-                 //   QuestionDetailActivity.show(mContext, id);
+                    //   QuestionDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_BLOG:
-               //     BlogDetailActivity.show(mContext, id);
+                    //     BlogDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_TRANSLATE:
-            //        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                    //        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
                     break;
                 case News.TYPE_EVENT:
-            //        EventDetailActivity.show(mContext, id);
+                    //        EventDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_NEWS:
-          //          NewsDetailActivity.show(mContext, id);
+                    //          NewsDetailActivity.show(mContext, id);
                     break;
                 case Article.TYPE_ENGLISH:
                     EnglishArticleDetailActivity.show(mContext, article);
                     break;
                 default:
-          //          UIHelper.showUrlRedirect(mContext, top.getUrl());
+                    //          UIHelper.showUrlRedirect(mContext, top.getUrl());
                     break;
             }
         });

@@ -6,6 +6,10 @@ import android.support.annotation.Nullable;
 
 import com.steven.oschina.base.BaseActivity;
 
+/**
+ * 有的是两个页面 有广告的时候显示广告页
+ * 有的是广告嵌在闪屏页里面 点击消失 广告就没了
+ */
 public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -13,7 +17,7 @@ public class SplashActivity extends BaseActivity {
         new Handler().postDelayed(() -> {
             startActivity(MainActivity.class);
             finish();
-        }, 1888);
+        }, 888);
     }
 
     @Override

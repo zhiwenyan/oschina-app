@@ -4,6 +4,14 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.steven.oschina.bean.tweet.Tweet;
+import com.steven.oschina.gson.DoubleJsonDeserializer;
+import com.steven.oschina.gson.FloatJsonDeserializer;
+import com.steven.oschina.gson.ImageJsonDeserializer;
+import com.steven.oschina.gson.IntegerJsonDeserializer;
+import com.steven.oschina.gson.StringJsonDeserializer;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -55,34 +63,35 @@ public final class AppOperator {
 //        }
 //    }
 
-//    public static Gson createGson() {
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        //gsonBuilder.setExclusionStrategies(new SpecificClassExclusionStrategy(null, Model.class));
-//        gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss");
-//
-//        JsonDeserializer deserializer = new IntegerJsonDeserializer();
-//        gsonBuilder.registerTypeAdapter(int.class, deserializer);
-//        gsonBuilder.registerTypeAdapter(Integer.class, deserializer);
-//
-//        deserializer = new FloatJsonDeserializer();
-//        gsonBuilder.registerTypeAdapter(float.class, deserializer);
-//        gsonBuilder.registerTypeAdapter(Float.class, deserializer);
-//
-//        deserializer = new DoubleJsonDeserializer();
-//        gsonBuilder.registerTypeAdapter(double.class, deserializer);
-//        gsonBuilder.registerTypeAdapter(Double.class, deserializer);
-//
-//        deserializer = new StringJsonDeserializer();
-//        gsonBuilder.registerTypeAdapter(String.class, deserializer);
-//
-//        gsonBuilder.registerTypeAdapter(Tweet.Image.class, new ImageJsonDeserializer());
-//
-//        return gsonBuilder.create();
-//    }
-//
-//    public synchronized static Gson getGson() {
-//        if (GSON_INSTANCE == null)
-//            GSON_INSTANCE = createGson();
-//        return GSON_INSTANCE;
-//    }
+    public static Gson createGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        //gsonBuilder.setExclusionStrategies(new SpecificClassExclusionStrategy(null, Model.class));
+        gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        JsonDeserializer deserializer = new IntegerJsonDeserializer();
+        gsonBuilder.registerTypeAdapter(int.class, deserializer);
+        gsonBuilder.registerTypeAdapter(Integer.class, deserializer);
+
+        deserializer = new FloatJsonDeserializer();
+        gsonBuilder.registerTypeAdapter(float.class, deserializer);
+        gsonBuilder.registerTypeAdapter(Float.class, deserializer);
+
+        deserializer = new DoubleJsonDeserializer();
+        gsonBuilder.registerTypeAdapter(double.class, deserializer);
+        gsonBuilder.registerTypeAdapter(Double.class, deserializer);
+
+        deserializer = new StringJsonDeserializer();
+        gsonBuilder.registerTypeAdapter(String.class, deserializer);
+
+        gsonBuilder.registerTypeAdapter(Tweet.Image.class, new ImageJsonDeserializer());
+
+        return gsonBuilder.create();
+    }
+
+    public synchronized static Gson getGson() {
+        if (GSON_INSTANCE == null)
+            GSON_INSTANCE = createGson();
+        return GSON_INSTANCE;
+    }
+
 }

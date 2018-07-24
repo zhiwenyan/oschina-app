@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.greenfarm.client.base_library.banner.BannerAdapter;
 import com.greenfarm.client.base_library.banner.BannerView;
+import com.steven.oschina.CacheManager;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
@@ -33,6 +34,8 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
     private List<Article> mArticles;
     private BannerView mBannerView;
     private static final int CATALOG = 1;
+    private static final String BANNER_CACHE_NAME = "article_banner";
+    private static final String CACHE_NAME = "article_list";
 
     public static ArticleFragment newInstance() {
         return new ArticleFragment();
@@ -42,6 +45,18 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
     public void initData() {
         mArticles = new ArrayList<>();
         super.initData();
+    }
+
+    @Override
+    public void requestCacheData() {
+        List<Article> articles = CacheManager.readListJson(mContext, CACHE_NAME, Article.class);
+        if (articles != null) {
+            showArticleList(articles);
+        }
+        List<Banner> banners = CacheManager.readListJson(mContext, BANNER_CACHE_NAME, Banner.class);
+        if (banners != null) {
+            showBanner(banners);
+        }
     }
 
     @Override
@@ -65,6 +80,7 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
                 @Override
                 public void onSuccess(List<Banner> banners, String nextPageToken) {
                     super.onSuccess(banners, nextPageToken);
+                    CacheManager.saveToJson(mContext, BANNER_CACHE_NAME, banners);
                     showBanner(banners);
 
                 }
@@ -119,6 +135,7 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
                     return;
                 }
                 showArticleList(articles);
+                CacheManager.saveToJson(mContext, CACHE_NAME, articles);
             }
         });
     }

@@ -35,7 +35,6 @@ public class TweetPagerFragment extends BaseViewPagerFragment {
         fragments.add(TweetFragment.newInstance(TweetFragment.CATALOG_NEW));
         fragments.add(TweetFragment.newInstance(TweetFragment.CATALOG_HOT));
         fragments.add(getSubFragment());
-        fragments.add(TweetFragment.newInstance(TweetFragment.CATALOG_MYSELF));
         return fragments;
     }
 

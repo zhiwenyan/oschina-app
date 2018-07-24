@@ -1,5 +1,6 @@
 package com.steven.oschina.base;
 
+import com.greenfarm.client.base_library.utils.NetworkUtils;
 import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.R;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
@@ -32,6 +33,11 @@ public abstract class BaseRecyclerActivity<T> extends BaseActivity implements Sw
     }
 
     public void onRequestData(String nextPageToken) {
+        if (!NetworkUtils.isConnectedByState(this)) {
+            showToast("请检查你的网络！！！");
+            mSwipeRefreshRv.setRefreshing(false);
+            return;
+        }
         mSwipeRefreshRv.setRefreshing(mRefreshing);
     }
 

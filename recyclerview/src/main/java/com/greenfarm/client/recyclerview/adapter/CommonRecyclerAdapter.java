@@ -61,7 +61,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull  ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         // 设置点击和长按事件
         if (mItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -153,17 +153,17 @@
                     tools:text="最近研究了这个项目，学习rx系列,修复了楼主的bug 主要原因在mainActivity里面资讯fragment的构建"/>
 
 
-                <!--<net.oschina.app.improve.widget.TweetPicturesLayout-->
-                <!--android:id="@+id/tweet_pics_layout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="16dp"-->
-                <!--android:layout_marginRight="16dp"-->
-                <!--android:layout_marginTop="@dimen/lay_8"-->
-                <!--android:visibility="gone"-->
-                <!--app:column="3"-->
-                <!--app:horizontalSpace="@dimen/lay_4"-->
-                <!--app:verticalSpace="@dimen/lay_4" />-->
+                <com.steven.oschina.widget.TweetPicturesLayout
+                    android:id="@+id/tweet_pics_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:visibility="gone"
+                    app:column="3"/>
+
 
                 <RelativeLayout
                     android:id="@+id/tweet_bg_record"
@@ -232,14 +232,14 @@
                         android:textSize="13sp"
                         tools:text="生产环境MySQL快速备份工具XtraBackup使用案例MySQL 的备份有很多种方式，最常用的应该是MySQLdump了，将数据库导出一个 sql文件，还原的时候source db.sql 就欢快的执行了。小伙伴愉快的布上一个shell脚本，配上…"/>
 
-                    <!--<net.oschina.app.improve.widget.TweetPicturesLayout-->
-                    <!--android:id="@+id/layout_ref_images"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="8dp"-->
-                    <!--android:visibility="gone"-->
-                    <!--app:horizontalSpace="@dimen/lay_4"-->
-                    <!--app:verticalSpace="@dimen/lay_4" />-->
+                    <com.steven.oschina.widget.TweetPicturesLayout
+                        android:id="@+id/layout_ref_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone"
+                        app:horizontalSpace="@dimen/lay_4"
+                        app:verticalSpace="@dimen/lay_4"/>
                 </LinearLayout>
 
 
@@ -250,7 +250,6 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </android.support.design.widget.CoordinatorLayout>

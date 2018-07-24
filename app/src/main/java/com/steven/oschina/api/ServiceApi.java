@@ -4,6 +4,7 @@ import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.base.ResultBean;
 import com.steven.oschina.bean.search.SearchBean;
+import com.steven.oschina.bean.simple.User;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.tweet.Tweet;
@@ -13,6 +14,7 @@ import com.steven.oschina.bean.tweet.TweetLike;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -27,6 +29,7 @@ import retrofit2.http.QueryMap;
  * @author yanzhiwen
  */
 public interface ServiceApi {
+    int COMMENT_TWEET = 100;  // 动弹
 
     @GET("sub_list?")
     Call<ResultBean<PageBean<SubBean>>> getSubList(@Query("token") String token, @Query("pageToken") String nextPageToken);
@@ -73,5 +76,8 @@ public interface ServiceApi {
     @GET("tweet_comments?")
     Call<ResultBean<PageBean<TweetComment>>> getTweetCommentList(@Query("sourceId") long sourceId, @Query("pageToken") String pageToken);
 
+    @FormUrlEncoded
+    @POST("account_login?")
+    Call<ResultBean<User>> login(@Field("account") String username, @Field("password") String password);
 
 }

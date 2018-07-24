@@ -19,6 +19,7 @@
         </activity>
         <activity
             android:name=".SplashActivity"
+            android:theme="@style/App.Theme.Launch"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -40,20 +41,32 @@
         </activity>
         <activity
             android:name=".ui.synthetical.detail.BlogDetailActivity"
-            android:screenOrientation="portrait"
             android:label="博客详情"
+            android:screenOrientation="portrait"
             android:theme="@style/App.Theme.Main">
         </activity>
         <activity android:name=".ui.synthetical.detail.QuestionDetailActivity">
         </activity>
-
         <activity
             android:name=".ui.tweet.TweetDetailActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"
             android:label="动弹详情"
-            android:theme="@style/App.Theme.Tweet.Main">
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Tweet.Main"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".ui.account.LoginActivity"
+            android:label="登录"
+            android:screenOrientation="portrait"
+            android:theme="@style/Account_Base.App.Theme.NoTitle"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+        <activity
+            android:name=".ui.tweet.ImageGalleryActivity"
+            android:theme="@style/Theme.Dialog.NoTitle.Translucent">
+        </activity>
+        <activity android:name=".ui.tweet.LargeImageActivity">
         </activity>
     </application>
 

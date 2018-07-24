@@ -4,6 +4,7 @@ package com.steven.oschina.ui.synthetical.sub;
 import android.os.Bundle;
 
 import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.steven.oschina.CacheManager;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
@@ -27,6 +28,7 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
     private List<SubBean> mSubBeans;
     protected SubTab mSubTab;
     private HeaderView mHeaderView;
+    private String CACHE_NAME;
 
     public static SubFragment newInstance(SubTab subTab) {
         SubFragment fragment = new SubFragment();
@@ -45,7 +47,22 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
     @Override
     public void initData() {
         mSubBeans = new ArrayList<>();
+        CACHE_NAME = mSubTab.getToken();
         super.initData();
+    }
+
+    @Override
+    public void requestCacheData() {
+        List<SubBean> subBeans = CacheManager.readListJson(mContext, mSubTab.getToken(), SubBean.class);
+        if (subBeans != null) {
+            showSubList(subBeans);
+        }
+        List<SubTab.Banner> banners = CacheManager.readListJson(mContext, mSubTab.getToken() + "banner"
+                + mSubTab.getType(), SubTab.Banner.class);
+        if (banners != null) {
+            // TODO: 7/24/2018  
+        }
+
     }
 
     public void initHeader() {
@@ -60,7 +77,6 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             mSwipeRefreshRv.addHeaderView(mHeaderView);
             mHeaderView.requestBanner(mSubTab.getBanner().getCatalog());
         }
-
     }
 
 
@@ -91,6 +107,7 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
+                CacheManager.saveToJson(mContext, CACHE_NAME, list);
                 showSubList(list);
             }
         });
@@ -111,7 +128,7 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {
-            SubBean subBean = subBeans.get(position);
+            SubBean subBean = mSubBeans.get(position);
             switch (mSubTab.getType()) {
                 case News.TYPE_SOFTWARE:
                     //          SoftwareDetailActivity.show(mContext, subBean);
