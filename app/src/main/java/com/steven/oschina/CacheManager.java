@@ -42,13 +42,11 @@ public class CacheManager {
             return !file.exists() || file.delete();
         }
         try {
-            return !(!file.exists() && !file.createNewFile())
-                    && save(file, list);
+            return (!file.exists() && file.createNewFile()) && save(file, list);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
-
     }
 
     private static <T> boolean save(File file, List<T> list) {
@@ -104,7 +102,7 @@ public class CacheManager {
         public ParameterizedTypeImpl(Type ownerType, Type rawType, Type... typeArguments) {
             // require an owner type if the raw type needs it
             if (rawType instanceof Class<?>) {
-                Class<?> rawTypeAsClass = (Class<?>) rawType;
+                Class<?> rawTypeAsClass = ( Class<?> ) rawType;
                 boolean isStaticOrTopLevelClass = Modifier.isStatic(rawTypeAsClass.getModifiers())
                         || rawTypeAsClass.getEnclosingClass() == null;
                 checkArgument(ownerType != null || isStaticOrTopLevelClass);
@@ -134,7 +132,7 @@ public class CacheManager {
         @Override
         public boolean equals(Object other) {
             return other instanceof ParameterizedType
-                    && $Gson$Types.equals(this, (ParameterizedType) other);
+                    && $Gson$Types.equals(this, ( ParameterizedType ) other);
         }
 
         @Override

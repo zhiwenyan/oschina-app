@@ -11,7 +11,6 @@ import com.steven.oschina.ui.search.SearchActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 
 public class ExploreFragment extends BaseFragment {
@@ -37,7 +36,6 @@ public class ExploreFragment extends BaseFragment {
     LinearLayout mLayoutNearby;
     @BindView(R.id.layout_events)
     LinearLayout mLayoutEvents;
-    Unbinder unbinder;
 
     public static ExploreFragment newInstance() {
         return new ExploreFragment();

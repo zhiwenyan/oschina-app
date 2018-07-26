@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.steven.oschina.CacheManager;
+import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
@@ -123,7 +124,7 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
-                CacheManager.saveToJson(mContext, CACHE_NAME, tweets);
+                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, tweets);
                 showTweetList(tweets);
             }
         });

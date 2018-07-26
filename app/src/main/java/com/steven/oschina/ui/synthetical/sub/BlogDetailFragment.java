@@ -1,4 +1,4 @@
-package com.steven.oschina.ui.synthetical.detail;
+package com.steven.oschina.ui.synthetical.sub;
 
 
 import android.content.Context;
@@ -34,7 +34,7 @@ public class BlogDetailFragment extends DetailFragment {
     private static class BlogDetailHeaderView extends AutoScrollView {
         public BlogDetailHeaderView(Context context) {
             super(context);
-            LayoutInflater.from(context).inflate(R.layout.layout_blod_detail_header, this, true);
+            LayoutInflater.from(context).inflate(R.layout.layout_blog_detail_header, this, true);
         }
     }
 }

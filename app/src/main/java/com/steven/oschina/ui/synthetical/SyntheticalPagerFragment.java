@@ -13,6 +13,8 @@ import com.steven.oschina.R;
 import com.steven.oschina.base.BaseViewPagerFragment;
 import com.steven.oschina.bean.sub.SubTab;
 import com.steven.oschina.ui.search.SearchActivity;
+import com.steven.oschina.ui.synthetical.article.ArticleFragment;
+import com.steven.oschina.ui.synthetical.article.EnglishArticleFragment;
 import com.steven.oschina.ui.synthetical.sub.SubFragment;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import butterknife.OnClick;
  */
 public class SyntheticalPagerFragment extends BaseViewPagerFragment {
 
-
+    private static final int CURRENT_PAGE_ITEM=1;
     @BindView(R.id.iv_search)
     ImageView mIvSearch;
 
@@ -42,7 +44,7 @@ public class SyntheticalPagerFragment extends BaseViewPagerFragment {
     @Override
     public void initData() {
         super.initData();
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(CURRENT_PAGE_ITEM);
     }
 
     public List<Fragment> getFragments() {

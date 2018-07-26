@@ -63,6 +63,14 @@ public class ImageGalleryActivity extends BaseActivity {
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
     }
+    public static void show(Context context, String images) {
+        show(context, images, true);
+    }
+    public static void show(Context context, String images, boolean needSaveLocal) {
+        if (images == null)
+            return;
+        show(context, new String[]{images}, 0, needSaveLocal);
+    }
 
     public static void show(Context context, String[] images, int position, boolean needSaveLocal, boolean needCookie) {
         if (images == null || images.length == 0)

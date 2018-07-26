@@ -31,6 +31,17 @@ import retrofit2.http.QueryMap;
 public interface ServiceApi {
     int COMMENT_TWEET = 100;  // 动弹
 
+   int CATALOG_ALL = 0;
+   int CATALOG_SOFTWARE = 1;
+   int CATALOG_QUESTION = 2;
+   int CATALOG_BLOG = 3;
+   int CATALOG_TRANSLATION = 4;
+   int CATALOG_EVENT = 5;
+   int CATALOG_NEWS = 6;
+   int CATALOG_TWEET = 100;
+
+
+
     @GET("sub_list?")
     Call<ResultBean<PageBean<SubBean>>> getSubList(@Query("token") String token, @Query("pageToken") String nextPageToken);
 
@@ -56,13 +67,18 @@ public interface ServiceApi {
     @POST("search_articles?")
     Call<ResultBean<SearchBean>> searchArticles(@FieldMap Map<String, Object> params);
 
-
-    //banner
+    //detail
     @GET("detail?")
     Call<ResultBean<SubBean>> getDetail(@QueryMap Map<String, Object> params);
 
-    @GET("getArticleDetail?")
+    @GET("get_article_detail?")
     Call<ResultBean<Article>> getArticleDetail(@Query("ident") String ident, @Query("key") String key);
+
+    @GET("get_article_detail?")
+    Call<ResultBean<Article>> getEnglishArticleDetailEN(@Query("ident") String ident, @Query("key") String key, @Query("type") int type);
+
+    @GET("article_translate?")
+    Call<ResultBean<Article>> article_translate(@Query("key") String key, @Query("type") int type);
 
     @GET("get_article_recommends?")
     Call<ResultBean<PageBean<Article>>> getArticleRecommends(@QueryMap Map<String, Object> params);
@@ -79,5 +95,6 @@ public interface ServiceApi {
     @FormUrlEncoded
     @POST("account_login?")
     Call<ResultBean<User>> login(@Field("account") String username, @Field("password") String password);
+
 
 }

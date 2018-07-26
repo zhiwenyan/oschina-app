@@ -114,14 +114,20 @@ public class BannerViewPager extends ViewPager {
 
         @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
             //Adapter设计模式为了完全让用户自定义
             //position % mBannerAdapter.getCount() 求模
             View bannerItemView = mBannerAdapter.getView(position % mBannerAdapter.getCount(), getConvertView());
             container.addView(bannerItemView);
-            if (mListener != null) {
-                mListener.click(position % mBannerAdapter.getCount());
-            }
+            bannerItemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 回调点击监听
+                    if (mListener != null) {
+                        mListener.click(position % mBannerAdapter.getCount());
+                    }
+                }
+            });
             return bannerItemView;
         }
 

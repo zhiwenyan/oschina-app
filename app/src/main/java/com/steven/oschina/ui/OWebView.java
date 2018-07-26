@@ -19,6 +19,7 @@ import com.greenfarm.client.base_library.log.LogUtils;
 import com.steven.oschina.AppConfig;
 import com.steven.oschina.AppContext;
 import com.steven.oschina.interf.OnWebViewImageListener;
+import com.steven.oschina.ui.tweet.ImageGalleryActivity;
 import com.steven.oschina.utils.StringUtils;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.utils.UIFormat;
@@ -32,6 +33,7 @@ import java.util.regex.Pattern;
  *
  * @author yanzhiwen
  */
+
 public class OWebView extends WebView {
     private boolean useShareCss;
 
@@ -56,16 +58,15 @@ public class OWebView extends WebView {
         init();
     }
 
-
     @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
     private void init() {
         setClickable(false);
         setFocusable(false);
 
-        setHorizontalScrollBarEnabled(false);
+        setHorizontalScrollBarEnabled(true);
 
         WebSettings settings = getSettings();
-        settings.setDefaultFontSize(14);
+        settings.setDefaultFontSize(15);
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
@@ -77,7 +78,7 @@ public class OWebView extends WebView {
                 @JavascriptInterface
                 public void showImagePreview(String bigImageUrl) {
                     if (bigImageUrl != null && !StringUtils.isEmpty(bigImageUrl)) {
-                        //ImageGalleryActivity.show(getContext(), bigImageUrl);
+                        ImageGalleryActivity.show(getContext(), bigImageUrl);
                     }
                 }
             }, "mWebViewImageListener");
@@ -86,8 +87,9 @@ public class OWebView extends WebView {
 
     public void loadDetailDataAsync(final String content) {
         Context context = getContext();
+        this.setWebViewClient(new OWebClient(null));
         if (context != null && context instanceof Activity) {
-            final Activity activity = (Activity) context;
+            final Activity activity = ( Activity ) context;
             AppOperator.runOnThread(new Runnable() {
                 @Override
                 public void run() {
@@ -115,7 +117,7 @@ public class OWebView extends WebView {
         this.setWebViewClient(new OWebClient(finishCallback));
         Context context = getContext();
         if (context != null && context instanceof Activity) {
-            final Activity activity = (Activity) context;
+            final Activity activity = ( Activity ) context;
             AppOperator.runOnThread(new Runnable() {
                 @Override
                 public void run() {
@@ -139,7 +141,7 @@ public class OWebView extends WebView {
         this.setWebViewClient(new OWebClient(finishCallback));
         Context context = getContext();
         if (context != null && context instanceof Activity) {
-            final Activity activity = (Activity) context;
+            final Activity activity = ( Activity ) context;
             AppOperator.runOnThread(new Runnable() {
                 @Override
                 public void run() {
@@ -232,6 +234,8 @@ public class OWebView extends WebView {
             // 过滤掉 img标签
             content = content.replaceAll("<\\s*img\\s+([^>]*)\\s*/>", "");
         }
+        //自适应图片大小
+        content = content.replaceAll("<img", "<img style='max-width:100%;height:auto;'");
 
         // 过滤table的内部属性
         content = content.replaceAll("(<table[^>]*?)\\s+border\\s*=\\s*\\S+", "$1");

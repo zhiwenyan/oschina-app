@@ -78,7 +78,6 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
                 if (mListener != null && isScrollBottom() && mLoadEnable) {
                     mListener.onLoadMore();
                     mStatus = STATUS_LOAD;
-                    System.out.println("---------sdasdfsaf=" + mBottomCount);
 
                 }
             }

@@ -27,6 +27,18 @@ public abstract class BaseFragment extends Fragment {
     private Unbinder mUnbinder;
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
@@ -36,7 +48,6 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mContext = getActivity();
         //针对fragment多次调用onCreateView的问题
         if (mRootView != null) {
             ViewGroup parent = ( ViewGroup ) mRootView.getParent();

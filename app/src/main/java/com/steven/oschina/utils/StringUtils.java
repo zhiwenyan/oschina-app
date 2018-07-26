@@ -606,4 +606,41 @@ public class StringUtils {
                 : String.format("%skm 以内", distance / 1000);
     }
 
+
+    public static String formatTextCount(int count) {
+        String text = String.valueOf(count);
+        if (count < 1000)
+            return String.format(" %s ", text);
+        if (count > 1000 && count < 10000)
+            return String.format(" %s,%s ", text.substring(0, 1), text.substring(1, text.length()));
+        if (count > 10000 && count < 100000)
+            return String.format(" %s,%s ", text.substring(0, 2), text.substring(2, text.length()));
+        if (count > 100000 && count < 1000000)
+            return String.format(" %s,%s ", text.substring(0, 3), text.substring(3, text.length()));
+        if (count > 1000000 && count < 10000000)
+            return String.format(" %s,%s,%s ", text.substring(0, 1), text.substring(1, 4), text.substring(4, text.length()));
+        return String.format(" %s ", String.valueOf(count));
+    }
+
+
+    public static String formatTime(long time) {
+        if (time < 60) {
+            return String.format(" %s ", time);
+        }
+        if (time >= 3600) {
+            return " 1 ";
+        }
+        return String.format(" %s ", time / 60 + 1);
+    }
+
+
+    public String formatTimeUnit(long time) {
+        if (time >= 3600) {
+            return "小时";
+        } else if (time >= 60) {
+            return "分钟";
+        } else
+            return "秒";
+    }
+
 }

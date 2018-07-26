@@ -1,9 +1,8 @@
-package com.steven.oschina.ui.synthetical.detail;
+package com.steven.oschina.ui.synthetical.sub;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.widget.NestedScrollView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -22,12 +21,15 @@ import com.steven.oschina.base.BaseRecyclerFragment;
 import com.steven.oschina.bean.media.Util;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Author;
+import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.sub.UserRelation;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.OWebView;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
+import com.steven.oschina.ui.synthetical.article.ArticleDetailActivity;
 import com.steven.oschina.utils.StringUtils;
+import com.steven.oschina.utils.TypeFormat;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
 
 import java.util.ArrayList;
@@ -36,18 +38,15 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class DetailFragment extends BaseRecyclerFragment {
-    private SubBean mSubBean;
+    protected SubBean mSubBean;
     protected OWebView mWebView;
     protected View mHeaderView;
-    private NestedScrollView mViewScroller;
     protected SwipeRefreshRecyclerView mRefreshRv;
     private List<Article> mArticles;
     private ImageView mAvatarIv;
     private TextView mArtcleTitle;
     private TextView mAuthorName;
-    private TextView mOrigin;
     private TextView mPubDate;
-    private TextView mRecommed;
     private TextView mTextAbstract;
     private Button mBtnRelation;
 
@@ -59,26 +58,27 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
 
     @Override
     public void initData() {
+        mRefreshing = false;
         mArticles = new ArrayList<>();
         mHeaderView = getHeaderView();
         if (mHeaderView != null) {
             mWebView = mHeaderView.findViewById(R.id.webView);
-            mViewScroller = mHeaderView.findViewById(R.id.lay_nsv);
+            mWebView.setUseShareCss(true);
             mAvatarIv = mHeaderView.findViewById(R.id.iv_avatar);
             mArtcleTitle = mHeaderView.findViewById(R.id.tv_title);
-            mAuthorName = mHeaderView.findViewById(R.id.tv_name);
-            mOrigin = mHeaderView.findViewById(R.id.tv_origin);
+            mAuthorName = mHeaderView.findViewById(R.id.tv_author);
             mPubDate = mHeaderView.findViewById(R.id.tv_pub_date);
-            mRecommed = mHeaderView.findViewById(R.id.tv_recommend);
-            mBtnRelation =  mHeaderView.findViewById(R.id.btn_relation);
+            mBtnRelation = mHeaderView.findViewById(R.id.btn_relation);
             mTextAbstract = mHeaderView.findViewById(R.id.tv_detail_abstract);
+            if (mContext == null) return;
+            //码云挂件替换
+            if (mWebView != null) {
+                mSubBean.setBody(mSubBean.getBody().replaceAll("(|<pre>)<code>&lt;script src='(//gitee.com/[^>]+)'&gt;&lt;/script&gt;\\s*</code>(|</pre>)",
+                        "<code><script src='https:$2'></script></code>"));
+                mWebView.loadDetailDataAsync(mSubBean.getBody());
+            }
         }
         mRefreshRv = mRootView.findViewById(R.id.swipe_refresh_recycler);
-        if (mContext == null) return;
-        //码云挂件替换
-        mSubBean.setBody(mSubBean.getBody().replaceAll("(|<pre>)<code>&lt;script src='(//gitee.com/[^>]+)'&gt;&lt;/script&gt;\\s*</code>(|</pre>)",
-                "<code><script src='https:$2'></script></code>"));
-        mWebView.loadDetailDataAsync(mSubBean.getBody());
         super.initData();
     }
 
@@ -104,6 +104,9 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
+                if (mOnCompleteListener != null) {
+                    mOnCompleteListener.onComplete();
+                }
                 showArticleList(result);
             }
         });
@@ -114,11 +117,13 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
         ImageLoader.load(mContext, mAvatarIv, author.getPortrait());
         mAuthorName.setText(author.getName());
         mPubDate.setText(StringUtils.formatYearMonthDay(mSubBean.getPubDate()));
-        mTextAbstract.setText(mSubBean.getSummary());
-        if (TextUtils.isEmpty(mSubBean.getSummary())) {
-            mRootView.findViewById(R.id.line3).setVisibility(View.GONE);
-            mRootView.findViewById(R.id.line4).setVisibility(View.GONE);
-            mTextAbstract.setVisibility(View.GONE);
+        if (mTextAbstract != null && mSubBean.getSummary() != null) {
+            mTextAbstract.setText(mSubBean.getSummary());
+            if (TextUtils.isEmpty(mSubBean.getSummary())) {
+                mRootView.findViewById(R.id.line3).setVisibility(View.GONE);
+                mRootView.findViewById(R.id.line4).setVisibility(View.GONE);
+                mTextAbstract.setVisibility(View.GONE);
+            }
         }
         mBtnRelation.setText(mSubBean.getAuthor().getRelation() < UserRelation.RELATION_ONLY_HER
                 ? "已关注" : "关注");
@@ -194,13 +199,66 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
                 return R.layout.item_article_three_img;
             });
             mSwipeRefreshRv.setAdapter(mAdapter);
+            mRefreshRv.addHeaderView(mHeaderView);
+            showAuthor();
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mRefreshRv.addHeaderView(mHeaderView);
-        showAuthor();
+        mAdapter.setOnItemClickListener(position -> {
+            Article top = mArticles.get(position);
+            if (top == null)
+                return;
+            if (top.getType() == 0) {
+                if (TypeFormat.isGit(top)) {
+//                WebActivity.show(mContext, TypeFormat.formatUrl(top));
+                } else {
+                    ArticleDetailActivity.show(mContext, top);
+                }
+            } else {
+                try {
+                    int type = top.getType();
+                    long id = top.getOscId();
+                    switch (type) {
+                        case News.TYPE_SOFTWARE:
+                            //  SoftwareDetailActivity.show(mContext, id);
+                            break;
+                        case News.TYPE_QUESTION:
+                            QuestionDetailActivity.show(mContext, id);
+                            break;
+                        case News.TYPE_BLOG:
+                            BlogDetailActivity.show(mContext, id);
+                            break;
+                        case News.TYPE_TRANSLATE:
+                            //     NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                            break;
+                        case News.TYPE_EVENT:
+                            //      EventDetailActivity.show(mContext, id);
+                            break;
+                        case News.TYPE_NEWS:
+                            NewsDetailActivity.show(mContext, id);
+                            break;
+                        default:
+                            //      UIHelper.showUrlRedirect(mContext, top.getUrl());
+                            break;
+                    }
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ArticleDetailActivity.show(mContext, top);
+                }
+            }
+        });
     }
 
     protected abstract View getHeaderView();
+
+    private onCompleteListener mOnCompleteListener;
+
+    public void setOnCompleteListener(onCompleteListener onCompleteListener) {
+        mOnCompleteListener = onCompleteListener;
+    }
+
+    public interface onCompleteListener {
+        void onComplete();
+    }
 }

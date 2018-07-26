@@ -5,11 +5,13 @@ import android.os.Bundle;
 
 import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.CacheManager;
+import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.sub.SubTab;
@@ -18,7 +20,6 @@ import com.steven.oschina.header.HeaderView;
 import com.steven.oschina.ui.adapter.BlogSubAdapter;
 import com.steven.oschina.ui.adapter.NewsSubAdapter;
 import com.steven.oschina.ui.adapter.QuestionSubAdapter;
-import com.steven.oschina.ui.synthetical.detail.BlogDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +58,10 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
         if (subBeans != null) {
             showSubList(subBeans);
         }
-        List<SubTab.Banner> banners = CacheManager.readListJson(mContext, mSubTab.getToken() + "banner"
-                + mSubTab.getType(), SubTab.Banner.class);
+        List<Banner> banners = CacheManager.readListJson(mContext, mSubTab.getToken() + "banner"
+                + mSubTab.getType(), Banner.class);
         if (banners != null) {
-            // TODO: 7/24/2018  
+            mHeaderView.showBanners(banners);
         }
 
     }
@@ -74,8 +75,9 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             } else if (mSubTab.getBanner().getCatalog() == SubTab.BANNER_CATEGORY_BLOG) {
                 mHeaderView = new BlogHeaderView(mContext, mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType(), SubTab.BANNER_CATEGORY_BLOG);
             }
-            mSwipeRefreshRv.addHeaderView(mHeaderView);
             mHeaderView.requestBanner(mSubTab.getBanner().getCatalog());
+            mSwipeRefreshRv.addHeaderView(mHeaderView);
+
         }
     }
 
@@ -107,11 +109,10 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
-                CacheManager.saveToJson(mContext, CACHE_NAME, list);
                 showSubList(list);
+                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, list);
             }
         });
-
     }
 
 
@@ -124,6 +125,7 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             mAdapter = getAdapter();
             mSwipeRefreshRv.setAdapter(mAdapter);
             initHeader();
+
         } else {
             mAdapter.notifyDataSetChanged();
         }
@@ -131,22 +133,22 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             SubBean subBean = mSubBeans.get(position);
             switch (mSubTab.getType()) {
                 case News.TYPE_SOFTWARE:
-                    //          SoftwareDetailActivity.show(mContext, subBean);
+                    //SoftwareDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_QUESTION:
-                    //QuestionDetailActivity.show(mContext, subBean);
+                    QuestionDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_BLOG:
                     BlogDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_TRANSLATE:
-                    //             NewsDetailActivity.show(mContext, subBean);
+                   NewsDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_EVENT:
                     //            EventDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_NEWS:
-                    //        NewsDetailActivity.show(mContext, subBean);
+                    NewsDetailActivity.show(mContext, subBean);
                     break;
                 default:
                     //     UIHelper.showUrlRedirect(mContext, mSubTab.getHref());

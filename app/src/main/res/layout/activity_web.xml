@@ -12,43 +12,31 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
         android:titleTextColor="@color/black"
         app:navigationIcon="@mipmap/btn_back_dark_pressed"
         app:popupTheme="@style/ToolbarPopupBlackTheme"
-        tools:ignore="UnusedAttribute"/>
+        tools:ignore="UnusedAttribute" />
 
-    <View style="@style/h_line"/>
+    <View style="@style/h_line" />
 
     <FrameLayout
+        android:id="@+id/fl_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<com.steven.oschina.widget.CommentShareView-->
-        <!--android:id="@+id/shareView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"/>-->
-
         <LinearLayout
-            android:id="@+id/ll_comment"
+            android:id="@+id/ll_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:id="@+id/lay_container"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
+            android:orientation="vertical" />
 
         <ProgressBar
-            android:id="@+id/lay_error"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"/>
-
-
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:max="100" />
     </FrameLayout>
+
 </LinearLayout>
