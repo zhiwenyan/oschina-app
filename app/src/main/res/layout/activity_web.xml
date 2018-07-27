@@ -12,7 +12,6 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
         android:titleTextColor="@color/black"
         app:navigationIcon="@mipmap/btn_back_dark_pressed"
         app:popupTheme="@style/ToolbarPopupBlackTheme"

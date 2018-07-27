@@ -11,8 +11,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
+import com.steven.oschina.api.HttpCallback;
+import com.steven.oschina.api.HttpUtils;
+import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseActivity;
+import com.steven.oschina.ui.web.Rule;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.widget.OSCWebView;
 
@@ -63,7 +68,7 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
 
     @Override
     protected void initData() {
-
+        StatusBarUtil.setStatusBarTrans(this, true);
         mWebView = new OSCWebView(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
         params.weight = 1;
@@ -73,6 +78,30 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
         mWebView.setOnFinishFinish(this);
         mUrl = getIntent().getStringExtra("url");
         isShowAd = getIntent().getBooleanExtra("isShowAd", false);
+        mWebView.loadUrl(mUrl);
+        //getRule(mUrl);
+    }
+
+    private void getRule(String url) {
+        HttpUtils._get(RetrofitClient.getServiceApi().get_article_rules(mUrl), new HttpCallback<Rule>() {
+            @Override
+            public void onSuccess(Rule result) {
+                super.onSuccess(result);
+                if (isDestroyed())
+                    return;
+                mWebView.loadUrl(url);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                if (isDestroyed())
+                    return;
+                mWebView.loadUrl(url);
+
+            }
+        });
+
     }
 
 
@@ -106,7 +135,7 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
 //        mShareDialog.setTitle(title);
         mTitle = title;
 //        mShareDialog.init(this, title, "", mWebView.getUrl());
-//        mToolBar.setTitle("返回");
+        mToolbar.setTitle("返回");
     }
 
     @Override

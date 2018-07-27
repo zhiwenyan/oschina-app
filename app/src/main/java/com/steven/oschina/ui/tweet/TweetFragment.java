@@ -142,7 +142,7 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {
-            TweetDetailActivity.show(mContext, tweets.get(position));
+            TweetDetailActivity.show(mContext, mTweets.get(position));
         });
     }
 }

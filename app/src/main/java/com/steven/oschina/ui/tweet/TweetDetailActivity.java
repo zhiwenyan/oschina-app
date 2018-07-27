@@ -33,6 +33,7 @@ import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.comment.CommentBar;
 import com.steven.oschina.utils.PlatformUtil;
 import com.steven.oschina.utils.StringUtils;
+import com.steven.oschina.utils.TweetParser;
 import com.steven.oschina.widget.TweetPicturesLayout;
 import com.steven.oschina.widget.TweetTextView;
 
@@ -186,8 +187,11 @@ public class TweetDetailActivity extends BaseActivity {
         PlatformUtil.setPlatFromString(mTvClient, tweet.getAppClient());
         if (!TextUtils.isEmpty(tweet.getContent())) {
             String content = tweet.getContent().replaceAll("[\n\\s]+", " ");
-            mTvContent.setText(content);
+            mTvContent.setText(TweetParser.getInstance().parse(this, content));
             mTvContent.setMovementMethod(LinkMovementMethod.getInstance());
+            mTvContent.setDispatchToParent(false);
+            mTvContent.setFocusable(false);
+            mTvContent.setLongClickable(false);
         }
 
         /* -- about reference -- */

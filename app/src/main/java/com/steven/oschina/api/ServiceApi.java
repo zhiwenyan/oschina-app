@@ -10,6 +10,7 @@ import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.bean.tweet.TweetComment;
 import com.steven.oschina.bean.tweet.TweetLike;
+import com.steven.oschina.ui.web.Rule;
 
 import java.util.Map;
 
@@ -95,6 +96,10 @@ public interface ServiceApi {
     @FormUrlEncoded
     @POST("account_login?")
     Call<ResultBean<User>> login(@Field("account") String username, @Field("password") String password);
+
+
+    @GET("get_article_rules?")
+    Call<ResultBean<Rule>> get_article_rules(@Query("url") String url);
 
 
 }

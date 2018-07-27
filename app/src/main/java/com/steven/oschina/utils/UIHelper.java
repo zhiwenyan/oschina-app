@@ -306,14 +306,14 @@ public class UIHelper {
         return body;
     }
 //
-//    private static void showUrlRedirect(Context context, long id, String url) {
-//        if (url == null && id > 0) {
-//            NewsDetailActivity.show(context, id);
-//            return;
-//        }
-//
-//        URLUtils.parseUrl(context, url);
-//    }
+    private static void showUrlRedirect(Context context, long id, String url) {
+        if (url == null && id > 0) {
+            NewsDetailActivity.show(context, id);
+            return;
+        }
+
+        URLUtils.parseUrl(context, url);
+    }
 
 //    /**
 //     * url跳转
@@ -321,9 +321,9 @@ public class UIHelper {
 //     * @param context
 //     * @param url
 //     */
-//    public static void showUrlRedirect(Context context, String url) {
-//        showUrlRedirect(context, 0, url);
-//    }
+    public static void showUrlRedirect(Context context, String url) {
+        showUrlRedirect(context, 0, url);
+    }
 
     /**
      * 打开内置浏览器

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,7 +19,9 @@ import com.steven.oschina.api.ServiceApi;
 import com.steven.oschina.bean.simple.About;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.utils.StringUtils;
+import com.steven.oschina.utils.TweetParser;
 import com.steven.oschina.widget.TweetPicturesLayout;
+import com.steven.oschina.widget.TweetTextView;
 
 import java.util.List;
 
@@ -46,7 +49,7 @@ public class TweetAdapter extends CommonRecyclerAdapter<Tweet> implements View.O
         like.setOnClickListener(this);
         LinearLayout dispatch = holder.getView(R.id.ll_dispatch);
         dispatch.setOnClickListener(this);
-        TextView tweetContentTv = holder.getView(R.id.tv_tweet_content);
+        TweetTextView tweetContentTv = holder.getView(R.id.tv_tweet_content);
         holder.setText(R.id.tv_tweet_name, TextUtils.isEmpty(item.getAuthor().getName()) ? "匿名用户" : item.getAuthor().getName())
                 .setText(R.id.tv_tweet_time, StringUtils.formatSomeAgo(item.getPubDate()))
                 .setText(R.id.tv_tweet_content, item.getContent())
@@ -64,15 +67,20 @@ public class TweetAdapter extends CommonRecyclerAdapter<Tweet> implements View.O
                     .setText(R.id.tv_dispatch_count, item.getStatistics().getTransmit() > 0
                             ? item.getStatistics().getTransmit() + "" : "转发");
         }
-        // TODO: 7/17/2018  
         if (!TextUtils.isEmpty(item.getContent())) {
+            //     "content": "码云上使用osc账号授权登录，设置ssh公钥时“权限验证 当前账户密码” 是多少？
+            // 死都输不对，osc密码刚刚特意修改了的
+            // <a href=\"https://my.oschina.net/javayou\" class=\"referer\" target=\"_blank\">@红薯</a>
+
+//           "content": "GitHub 在国内无法访问之后，如何自救 " +
+//            "<a href='https://my.oschina.net/yuandi/blog/1863198' rel='nofollow' target='_blank'>https://my.oschina.net/yuandi/blog/1863198</a>",
             String content = item.getContent().replaceAll("[\n\\s]+", " ");
             //holder.mViewContent.setText(AssimilateUtils.assimilate(mContext, content));
-//            tweetContentTv.setText(TweetParser.getInstance().parse(mContext, content));
-//            tweetContentTv.setMovementMethod(LinkMovementMethod.getInstance());
-//            tweetContentTv.setFocusable(false);
-//            tweetContentTv.setDispatchToParent(true);
-//            tweetContentTv.setLongClickable(false);
+            tweetContentTv.setText(TweetParser.getInstance().parse(mContext, content));
+            tweetContentTv.setMovementMethod(LinkMovementMethod.getInstance());
+            tweetContentTv.setFocusable(false);
+            tweetContentTv.setDispatchToParent(true);
+            tweetContentTv.setLongClickable(false);
         }
         LinearLayout layoutRef = holder.getView(R.id.layout_ref);
         TextView viewRefTitle = holder.getView(R.id.tv_ref_title);

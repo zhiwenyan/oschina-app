@@ -24,7 +24,7 @@ import butterknife.Unbinder;
  * @author yanzhiwen
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    private Toolbar mToolbar;
+    protected Toolbar mToolbar;
     private Unbinder mUnbinder;
 
     @Override

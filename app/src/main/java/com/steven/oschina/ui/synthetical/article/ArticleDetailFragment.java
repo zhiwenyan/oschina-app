@@ -19,6 +19,7 @@ import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
 import com.steven.oschina.utils.DataFormat;
+import com.steven.oschina.utils.StringUtils;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.utils.TypeFormat;
 
@@ -115,6 +116,8 @@ public class ArticleDetailFragment extends BaseRecyclerFragment {
         TextView tv_pub_date = mHeaderView.findViewById(R.id.tv_pub_date);
         TextView tv_origin = mHeaderView.findViewById(R.id.tv_origin);
         TextView tv_detail_content = mHeaderView.findViewById(R.id.tv_detail_content);
+        TextView tv_text_count=mHeaderView.findViewById(R.id.tv_text_count);
+        TextView tv_text_time=mHeaderView.findViewById(R.id.tv_text_time);
         tv_title.setText(article.getTitle());
         tv_name.setText(TextUtils.isEmpty(article.getAuthorName()) ? "匿名" : article.getAuthorName());
         tv_pub_date.setText(DataFormat.parsePubDate(article.getPubDate()));
@@ -124,7 +127,8 @@ public class ArticleDetailFragment extends BaseRecyclerFragment {
         if (TextUtils.isEmpty(article.getSource())) {
             tv_origin.setVisibility(View.GONE);
         }
-
+        tv_text_count.setText(StringUtils.formatTextCount(article.getWordCount()));
+        tv_text_time.setText(StringUtils.formatTime(article.getReadTime()));
     }
 
     private void showArticleList(List<Article> articles) {

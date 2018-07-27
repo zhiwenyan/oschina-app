@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-
     implementation project(':base-library')
     implementation project(':recyclerview')
+    implementation files('libs/pinyin4j-2.5.0.jar')
 }
