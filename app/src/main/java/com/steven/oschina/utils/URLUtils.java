@@ -126,8 +126,6 @@ public class URLUtils {
         String path = matcher.group(2);
 
         if (TextUtils.isEmpty(host) || TextUtils.isEmpty(path)) return;
-        System.out.println("host========" + host);
-
         long oid = 0;
         switch (host) {
             case "www.oschina.net":

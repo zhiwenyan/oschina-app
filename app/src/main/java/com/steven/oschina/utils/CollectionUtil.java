@@ -53,7 +53,7 @@ public class CollectionUtil {
 
     public static <T> HashSet<T> toHashSet(T[] items) {
         if (items != null && items.length != 0) {
-            HashSet<T> set = new HashSet();
+            HashSet<T> set = new HashSet<>();
             Collections.addAll(set, items);
             return set;
         } else {
@@ -63,7 +63,7 @@ public class CollectionUtil {
 
     public static <T> ArrayList<T> toArrayList(T[] items) {
         if (items != null && items.length != 0) {
-            ArrayList<T> list = new ArrayList();
+            ArrayList<T> list = new ArrayList<>();
             Collections.addAll(list, items);
             return list;
         } else {
@@ -93,10 +93,10 @@ public class CollectionUtil {
     }
 
     public static <T> List<T> filter(List<T> source, CollectionUtil.Checker<T> checker) {
-        Iterator iterator = source.iterator();
+        Iterator<T> iterator = source.iterator();
 
-        while(iterator.hasNext()) {
-            if (!checker.check(( T ) iterator.next())) {
+        while (iterator.hasNext()) {
+            if (!checker.check(iterator.next())) {
                 iterator.remove();
             }
         }
@@ -106,7 +106,7 @@ public class CollectionUtil {
 
     public static <T> List<T> filter(T[] source, CollectionUtil.Checker<T> checker) {
         ArrayList<T> list = toArrayList(source);
-        return filter((List)list, checker);
+        return filter(( List<T> ) list, checker);
     }
 
     public interface Checker<T> {

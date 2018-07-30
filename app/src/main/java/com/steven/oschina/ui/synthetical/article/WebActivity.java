@@ -1,6 +1,5 @@
 package com.steven.oschina.ui.synthetical.article;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -17,6 +16,7 @@ import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseActivity;
+import com.steven.oschina.share.ShareDialog;
 import com.steven.oschina.ui.web.Rule;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.widget.OSCWebView;
@@ -36,7 +36,7 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
     @BindView(R.id.ll_root)
     LinearLayout mLinearRoot;
     private String mTitle;
-    //    protected ShareDialog mShareDialog;
+    protected ShareDialog mShareDialog;
     private String mUrl;
     private boolean isShowAd;
     private boolean isWebViewFinish;
@@ -79,16 +79,20 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
         mUrl = getIntent().getStringExtra("url");
         isShowAd = getIntent().getBooleanExtra("isShowAd", false);
         mWebView.loadUrl(mUrl);
-        //getRule(mUrl);
+        mShareDialog = new ShareDialog(this);
+//
+//        if (!TextUtils.isEmpty(mUrl))
+//            getRule(mUrl);
     }
 
     private void getRule(String url) {
         HttpUtils._get(RetrofitClient.getServiceApi().get_article_rules(mUrl), new HttpCallback<Rule>() {
             @Override
-            public void onSuccess(Rule result) {
-                super.onSuccess(result);
+            public void onSuccess(Rule rule) {
+                super.onSuccess(rule);
                 if (isDestroyed())
                     return;
+                mWebView.setRule(rule);
                 mWebView.loadUrl(url);
             }
 
@@ -105,7 +109,6 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
     }
 
 
-    @SuppressLint("SetTextI18n")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -118,10 +121,9 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
         switch (item.getItemId()) {
             case R.id.menu_share:
                 if (!TextUtils.isEmpty(mTitle) && !TextUtils.isEmpty(mUrl)) {
-//
-//                    mShareDialog.show();  mShareDialog.init(this, mWebView.getTitle(),
-////                            " ",
-////                            mWebView.getUrl());
+                    mShareDialog.show();
+                    mShareDialog.init(this, mWebView.getTitle(),
+                            " ", mWebView.getUrl());
                 }
                 break;
         }
@@ -132,9 +134,8 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
     public void onReceivedTitle(String title) {
         if (isDestroyed())
             return;
-//        mShareDialog.setTitle(title);
+        mShareDialog.setTitle(title);
         mTitle = title;
-//        mShareDialog.init(this, title, "", mWebView.getUrl());
         mToolbar.setTitle("返回");
     }
 
@@ -149,13 +150,10 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
         }
         if (progress >= 60 && !isWebViewFinish) {
             isWebViewFinish = true;
-            mWebView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isDestroyed())
-                        return;
-                    mWebView.setVisibility(View.VISIBLE);
-                }
+            mWebView.postDelayed(() -> {
+                if (isDestroyed())
+                    return;
+                mWebView.setVisibility(View.VISIBLE);
             }, 800);
         }
     }

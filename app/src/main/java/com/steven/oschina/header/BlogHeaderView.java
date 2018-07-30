@@ -10,6 +10,8 @@ import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
 import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.media.Util;
+import com.steven.oschina.bean.sub.SubTab;
+import com.steven.oschina.ui.synthetical.sub.SubActivity;
 
 import java.util.List;
 
@@ -24,6 +26,20 @@ public class BlogHeaderView extends HeaderView {
 
     public BlogHeaderView(Context context, String api, String cacheName, int catalog) {
         super(context, api, cacheName, catalog);
+        findViewById(R.id.tv_all).setOnClickListener(v -> {
+            SubTab tab = new SubTab();
+            tab.setName("每日一博");
+            tab.setFixed(false);
+            tab.setHref("https://www.oschina.net/action/apiv2/sub_list?token=1abf09a23a87442184c2f9bf9dc29e35");
+            tab.setNeedLogin(false);
+            tab.setSubtype(1);
+            tab.setOrder(4);
+            tab.setToken("1abf09a23a87442184c2f9bf9dc29e35");
+            tab.setType(3);
+
+            SubActivity.show(getContext(), tab);
+        });
+
     }
 
     @Override

@@ -69,6 +69,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
                  *（自动滚动）
                  */
                 // public static final int SCROLL_STATE_SETTLING = 2;
+
             }
 
             @Override
@@ -78,7 +79,6 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
                 if (mListener != null && isScrollBottom() && mLoadEnable) {
                     mListener.onLoadMore();
                     mStatus = STATUS_LOAD;
-
                 }
             }
         });

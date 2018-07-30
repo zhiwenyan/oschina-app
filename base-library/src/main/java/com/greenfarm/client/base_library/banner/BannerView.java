@@ -106,7 +106,7 @@ public class BannerView extends RelativeLayout {
     public void setAdapter(BannerAdapter adapter) {
         this.mAdapter = adapter;
         mBannerViewPager.setAdapter(adapter);
-        mBannerViewPager.setCurrentItem(mBannerViewPager.getChildCount() / 2);
+//        mBannerViewPager.setCurrentItem(mBannerViewPager.getChildCount());
         initDotIndicator();
         mBannerViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

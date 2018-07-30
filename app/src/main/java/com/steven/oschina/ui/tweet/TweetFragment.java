@@ -64,7 +64,7 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
 
     @Override
     public void requestCacheData() {
-        List<Tweet> tweets=null;
+        List<Tweet> tweets = null;
         switch (mReqCatalog) {
             case CATALOG_NEW:
                 CACHE_NAME = CACHE_NEW_TWEET;
@@ -124,8 +124,8 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
-                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, tweets);
                 showTweetList(tweets);
+                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, tweets);
             }
         });
     }

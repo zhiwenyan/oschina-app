@@ -125,7 +125,6 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
             mAdapter = getAdapter();
             mSwipeRefreshRv.setAdapter(mAdapter);
             initHeader();
-
         } else {
             mAdapter.notifyDataSetChanged();
         }
@@ -142,10 +141,10 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
                     BlogDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_TRANSLATE:
-                   NewsDetailActivity.show(mContext, subBean);
+                    NewsDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_EVENT:
-                    //            EventDetailActivity.show(mContext, subBean);
+                    //EventDetailActivity.show(mContext, subBean);
                     break;
                 case News.TYPE_NEWS:
                     NewsDetailActivity.show(mContext, subBean);

@@ -13,7 +13,6 @@
         android:smallScreens="true"
         android:xlargeScreens="true"/>
 
-
     <application
         android:name=".OSCApplication"
         android:allowBackup="true"
@@ -46,8 +45,6 @@
             android:label="发布选择"
             android:theme="@style/PubTheme">
         </activity>
-
-
         <activity
             android:name=".ui.tweet.TweetDetailActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -68,35 +65,31 @@
             android:label="图片预览"
             android:theme="@style/Theme.Dialog.NoTitle.Translucent">
         </activity>
-
-
         <activity
             android:name=".ui.tweet.LargeImageActivity"
             android:screenOrientation="portrait">
         </activity>
 
-
-        <!---detail activity-->
+        <!-- -detail activity -->
 
         <activity
             android:name=".ui.synthetical.article.EnglishArticleDetailActivity"
-            android:launchMode="singleTask"
             android:label="返回"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/App.Theme.Main">
         </activity>
         <activity
             android:name=".ui.synthetical.article.ArticleDetailActivity"
-            android:screenOrientation="portrait"
             android:label="返回"
+            android:screenOrientation="portrait"
             android:theme="@style/App.Theme.Main">
         </activity>
-
         <activity
             android:name=".ui.synthetical.sub.QuestionDetailActivity"
             android:label="问答详情"
-            android:theme="@style/App.Theme.Main"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
         </activity>
         <activity
             android:name=".ui.synthetical.sub.NewsDetailActivity"
@@ -110,14 +103,19 @@
             android:screenOrientation="portrait"
             android:theme="@style/App.Theme.Main">
         </activity>
-
         <activity
             android:name=".ui.synthetical.article.WebActivity"
-            android:windowSoftInputMode="adjustResize"
             android:label="返回"
             android:screenOrientation="portrait"
             android:theme="@style/App.Theme.Main"/>
-
+        <activity
+            android:name=".ui.synthetical.sub.SubActivity"
+            android:label="每日一博"
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
+        </activity>
+        <activity android:name=".ui.comment.CommentsActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -33,16 +33,17 @@ import static com.google.gson.internal.$Gson$Types.typeToString;
 public class CacheManager {
 
     public static <T> boolean saveToJson(Context context, String fileName, List<T> list) {
-        if (context == null || list == null) {
+        if (context == null || list == null)
             return false;
-        }
         String path = context.getCacheDir() + "/" + fileName + ".json";
         File file = new File(path);
         if (list.size() == 0) {
             return !file.exists() || file.delete();
         }
+
         try {
-            return (!file.exists() && file.createNewFile()) && save(file, list);
+            return !(!file.exists() && !file.createNewFile())
+                    && save(file, list);
         } catch (Exception e) {
             e.printStackTrace();
         }

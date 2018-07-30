@@ -18,6 +18,7 @@ import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.bean.comment.Comment;
 import com.steven.oschina.bean.media.Util;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Author;
@@ -28,8 +29,10 @@ import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.OWebView;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
 import com.steven.oschina.ui.synthetical.article.ArticleDetailActivity;
+import com.steven.oschina.ui.synthetical.article.WebActivity;
 import com.steven.oschina.utils.StringUtils;
 import com.steven.oschina.utils.TypeFormat;
+import com.steven.oschina.widget.CommentView;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
 
 import java.util.ArrayList;
@@ -49,6 +52,7 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
     private TextView mPubDate;
     private TextView mTextAbstract;
     private Button mBtnRelation;
+    private CommentView mCommentView;
 
     @Override
     public void initBundle(Bundle bundle) {
@@ -70,6 +74,7 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
             mPubDate = mHeaderView.findViewById(R.id.tv_pub_date);
             mBtnRelation = mHeaderView.findViewById(R.id.btn_relation);
             mTextAbstract = mHeaderView.findViewById(R.id.tv_detail_abstract);
+            mCommentView = mHeaderView.findViewById(R.id.cv_comment);
             if (mContext == null) return;
             //码云挂件替换
             if (mWebView != null) {
@@ -117,13 +122,9 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
         ImageLoader.load(mContext, mAvatarIv, author.getPortrait());
         mAuthorName.setText(author.getName());
         mPubDate.setText(StringUtils.formatYearMonthDay(mSubBean.getPubDate()));
-        if (mTextAbstract != null && mSubBean.getSummary() != null) {
+        if (mTextAbstract != null && mSubBean.getSummary() != null && !TextUtils.isEmpty(mSubBean.getSummary())) {
             mTextAbstract.setText(mSubBean.getSummary());
-            if (TextUtils.isEmpty(mSubBean.getSummary())) {
-                mRootView.findViewById(R.id.line3).setVisibility(View.GONE);
-                mRootView.findViewById(R.id.line4).setVisibility(View.GONE);
-                mTextAbstract.setVisibility(View.GONE);
-            }
+            mHeaderView.findViewById(R.id.lay_blog_detail_abstract).setVisibility(View.VISIBLE);
         }
         mBtnRelation.setText(mSubBean.getAuthor().getRelation() < UserRelation.RELATION_ONLY_HER
                 ? "已关注" : "关注");
@@ -201,6 +202,7 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
             mSwipeRefreshRv.setAdapter(mAdapter);
             mRefreshRv.addHeaderView(mHeaderView);
             showAuthor();
+            showCommentView();
         } else {
             mAdapter.notifyDataSetChanged();
         }
@@ -210,7 +212,7 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
                 return;
             if (top.getType() == 0) {
                 if (TypeFormat.isGit(top)) {
-//                WebActivity.show(mContext, TypeFormat.formatUrl(top));
+                    WebActivity.show(mContext, TypeFormat.formatUrl(top));
                 } else {
                     ArticleDetailActivity.show(mContext, top);
                 }
@@ -220,7 +222,7 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
                     long id = top.getOscId();
                     switch (type) {
                         case News.TYPE_SOFTWARE:
-                            //  SoftwareDetailActivity.show(mContext, id);
+                            //SoftwareDetailActivity.show(mContext, id);
                             break;
                         case News.TYPE_QUESTION:
                             QuestionDetailActivity.show(mContext, id);
@@ -229,16 +231,16 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
                             BlogDetailActivity.show(mContext, id);
                             break;
                         case News.TYPE_TRANSLATE:
-                            //     NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                            NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
                             break;
                         case News.TYPE_EVENT:
-                            //      EventDetailActivity.show(mContext, id);
+                            //EventDetailActivity.show(mContext, id);
                             break;
                         case News.TYPE_NEWS:
                             NewsDetailActivity.show(mContext, id);
                             break;
                         default:
-                            //      UIHelper.showUrlRedirect(mContext, top.getUrl());
+                            //UIHelper.showUrlRedirect(mContext, top.getUrl());
                             break;
                     }
 
@@ -248,6 +250,28 @@ public abstract class DetailFragment extends BaseRecyclerFragment {
                 }
             }
         });
+    }
+
+    private void showCommentView() {
+        SubBean.Statistics statistics = mSubBean.getStatistics();
+        if (statistics == null)
+            return;
+        mCommentView.setShareTitle(mSubBean.getTitle());
+        mCommentView.setTitle(String.format("%s (%d)", getResources().getString(R.string.answer_hint), mSubBean.getStatistics().getComment()));
+        mCommentView.init(mSubBean.getId(),
+                mSubBean.getType(),
+                2,
+                mSubBean.getStatistics().getComment(), new CommentView.OnCommentClickListener() {
+                    @Override
+                    public void onClick(View view, Comment comment) {
+
+                    }
+
+                    @Override
+                    public void onShowComment(View view) {
+
+                    }
+                });
     }
 
     protected abstract View getHeaderView();

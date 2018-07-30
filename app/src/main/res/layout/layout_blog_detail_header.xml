@@ -130,6 +130,7 @@
         <!--摘要-->
         <LinearLayout
             android:id="@+id/lay_blog_detail_abstract"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -212,13 +213,12 @@
             tools:text="写的不错，打赏作者"/>
 
 
-        <!--to do-->
-        <!--<net.oschina.app.improve.detail.v2.CommentView-->
-        <!--android:id="@+id/cv_comment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="32dp"-->
-        <!--android:background="@color/ques_detail_bg_color" />-->
+        <com.steven.oschina.widget.CommentView
+            android:id="@+id/cv_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:background="@color/ques_detail_bg_color"/>
 
         <View
             android:id="@+id/line1"

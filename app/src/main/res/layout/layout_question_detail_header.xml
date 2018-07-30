@@ -122,6 +122,7 @@
         <!--摘要-->
         <LinearLayout
             android:id="@+id/lay_blog_detail_abstract"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -164,8 +165,6 @@
             android:paddingRight="16dp">
 
 
-
-
             <com.steven.oschina.ui.OWebView
                 android:id="@+id/webView"
                 android:scrollbars="none"
@@ -173,30 +172,30 @@
                 android:layout_height="match_parent"/>
 
 
-
         </FrameLayout>
 
         <!--<net.oschina.common.widget.FlowLayout-->
-            <!--android:id="@+id/flowLayout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:visibility="gone"-->
-            <!--android:layout_marginLeft="@dimen/lay_16"-->
-            <!--android:layout_marginRight="@dimen/lay_16"-->
-            <!--android:layout_marginBottom="@dimen/lay_12"-->
-            <!--app:oscHorizontalSpace="8dp"-->
-            <!--app:oscVerticalSpace="8dp"/>-->
+        <!--android:id="@+id/flowLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_marginLeft="@dimen/lay_16"-->
+        <!--android:layout_marginRight="@dimen/lay_16"-->
+        <!--android:layout_marginBottom="@dimen/lay_12"-->
+        <!--app:oscHorizontalSpace="8dp"-->
+        <!--app:oscVerticalSpace="8dp"/>-->
 
         <View
             style="@style/h_line"
             android:visibility="visible"/>
 
-        <!--<net.oschina.app.improve.detail.v2.CommentView-->
-        <!--android:id="@+id/cv_comment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="32dp"-->
-        <!--android:background="@color/ques_detail_bg_color"/>-->
+
+        <com.steven.oschina.widget.CommentView
+            android:id="@+id/cv_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:background="@color/ques_detail_bg_color"/>
 
 
         <View
