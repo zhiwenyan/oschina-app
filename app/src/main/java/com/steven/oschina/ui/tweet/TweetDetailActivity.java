@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.AppContext;
@@ -126,14 +125,12 @@ public class TweetDetailActivity extends BaseActivity {
         mDelegation.getBottomSheet().getEditText().setOnKeyArrivedListener(new OnKeyArrivedListenerAdapterV2(this));
         mDelegation.getBottomSheet().showEmoji();
         mDelegation.getBottomSheet().hideSyncAction();
-        mDelegation.getBottomSheet().setCommitListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String content = mDelegation.getBottomSheet().getCommentText().replaceAll("[\\s\\n]+", " ");
-                if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(TweetDetailActivity.this, "请输入文字", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        mDelegation.getBottomSheet().setCommitListener(v -> {
+            String content = mDelegation.getBottomSheet().getCommentText().replaceAll("[\\s\\n]+", " ");
+            if (TextUtils.isEmpty(content)) {
+                showToast("请输入文字");
+                return;
+            }
 //                if (!AccountHelper.isLogin()) {
 //                    UIHelper.showLoginActivity(TweetDetailActivity.this);
 //                    return;
@@ -141,7 +138,6 @@ public class TweetDetailActivity extends BaseActivity {
 //                if (replies.size() > 0)
 //                    content = mDelegation.getBottomSheet().getEditText().getHint() + ": " + content;
 //                OSChinaApi.pubTweetComment(tweet.getId(), content, 0, publishCommentHandler);
-            }
         });
 
 

@@ -1,5 +1,6 @@
 package com.steven.oschina.emoji;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import java.util.List;
  *
  * @author yanzhiwen
  */
+@SuppressLint("ViewConstructor")
 public class FaceRecyclerView extends RecyclerView implements OnItemClickListener {
     private FaceAdapter mAdapter;
     private final List<Emojicon> mData = new ArrayList<>();

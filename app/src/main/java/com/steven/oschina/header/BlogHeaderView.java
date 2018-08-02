@@ -9,7 +9,7 @@ import com.greenfarm.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
 import com.steven.oschina.bean.banner.Banner;
-import com.steven.oschina.bean.media.Util;
+import com.steven.oschina.media.Util;
 import com.steven.oschina.bean.sub.SubTab;
 import com.steven.oschina.ui.synthetical.sub.SubActivity;
 

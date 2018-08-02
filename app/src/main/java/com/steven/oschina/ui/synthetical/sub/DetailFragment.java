@@ -19,7 +19,7 @@ import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerFragment;
 import com.steven.oschina.bean.comment.Comment;
-import com.steven.oschina.bean.media.Util;
+import com.steven.oschina.media.Util;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Author;
 import com.steven.oschina.bean.sub.News;

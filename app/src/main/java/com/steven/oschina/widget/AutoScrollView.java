@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 
-import com.steven.oschina.bean.media.Util;
+import com.steven.oschina.media.Util;
 
 /**
  * Description:

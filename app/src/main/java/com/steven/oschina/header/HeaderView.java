@@ -15,7 +15,7 @@ import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.bean.banner.Banner;
-import com.steven.oschina.bean.media.Util;
+import com.steven.oschina.media.Util;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.ui.synthetical.article.WebActivity;
 import com.steven.oschina.utils.UIHelper;

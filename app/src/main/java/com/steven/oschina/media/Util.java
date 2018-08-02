@@ -1,12 +1,16 @@
-package com.steven.oschina.bean.media;
+package com.steven.oschina.media;
 
 import android.content.Context;
 import android.os.Environment;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.steven.oschina.media.bean.Image;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 选择图片库相关工具类
@@ -30,29 +34,29 @@ public class Util {
         return "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";// 照片命名
     }
 
-//    public static ArrayList<String> toArrayList(List<Image> images) {
-//        ArrayList<String> strings = new ArrayList<>();
-//        for (Image i : images) {
-//            strings.add(i.getPath());
-//        }
-//        return strings;
-//    }
-//
-//    public static String[] toArray(List<Image> images) {
-//        if (images == null)
-//            return null;
-//        int len = images.size();
-//        if (len == 0)
-//            return null;
-//
-//        String[] strings = new String[len];
-//        int i = 0;
-//        for (Image image : images) {
-//            strings[i] = image.getPath();
-//            i++;
-//        }
-//        return strings;
-//    }
+    public static ArrayList<String> toArrayList(List<Image> images) {
+        ArrayList<String> strings = new ArrayList<>();
+        for (Image i : images) {
+            strings.add(i.getPath());
+        }
+        return strings;
+    }
+
+    public static String[] toArray(List<Image> images) {
+        if (images == null)
+            return null;
+        int len = images.size();
+        if (len == 0)
+            return null;
+
+        String[] strings = new String[len];
+        int i = 0;
+        for (Image image : images) {
+            strings[i] = image.getPath();
+            i++;
+        }
+        return strings;
+    }
 
     /**
      * 获得屏幕的宽度

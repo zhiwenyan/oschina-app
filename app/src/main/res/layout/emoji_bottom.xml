@@ -15,8 +15,8 @@
         android:gravity="center"
         android:padding="@dimen/lay_8"
         android:text="QQ表情"
-        android:textColor="?attr/infoTextColor"
-        android:textSize="@dimen/font_14" />
+        android:textColor="@color/tab_txt_color"
+        android:textSize="@dimen/font_14"/>
 
     <TextView
         android:id="@+id/tv_emoji"
@@ -27,8 +27,9 @@
         android:gravity="center"
         android:padding="@dimen/lay_8"
         android:text="Emoji表情"
-        android:textColor="?attr/infoTextColor"
-        android:textSize="@dimen/font_14" />
+        android:textColor="@color/tab_txt_color"
+        android:textSize="@dimen/font_14"/>
+
 
     <ImageView
         android:id="@+id/btn_del"
@@ -39,6 +40,6 @@
         android:gravity="center"
         android:padding="@dimen/lay_4"
         android:scaleType="centerInside"
-        android:src="@mipmap/btn_del" />
+        android:src="@mipmap/btn_del"/>
 
 </LinearLayout>

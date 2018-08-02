@@ -32,6 +32,8 @@ public class FacePanelView extends LinearLayout implements View.OnClickListener,
     private boolean mKeyboardShowing;
     private AtomicBoolean mWillShowPanel = new AtomicBoolean();
     private int mRealHeight;
+    private int mFacePosition;
+    private ViewGroup mBottomView;
 
     public FacePanelView(Context context) {
         super(context);
@@ -62,8 +64,9 @@ public class FacePanelView extends LinearLayout implements View.OnClickListener,
         mViewPager = findViewById(R.id.view_pager);
         findViewById(R.id.tv_qq).setOnClickListener(this);
         findViewById(R.id.tv_emoji).setOnClickListener(this);
+        findViewById(R.id.tv_qq).setSelected(true);
         findViewById(R.id.btn_del).setOnClickListener(this);
-
+        mBottomView=findViewById(R.id.emoji_bottom);
         mViewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -91,9 +94,20 @@ public class FacePanelView extends LinearLayout implements View.OnClickListener,
                 }
             }
         });
-
         // init soft keyboard helper
         SoftKeyboardUtil.attach(( Activity ) getContext(), this);
+
+
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                mBottomView.getChildAt(mFacePosition).setSelected(false);
+                mFacePosition = position;
+                mBottomView.getChildAt(position).setSelected(true);
+
+            }
+        });
     }
 
     @Override

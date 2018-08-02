@@ -58,15 +58,12 @@ public class CommentBar {
         mDispatchLayout = mRootView.findViewById(R.id.ll_dispatch);
         mLikeLayout = mRootView.findViewById(R.id.ll_like);
         mImageLike = mRootView.findViewById(R.id.iv_thumbup);
-        mCommentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //      if (AccountHelper.isLogin()) {
-                mDelegation.show(mCommentText.getHint().toString());
-                //      } else {
-                //          LoginActivity.show(mContext);
-                //    }
-            }
+        mCommentLayout.setOnClickListener(v -> {
+            //      if (AccountHelper.isLogin()) {
+            mDelegation.show(mCommentText.getHint().toString());
+            //      } else {
+            //          LoginActivity.show(mContext);
+            //    }
         });
     }
 

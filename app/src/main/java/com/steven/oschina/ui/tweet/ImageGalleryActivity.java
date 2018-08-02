@@ -185,7 +185,6 @@ public class ImageGalleryActivity extends BaseActivity {
 //                //这样，就不会拦截触摸操作，子View就可以获得触摸事件
 //                mVpImage.getChildAt(mCurrentPosition).getParent().requestDisallowInterceptTouchEvent(true);
 //            }
-
             mVpImage.isInterceptable(isReached);
 
 

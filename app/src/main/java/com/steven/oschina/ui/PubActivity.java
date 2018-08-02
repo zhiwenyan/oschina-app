@@ -16,7 +16,8 @@ import android.widget.RelativeLayout;
 import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
-import com.steven.oschina.bean.media.Util;
+import com.steven.oschina.media.Util;
+import com.steven.oschina.ui.tweet.TweetPublishActivity;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -29,7 +30,7 @@ public class PubActivity extends BaseActivity {
     ImageView mBtnPub;
     @BindView(R.id.rl_main)
     RelativeLayout mRlMain;
-    //绑定多个View
+    //绑定多个View使用BindViews
     @BindViews({R.id.ll_pub_article, R.id.ll_pub_blog, R.id.ll_pub_tweet})
     LinearLayout[] mLays;
 
@@ -126,13 +127,16 @@ public class PubActivity extends BaseActivity {
                 dismiss();
                 break;
             case R.id.ll_pub_tweet:
+                TweetPublishActivity.show(this, this.findViewById(R.id.nav_item_tweet_pub));
                 break;
             case R.id.ll_pub_article:
                 break;
             case R.id.ll_pub_blog:
                 break;
         }
+        finish();
     }
+
     @Override
     public void finish() {
         super.finish();
