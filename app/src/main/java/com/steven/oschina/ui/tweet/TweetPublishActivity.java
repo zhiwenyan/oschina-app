@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.bean.simple.About;
@@ -81,7 +80,6 @@ public class TweetPublishActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        StatusBarUtil.setStatusBarTrans(this, true);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 

@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.AppContext;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
@@ -85,9 +84,6 @@ public class TweetDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        StatusBarUtil.setStatusBarTrans(this, true);
-        setDarkToolBar();
-
         tweet = ( Tweet ) getIntent().getSerializableExtra(BUNDLE_KEY_TWEET);
         if (tweet == null) {
             AppContext.showToastShort("对象没找到");

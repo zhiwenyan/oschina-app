@@ -117,11 +117,11 @@ public class ImageGalleryActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        int len = mImageSources.length;
-        if (mCurrentPosition < 0 || mCurrentPosition >= len) {
+        int length = mImageSources.length;
+        if (mCurrentPosition < 0 || mCurrentPosition >= length) {
             mCurrentPosition = 0;
         }
-        mIndexTv.setText(String.format("%s/%s", (mCurrentPosition + 1), mImageSources.length));
+        mIndexTv.setText(String.format("%s/%s", (mCurrentPosition + 1), length));
         //set adapter
         mVpImage.setAdapter(new ImagePagerAdapter());
         mVpImage.setCurrentItem(mCurrentPosition);
@@ -130,7 +130,7 @@ public class ImageGalleryActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 mCurrentPosition = position;
-                mIndexTv.setText(String.format("%s/%s", (position + 1), mImageSources.length));
+                mIndexTv.setText(String.format("%s/%s", (position + 1),length));
                 // 滑动时自动切换当前的下载状态
                 changeSaveButtonStatus(mImageDownloadStatus[position]);
             }

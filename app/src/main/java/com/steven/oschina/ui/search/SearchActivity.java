@@ -11,7 +11,17 @@ import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerActivity;
 import com.steven.oschina.bean.search.SearchBean;
 import com.steven.oschina.bean.sub.Article;
+import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.ui.adapter.SearchAdapter;
+import com.steven.oschina.ui.synthetical.article.ArticleDetailActivity;
+import com.steven.oschina.ui.synthetical.article.EnglishArticleDetailActivity;
+import com.steven.oschina.ui.synthetical.article.WebActivity;
+import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
+import com.steven.oschina.utils.TDevice;
+import com.steven.oschina.utils.TypeFormat;
+import com.steven.oschina.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,12 +121,53 @@ public class SearchActivity extends BaseRecyclerActivity {
         mArticles.addAll(result);
         if (mAdapter == null) {
             mAdapter = new SearchAdapter(this, mArticles, R.layout.item_sub_news);
+            mSwipeRefreshRv.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mSwipeRefreshRv.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(position -> {
-
+            Article top = mArticles.get(position);
+            if (top == null) {
+                return;
+            }
+            if (!TDevice.hasWebView(this))
+                return;
+            if (top.getType() == 0) {
+                if (TypeFormat.isGit(top)) {
+                    WebActivity.show(this, TypeFormat.formatUrl(top));
+                } else {
+                    ArticleDetailActivity.show(this, top);
+                }
+            } else {
+                int type = top.getType();
+                long id = top.getOscId();
+                switch (type) {
+                    case News.TYPE_SOFTWARE:
+                        //    SoftwareDetailActivity.show(this, id);
+                        break;
+                    case News.TYPE_QUESTION:
+                        QuestionDetailActivity.show(this, id);
+                        break;
+                    case News.TYPE_BLOG:
+                        BlogDetailActivity.show(this, id);
+                        break;
+                    case News.TYPE_TRANSLATE:
+                        NewsDetailActivity.show(this, id, News.TYPE_TRANSLATE);
+                        break;
+                    case News.TYPE_EVENT:
+                        //    EventDetailActivity.show(this, id);
+                        break;
+                    case News.TYPE_NEWS:
+                        NewsDetailActivity.show(this, id);
+                        break;
+                    case Article.TYPE_ENGLISH:
+                        EnglishArticleDetailActivity.show(this, top);
+                        break;
+                    default:
+                        UIHelper.showUrlRedirect(this, top.getUrl());
+                        break;
+                }
+            }
         });
     }
 }

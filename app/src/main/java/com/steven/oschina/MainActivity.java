@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity {
         mCurrentNavigationButton = mNavItemNews;
         mFragmentManagerHelper = new FragmentManagerHelper(getSupportFragmentManager(), R.id.container);
         mSyntheticalFragment = SyntheticalPagerFragment.newInstance();
-        mFragmentManagerHelper.add(mSyntheticalFragment);
+        mFragmentManagerHelper.switchFragment(mSyntheticalFragment);
 
 
     }

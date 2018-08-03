@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.greenfarm.client.base_library.utils.AppManagerUtil;
+import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.greenfarm.client.base_library.utils.ToastUtil;
 import com.steven.oschina.R;
 
@@ -42,6 +43,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 actionBar.setHomeButtonEnabled(false);
             }
         }
+        StatusBarUtil.setStatusBarTrans(this, true);
+        setDarkToolBar();
         initBundle(getIntent().getExtras());
         initData();
 

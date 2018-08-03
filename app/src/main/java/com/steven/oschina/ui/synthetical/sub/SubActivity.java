@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.bean.sub.SubTab;
@@ -26,8 +25,6 @@ public class SubActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        StatusBarUtil.setStatusBarTrans(this, true);
-        setDarkToolBar();
         SubTab tab = ( SubTab ) getIntent().getSerializableExtra("sub_tab");
         setTitle(tab.getName());
         FragmentManagerHelper fragmentManagerHelper = new FragmentManagerHelper(getSupportFragmentManager(), R.id.fl_content);

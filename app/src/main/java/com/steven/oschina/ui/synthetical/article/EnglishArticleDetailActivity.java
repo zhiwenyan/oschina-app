@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.bean.sub.Article;
@@ -37,8 +36,6 @@ public class EnglishArticleDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        StatusBarUtil.setStatusBarTrans(this, true);
-        setDarkToolBar();
         addFragment(R.id.fl_content, EnglishArticleDetailFragment.newInstance(mArticle));
     }
 

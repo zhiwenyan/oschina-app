@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
@@ -68,7 +67,6 @@ public class WebActivity extends BaseActivity implements OSCWebView.OnFinishList
 
     @Override
     protected void initData() {
-        StatusBarUtil.setStatusBarTrans(this, true);
         mWebView = new OSCWebView(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
         params.weight = 1;

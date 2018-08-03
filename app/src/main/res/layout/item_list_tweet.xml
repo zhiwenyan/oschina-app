@@ -128,6 +128,13 @@
         android:layout_marginRight="16dp"
         android:visibility="gone"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_tweet_pictures"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        app:spanCount="3"/>
+
 
     <!--&lt;!&ndash;about reference&ndash;&gt;-->
     <LinearLayout

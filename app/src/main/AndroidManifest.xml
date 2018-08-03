@@ -64,8 +64,10 @@
         <activity
             android:name=".ui.tweet.ImageGalleryActivity"
             android:label="图片预览"
-            android:theme="@style/Theme.Dialog.NoTitle.Translucent">
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
         </activity>
+
         <activity
             android:name=".ui.tweet.LargeImageActivity"
             android:screenOrientation="portrait">
@@ -129,9 +131,22 @@
         </activity>
         <activity
             android:name=".ui.tweet.SelectImageActivity"
-            android:theme="@style/App.Theme.Main"
             android:label="选择图片"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
+        </activity>
+        <activity
+            android:name=".ui.synthetical.article.PubArticleActivity"
+            android:label="投递文章"
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
+        </activity>
+        <activity
+            android:name=".ui.synthetical.article.WriteBlogActivity"
+            android:theme="@style/App.Theme.Main"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:label="写博客">
         </activity>
     </application>
 

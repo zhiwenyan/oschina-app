@@ -17,6 +17,8 @@ import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.media.Util;
+import com.steven.oschina.ui.synthetical.article.PubArticleActivity;
+import com.steven.oschina.ui.synthetical.article.WriteBlogActivity;
 import com.steven.oschina.ui.tweet.TweetPublishActivity;
 
 import butterknife.BindView;
@@ -130,8 +132,10 @@ public class PubActivity extends BaseActivity {
                 TweetPublishActivity.show(this, this.findViewById(R.id.nav_item_tweet_pub));
                 break;
             case R.id.ll_pub_article:
+                PubArticleActivity.show(this, "");
                 break;
             case R.id.ll_pub_blog:
+                WriteBlogActivity.show(this);
                 break;
         }
         finish();
