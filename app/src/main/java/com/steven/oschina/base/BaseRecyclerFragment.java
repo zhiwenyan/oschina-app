@@ -1,7 +1,7 @@
 package com.steven.oschina.base;
 
-import com.greenfarm.client.base_library.utils.NetworkUtils;
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.base_library.utils.NetworkUtils;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.R;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
 

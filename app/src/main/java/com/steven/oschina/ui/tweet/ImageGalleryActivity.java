@@ -242,6 +242,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
                     int width = options.outWidth;
                     int height = options.outHeight;
+
                     BitmapUtil.resetOptions(options);
 
                     if (width > 0 && height > 0) {

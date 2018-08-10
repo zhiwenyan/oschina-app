@@ -2,7 +2,7 @@ package com.steven.oschina.bean.sub;
 
 import android.text.TextUtils;
 
-import com.greenfarm.client.base_library.log.LogUtils;
+import com.oschina.client.base_library.log.LogUtils;
 import com.steven.oschina.api.RetrofitClient;
 
 import java.io.Serializable;

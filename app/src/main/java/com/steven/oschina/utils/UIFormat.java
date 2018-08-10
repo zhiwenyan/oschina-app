@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
+import com.steven.oschina.ui.tweet.TweetDetailActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -126,7 +131,7 @@ public final class UIFormat {
                 matcher = PATTERN_PATH_NEWS.matcher(path);
                 if (matcher.find()) {
                     oid = StringUtils.toLong(matcher.group(1));
-//                    NewsDetailActivity.show(context, oid);
+                    NewsDetailActivity.show(context, oid);
                     break;
                 }
                 matcher = PATTERN_PATH_SOFTWARE.matcher(path);
@@ -142,20 +147,20 @@ public final class UIFormat {
                 matcher = PATTERN_PATH_TWEET_TOPIC.matcher(path);
                 if (matcher.find()) {
                     // TODO replace by new activity
-//                    TopicActivity.show(context, TweetFragment.CATALOG_TAG, matcher.group(1));
+                    //  TopicActivity.show(context, TweetFragment.CATALOG_TAG, matcher.group(1));
                     break;
                 }
                 matcher = PATTERN_PATH_QUESTION.matcher(path);
                 if (matcher.find()) {
                     oid = StringUtils.toLong(matcher.group(1).split("_")[1]);
-//                    QuestionDetailActivity.show(context, oid);
+                    QuestionDetailActivity.show(context, oid);
                     break;
                 }
                 matcher = PATTERN_PATH_EVENT.matcher(path);
                 if (matcher.find()) {
                     oid = StringUtils.toLong(matcher.group(1));
                     if (oid > 0) {
-//                        EventDetailActivity.show(context, oid);
+//                       EventDetailActivity.show(context, oid);
                         break;
                     }
                 }
@@ -186,34 +191,34 @@ public final class UIFormat {
                 matcher = PATTERN_PATH_USER_BLOG.matcher(path);
                 if (matcher.find()) {
                     oid = StringUtils.toLong(matcher.group(2));
-                 //   BlogDetailActivity.show(context, oid);
+                       BlogDetailActivity.show(context, oid);
                     break;
                 }
                 matcher = PATTERN_PATH_USER_TWEET.matcher(path);
                 if (matcher.find()) {
                     oid = StringUtils.toLong(matcher.group(2));
-                  //  TweetDetailActivity.show(context, oid);
+                     TweetDetailActivity.show(context, oid);
                     break;
                 }
                 matcher = PATTERN_PATH_USER_UID.matcher(path);
                 if (matcher.find()) {
                     oid = StringUtils.toLong(matcher.group(1));
-                 //   OtherUserHomeActivity.show(context, oid);
+                   //  OtherUserHomeActivity.show(context, oid);
                     break;
                 }
                 matcher = PATTERN_PATH_USER_SUFFIX.matcher(path);
                 if (matcher.find()) {
-                 //   OtherUserHomeActivity.show(context, 0, matcher.group(1));
+                    //   OtherUserHomeActivity.show(context, 0, matcher.group(1));
                     break;
                 }
-            //    UIHelper.openInternalBrowser(context, url);
+                //    UIHelper.openInternalBrowser(context, url);
                 break;
             case "city.oschina.net":
                 matcher = PATTERN_PATH_CITY_EVENT.matcher(url);
                 if (matcher.find()) {
                     long eid = StringUtils.toInt(matcher.group(2), 0);
                     if (eid <= 0) return;
-         //           UIHelper.showEventDetail(context, eid);
+                    //           UIHelper.showEventDetail(context, eid);
                     return;
                 }
                 openAPPBrowser(context, url);
@@ -245,7 +250,7 @@ public final class UIFormat {
      * @param url     url
      */
     private static void openAPPBrowser(Context context, String url) {
-     //   WebActivity.show(context, url);
+        //   WebActivity.show(context, url);
     }
 
     /**

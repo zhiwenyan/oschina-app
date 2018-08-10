@@ -17,7 +17,7 @@ import android.view.ViewConfiguration;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.greenfarm.client.recyclerview.widget.WrapRecyclerView;
+import com.oschina.client.recyclerview.widget.WrapRecyclerView;
 import com.steven.oschina.R;
 
 /**
@@ -34,7 +34,8 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
     private boolean mLoadEnable = true;
     private final int STATUS_LOAD = 2, STATUS_REFRESH = 1;
     private int mStatus = STATUS_REFRESH;
-    private int mBottomCount;
+    private int mBottomViewCount;
+    private int mHeaderViewCount;
     private int mYDown;
     private int mLastY;
     private int mTouchSlop;
@@ -104,7 +105,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
             mLoadMoreTv = mLoadMoreView.findViewById(R.id.tv_footer);
         }
         mRecyclerView.addFooterView(mLoadMoreView);
-        mBottomCount++;
+        mBottomViewCount++;
     }
 
     @Override
@@ -148,7 +149,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
      */
     public void addHeaderView(View view) {
         mRecyclerView.addHeaderView(view);
-        mBottomCount++;
+        mHeaderViewCount++;
     }
 
     /**
@@ -158,7 +159,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
         //第一个可见item的位置 + 当前可见的item个数 >= item的总个数-头部底部的View的个数
         //这样就可以判断出来，是在底部了。
         return (mRecyclerView != null && mRecyclerView.getAdapter() != null)
-                && getLastVisiblePosition() == (mRecyclerView.getAdapter().getItemCount() - mBottomCount);
+                && getLastVisiblePosition() == (mRecyclerView.getAdapter().getItemCount() - mHeaderViewCount - mBottomViewCount);
     }
 
     /**

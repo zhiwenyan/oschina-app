@@ -3,7 +3,7 @@ package com.steven.oschina.ui.synthetical.sub;
 
 import android.os.Bundle;
 
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;

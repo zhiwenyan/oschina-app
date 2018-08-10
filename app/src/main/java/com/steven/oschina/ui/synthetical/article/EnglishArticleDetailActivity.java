@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
+import com.oschina.client.base_library.utils.FragmentManagerHelper;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.bean.sub.Article;

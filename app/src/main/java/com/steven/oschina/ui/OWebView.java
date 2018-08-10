@@ -15,7 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.greenfarm.client.base_library.log.LogUtils;
+import com.oschina.client.base_library.log.LogUtils;
 import com.steven.oschina.AppConfig;
 import com.steven.oschina.AppContext;
 import com.steven.oschina.interf.OnWebViewImageListener;
@@ -72,17 +72,15 @@ public class OWebView extends WebView {
         settings.setDisplayZoomControls(false);
         settings.setJavaScriptEnabled(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            addJavascriptInterface(new OnWebViewImageListener() {
-                @Override
-                @JavascriptInterface
-                public void showImagePreview(String bigImageUrl) {
-                    if (bigImageUrl != null && !StringUtils.isEmpty(bigImageUrl)) {
-                        ImageGalleryActivity.show(getContext(), bigImageUrl);
-                    }
+        addJavascriptInterface(new OnWebViewImageListener() {
+            @Override
+            @JavascriptInterface
+            public void showImagePreview(String bigImageUrl) {
+                if (bigImageUrl != null && !StringUtils.isEmpty(bigImageUrl)) {
+                    ImageGalleryActivity.show(getContext(), bigImageUrl);
                 }
-            }, "mWebViewImageListener");
-        }
+            }
+        }, "mWebViewImageListener");
     }
 
     public void loadDetailDataAsync(final String content) {
@@ -235,7 +233,7 @@ public class OWebView extends WebView {
             content = content.replaceAll("<\\s*img\\s+([^>]*)\\s*/>", "");
         }
         //自适应图片大小
-        content = content.replaceAll("<img", "<img style='max-width:100%;height:auto;'");
+        //   content = content.replaceAll("<img", "<img style='max-width:100%;height:auto;'");
 
         // 过滤table的内部属性
         content = content.replaceAll("(<table[^>]*?)\\s+border\\s*=\\s*\\S+", "$1");

@@ -2,7 +2,7 @@ package com.steven.oschina.api;
 
 import android.support.annotation.NonNull;
 
-import com.greenfarm.client.base_library.log.LogUtils;
+import com.oschina.client.base_library.log.LogUtils;
 import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.base.ResultBean;
 

@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
+import com.oschina.client.base_library.utils.FragmentManagerHelper;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.bean.sub.Article;

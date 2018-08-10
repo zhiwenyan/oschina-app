@@ -19,15 +19,12 @@
 
     <View style="@style/h_line"/>
 
-    <com.steven.oschina.widget.RichEditText
+    <com.steven.oschina.widget.rich.RichEditLayout
         android:id="@+id/richLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:hint="博客......."
-        android:padding="8dp"
-        android:gravity="top|left"
-        android:background="@color/white"/>
+        android:background="@color/white" />
 
     <View style="@style/h_line"/>
 
@@ -37,5 +34,5 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-    <include layout="@layout/view_rich_bar"/>
+    <!--<include layout="@layout/view_rich_bar"/>-->
 </LinearLayout>

@@ -207,5 +207,15 @@
                 android:scaleType="fitCenter"
                 android:src="@mipmap/ic_tweet_expression_normal"/>
         </LinearLayout>
+
+        <View style="@style/h_line"/>
+
+        <com.steven.oschina.emoji.FacePanelView
+            android:id="@+id/panel_face"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone"/>
     </LinearLayout>
 </FrameLayout>

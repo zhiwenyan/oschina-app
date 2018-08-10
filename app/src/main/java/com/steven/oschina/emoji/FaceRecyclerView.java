@@ -5,7 +5,7 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.greenfarm.client.recyclerview.adapter.OnItemClickListener;
+import com.oschina.client.recyclerview.adapter.OnItemClickListener;
 import com.steven.oschina.R;
 import com.steven.oschina.utils.TDevice;
 

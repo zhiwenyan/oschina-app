@@ -10,9 +10,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.greenfarm.client.base_library.utils.AppManagerUtil;
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
-import com.greenfarm.client.base_library.utils.ToastUtil;
+import com.oschina.client.base_library.utils.AppManagerUtil;
+import com.oschina.client.base_library.utils.StatusBarUtil;
+import com.oschina.client.base_library.utils.ToastUtil;
 import com.steven.oschina.R;
 
 import butterknife.ButterKnife;

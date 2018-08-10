@@ -4,7 +4,7 @@ package com.steven.oschina.api;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.greenfarm.client.base_library.log.LogUtils;
+import com.oschina.client.base_library.log.LogUtils;
 import com.steven.oschina.Constants;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.utils.MD5;

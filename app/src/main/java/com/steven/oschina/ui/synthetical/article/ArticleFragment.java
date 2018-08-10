@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.greenfarm.client.base_library.banner.BannerAdapter;
-import com.greenfarm.client.base_library.banner.BannerView;
+import com.oschina.client.base_library.banner.BannerAdapter;
+import com.oschina.client.base_library.banner.BannerView;
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.OSCApplication;

@@ -16,11 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
-import com.greenfarm.client.recyclerview.adapter.ViewHolder;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.R;
 import com.steven.oschina.bean.comment.Comment;
-import com.steven.oschina.utils.DialogHelper;
+import com.steven.oschina.dialog.DialogHelper;
 
 import java.io.File;
 import java.util.List;

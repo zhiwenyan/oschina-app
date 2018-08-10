@@ -13,7 +13,9 @@ import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
 import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
+import com.steven.oschina.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,25 +109,25 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
                     //    SoftwareDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_QUESTION:
-                     QuestionDetailActivity.show(mContext, id);
+                    QuestionDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_BLOG:
                     BlogDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_TRANSLATE:
-                    //        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                    NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
                     break;
                 case News.TYPE_EVENT:
                     //        EventDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_NEWS:
-                    //          NewsDetailActivity.show(mContext, id);
+                    NewsDetailActivity.show(mContext, id);
                     break;
                 case Article.TYPE_ENGLISH:
                     EnglishArticleDetailActivity.show(mContext, article);
                     break;
                 default:
-                    //UIHelper.showUrlRedirect(mContext, top.getUrl());
+                    UIHelper.showUrlRedirect(mContext, article.getUrl());
                     break;
             }
         });

@@ -40,7 +40,6 @@ public class CacheManager {
         if (list.size() == 0) {
             return !file.exists() || file.delete();
         }
-
         try {
             return !(!file.exists() && !file.createNewFile())
                     && save(file, list);

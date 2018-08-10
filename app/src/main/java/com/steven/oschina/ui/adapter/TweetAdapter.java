@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
-import com.greenfarm.client.recyclerview.adapter.ViewHolder;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
 import com.steven.oschina.api.ServiceApi;

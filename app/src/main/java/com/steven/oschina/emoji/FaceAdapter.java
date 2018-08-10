@@ -3,8 +3,8 @@ package com.steven.oschina.emoji;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
-import com.greenfarm.client.recyclerview.adapter.ViewHolder;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.GlideApp;
 import com.steven.oschina.R;
 

@@ -15,7 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
-import com.greenfarm.client.recyclerview.adapter.OnItemClickListener;
+import com.oschina.client.recyclerview.adapter.OnItemClickListener;
 import com.steven.oschina.R;
 import com.steven.oschina.media.adapter.ImageFolderAdapter;
 import com.steven.oschina.media.bean.ImageFolder;
@@ -51,12 +51,7 @@ public class ImageFolderPopupWindow extends PopupWindow implements View.OnAttach
 
         // content
         View content = getContentView();
-        content.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        content.setOnClickListener(v -> dismiss());
         content.addOnAttachStateChangeListener(this);
         mFolderView = content.findViewById(R.id.rv_popup_folder);
         mFolderView.setLayoutManager(new LinearLayoutManager(context));

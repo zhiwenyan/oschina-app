@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.greenfarm.client.recyclerview.adapter.OnItemClickListener;
+import com.oschina.client.recyclerview.adapter.OnItemClickListener;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseFragment;
 import com.steven.oschina.media.ImageFolderPopupWindow;

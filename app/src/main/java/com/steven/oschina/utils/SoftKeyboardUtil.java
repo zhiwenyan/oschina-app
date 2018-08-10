@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.greenfarm.client.base_library.log.LogUtils;
+import com.oschina.client.base_library.log.LogUtils;
 import com.steven.oschina.Setting;
 
 /**

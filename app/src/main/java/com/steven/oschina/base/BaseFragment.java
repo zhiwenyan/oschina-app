@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.greenfarm.client.base_library.utils.ToastUtil;
+import com.oschina.client.base_library.utils.ToastUtil;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

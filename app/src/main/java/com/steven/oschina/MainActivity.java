@@ -4,8 +4,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
+import com.oschina.client.base_library.utils.FragmentManagerHelper;
+import com.oschina.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.ui.PubActivity;
 import com.steven.oschina.ui.explore.ExploreFragment;

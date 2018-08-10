@@ -2,7 +2,7 @@ package com.steven.oschina.header;
 
 import android.content.Context;
 
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.R;
 import com.steven.oschina.bean.banner.Banner;
 

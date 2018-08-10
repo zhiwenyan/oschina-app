@@ -3,7 +3,7 @@ package com.steven.oschina.ui.synthetical.sub;
 import android.content.Context;
 import android.content.Intent;
 
-import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
+import com.oschina.client.base_library.utils.FragmentManagerHelper;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.bean.sub.SubTab;

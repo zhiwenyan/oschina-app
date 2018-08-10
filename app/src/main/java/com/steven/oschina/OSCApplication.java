@@ -3,7 +3,6 @@ package com.steven.oschina;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import com.bumptech.glide.request.target.ViewTarget;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.utils.MD5;
 
@@ -20,7 +19,7 @@ public class OSCApplication extends AppContext {
     public void onCreate() {
         super.onCreate();
         init();
-        ViewTarget.setTagId(R.id.tag_glide);
+     //   ViewTarget.setTagId(R.id.tag_glide);
 
     }
     private void init(){

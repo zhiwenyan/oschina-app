@@ -8,8 +8,8 @@ import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
-import com.greenfarm.client.recyclerview.adapter.ViewHolder;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.R;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.utils.StringUtils;

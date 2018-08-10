@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.greenfarm.client.recyclerview.adapter.CommonRecyclerAdapter;
-import com.greenfarm.client.recyclerview.adapter.ViewHolder;
+import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
+import com.oschina.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
 import com.steven.oschina.bean.banner.Banner;

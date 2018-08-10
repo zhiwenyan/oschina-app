@@ -7,13 +7,11 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.media.Util;
@@ -43,9 +41,6 @@ public class PubActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        StatusBarUtil.statusBarTranslucent(this);
-        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-
     }
 
     @Override
@@ -83,7 +78,8 @@ public class PubActivity extends BaseActivity {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        mBtnPub.setVisibility(View.GONE);
+                        if (mBtnPub != null)
+                            mBtnPub.setVisibility(View.GONE);
                         finish();
                     }
                 })
@@ -94,6 +90,10 @@ public class PubActivity extends BaseActivity {
         int angle = 30 + position * 60;
         float x = ( float ) Math.cos(angle * (Math.PI / 180)) * Util.dipTopx(this, 100);
         float y = ( float ) -Math.sin(angle * (Math.PI / 180)) * Util.dipTopx(this, position != 1 ? 160 : 100);
+        // position=0x=259.80762,y=-240.0
+        // position=1x=1.8369703E-14,y=-300.0
+        // position=2x=-259.80762,y=-240.0
+        System.out.println("position=" + position + "x=" + x + ",y=" + y);
         ObjectAnimator objectAnimatorX = ObjectAnimator.ofFloat(mLays[position], "translationX", 0, x);
         ObjectAnimator objectAnimatorY = ObjectAnimator.ofFloat(mLays[position], "translationY", 0, y);
         AnimatorSet animatorSet = new AnimatorSet();
@@ -116,7 +116,8 @@ public class PubActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mLays[position].setVisibility(View.GONE);
+                if (mLays != null)
+                    mLays[position].setVisibility(View.GONE);
             }
         });
         animatorSet.start();

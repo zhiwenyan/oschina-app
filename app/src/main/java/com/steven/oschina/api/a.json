@@ -1,35 +1,93 @@
 {
-  "message": "success",
+  "code": 1,
+  "message": "SUCCESS",
+  "notice": {
+    "newsCount": 21
+  },
   "result": {
-    "discoverBanner": [
+    "abouts": [
       {
-        "img": "http:\/\/www.fumi88.cn\/UF\/Uploads\/Ad\/20180102094450952.jpg",
-        "info": "",
-        "url": "http:\/\/www.fumi88.cn\/oil\/Traffic\/index?flg=1?app"
+        "commentCount": 0,
+        "content": "import groovy.util.slurpersupport.GPathResult\n\ndef replaceManifest() {\n     GPathResult androidManifest = new XmlSlurper().parse(\"AndroidManifest.xml\")\n     String versionName = androidManifest['@android:versionName']\n     versionName += ' beta' \n    androidManifest.setProperty('@android:versionName', versionName + \"\") \n\n    groovy.xml.XmlUtil.serialize(androidManifest, new PrintWriter(new File...",
+        "href": "https://my.oschina.net/polarw/blog/794506",
+        "id": 794506,
+        "statistics": {
+          "comment": 0,
+          "favCount": 0,
+          "like": 0,
+          "transmit": 0,
+          "view": 57
+        },
+        "title": "groovy.util.slurpersupport.GPathResult.setProperty  无效",
+        "type": 3,
+        "viewCount": 57
+      },
+      {
+        "commentCount": 0,
+        "content": "![封面图片：MBP With Touch Bar（Space Gray）](http://upload-images.jianshu.io/upload_images/9824247-dbd6b84206381f8e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240) > **注：** 本文首发于 My 公众号 **CodeSheep** ，可 **长按** 或 **扫描** 下面的 **小心心** 来订阅 ↓ ↓ ↓ ![CodeSheep · 程序羊](https://upload-images.jianshu.io/upload_images/9824247-13f444f5a47f5d6b.jpg?imageMogr2/auto-ori...",
+        "href": "https://my.oschina.net/hansonwang99/blog/1647583",
+        "id": 1647583,
+        "statistics": {
+          "comment": 0,
+          "favCount": 0,
+          "like": 0,
+          "transmit": 0,
+          "view": 206
+        },
+        "title": "Pipeline As Code With Jenkins2.0",
+        "type": 3,
+        "viewCount": 206
+      },
+      {
+        "commentCount": 0,
+        "content": "一、简介 Groovy是一种编程语言，通过添加新的关键字，自动导入常用的类，以及可选类型变量声明，既简化又扩展了Java。",
+        "href": "https://my.oschina.net/kun123/blog/798035",
+        "id": 798035,
+        "statistics": {
+          "comment": 0,
+          "favCount": 0,
+          "like": 0,
+          "transmit": 0,
+          "view": 49
+        },
+        "title": "Groovy",
+        "type": 3,
+        "viewCount": 49
       }
     ],
-    "discoverPic": [
-      {
-        "img": "http:\/\/www.fumi88.cn\/UF\/Uploads\/Ad\/20180801102132753.png",
-        "info": "\u6211\u8981\u501f\u6b3e",
-        "url": "http:\/\/www.fumi88.cn\/oil\/activity\/borrow?app"
+    "author": {
+      "id": 3780168,
+      "identity": {
+        "officialMember": false,
+        "softwareAuthor": false
       },
-      {
-        "img": "http:\/\/www.fumi88.cn\/UF\/Uploads\/Ad\/20180801102234807.png",
-        "info": "\u9650\u65f6\u4f18\u60e0",
-        "url": "http:\/\/www.fumi88.cn\/oil\/index\/xianshiyouhui?app"
-      },
-      {
-        "img": "http:\/\/www.fumi88.cn\/UF\/Uploads\/Ad\/20180801102249392.png",
-        "info": "\u8fdd\u7ae0\u67e5\u8be2",
-        "url": "http:\/\/www.fumi88.cn\/oil\/Traffic\/index?app"
-      },
-      {
-        "img": "http:\/\/www.fumi88.cn\/UF\/Uploads\/Ad\/20180801102307640.png",
-        "info": "\u65b0\u624b\u6307\u5f15",
-        "url": "http:\/\/www.fumi88.cn\/oil\/activity\/activityapp?app"
-      }
-    ]
+      "name": "美团技术团队",
+      "portrait": "http://static.oschina.net/uploads/user/1890/3780168_50.jpeg?t=1527562525000",
+      "relation": 4
+    },
+    "body": "<h2>一、背景</h2> \n<p>在日常开发中，我们经常会有发布需求，而且还会遇到各种环境，比如：线上环境（Online），模拟环境（Staging），开发环境（Dev）等。最简单的就是手动构建、上传服务器，但这种方式太过于繁琐，使用持续集成可以完美地解决这个问题，推荐了解一下<a href=\"https://jenkins.io/\" rel=\"nofollow\">Jenkins</a>。 Jenkins构建也有很多种方式，现在使用比较多的是自由风格的软件项目（Jenkins构建的一种方式，会结合SCM和构建系统来构建你的项目，甚至可以构建软件以外的系统）的方式。针对单个项目的简单构建，这种方式已经足够了，但是针对多个类似且又存在差异的项目，就难以满足要求，否则就需要大量的job来支持，这就存在，一个小的变动，就需要修改很多个job的情况，难以维护。我们团队之前就存在这样的问题。</p> \n<p>目前，我们团队主要负责开发和维护多个Android项目，而且每个项目都需要构建，每个构建流程非常类似但又存在一定的差异。比如构建的流程大概如下：</p> \n<ul> \n <li>克隆代码；</li> \n <li>静态代码检查（可选）；</li> \n <li>单元测试（可选）；</li> \n <li>编译打包APK或者热补丁；</li> \n <li>APK分析，获取版本号（VersionCode），包的Hash值（apkhash）等；</li> \n <li>加固；</li> \n <li>上传测试分发平台；</li> \n <li>存档（可选）；</li> \n <li>触发自动化测试（可选）；</li> \n <li>通知负责人构建结果等。</li> \n</ul> \n<p>整个流程大体上是相同的，但是又存在一些差异。比如有的构建可以没有单元测试，有的构建不用触发自动化测试，而且构建结果通知的负责人也不同。如果使用自由风格软件项目的普通构建，每个项目都要建立一个job来处理流程（可能会调用其他job）。</p> \n<p>这种处理方式原本也是可以的，但是必须考虑到，可能会有新的流程接入（比如二次签名），构建流程也可能存在Bug等多种问题。无论哪种情况，一旦修改主构建流程，每个项目的job都需要修改和测试，就必然会浪费大量的时间。针对这种情况，我们使用了Pipeline的构建方式来解决。</p> \n<p>当然，如果有项目集成了React Native，还需要构建JsBundle。在Native修改以后，JsBundle不一定会有更新，如果是构建Native的时候一起构建JsBundle，就会造成很多资源浪费。并且直接把JsBundle这类大文件放在Native的Git仓库里，也不是特别合适。</p> \n<p>本文是分享一种<code>Pipeline</code>的使用经验，来解决这类问题。</p> \n<h2>二、Pipeline的介绍</h2> \n<p>Pipeline也就是构建流水线，对于程序员来说，最好的解释是：使用代码来控制项目的构建、测试、部署等。使用它的好处有很多，包括但不限于：</p> \n<ul> \n <li>使用Pipeline可以非常灵活的控制整个构建过程；</li> \n <li>可以清楚的知道每个构建阶段使用的时间，方便构建的优化；</li> \n <li>构建出错，使用stageView可以快速定位出错的阶段；</li> \n <li>一个job可以搞定整个构建，方便管理和维护等。</li> \n</ul> \n<p><strong>Stage View</strong></p> \n<p><img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde718ecb4cf6%3Fw%3D2248%26h%3D740%26f%3Dpng%26s%3D214045\" alt=\"\"></p> \n<h2>三、使用Pipeline构建</h2> \n<p>新建一个Pipeline项目，写入Pipeline的构建脚本，就像下面这样: <img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde892b9d95ef%3Fw%3D1700%26h%3D500%26f%3Dpng%26s%3D640168\" alt=\"\"> 对于单个项目来说，使用这样的Pipeline来构建能够满足绝大部分需求，但是这样做也有很多缺陷，包括：</p> \n<ul> \n <li>多个项目的Pipeline打包脚本不能公用，导致一个项目写一份脚本，维护比较麻烦。一个变动，需要修改多个job的脚本；</li> \n <li>多个人维护构建job的时候，可能会覆盖彼此的代码；</li> \n <li>修改脚本失败以后，无法回滚到上个版本；</li> \n <li>无法进行构建脚本的版本管理，老版本发修复版本需要构建，可能和现在用的job版本已经不一样了，等等。</li> \n</ul> \n<h2>四、把Pipeline当代码写</h2> \n<p>既然存在缺陷，我们就要找更好的方式，其实Jenkins提供了一个更优雅的管理Pipeline脚本的方式，在配置项目Pipeline的时候，选择<code>Pipeline script from SCM</code>，就像下面这样： <img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde8c156bf659%3Fw%3D2358%26h%3D1324%26f%3Dpng%26s%3D204251\" alt=\"\"> 这样，Jenkins在启动job的时候，首先会去仓库里面拉取脚本，然后再运行这个脚本。在脚本里面，我们规定的构建方式和流程，就会按部就班地执行。构建的脚本，可以实现多人维护，还可以Review，避免出错。 以上就算搭建好了一个基础，而针对多个项目时，还有一些事情要做，不可能完全一样，以下是构建的结构图：</p> \n<p><img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde8e77a1e8fb%3Fw%3D2860%26h%3D714%26f%3Dpng%26s%3D221549\" alt=\"\"></p> \n<p>如此以来，我们的构建数据来源分为三部分：job UI界面、仓库的通用Pipeline脚本、项目下的特殊配置，我们分别来看一下：</p> \n<h3>job UI界面（参数化构建）</h3> \n<p>在配置job的时候，选择参数化构建过程，传入项目仓库地址、分支、构建通知人等等。还可以增加更多的参数 ，这些参数的特点是，可能需要经常修改，比如灵活选择构建的代码分支。</p> \n<p><img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde949ae097bf%3Fw%3D1860%26h%3D1742%26f%3Dpng%26s%3D240593\" alt=\"\"></p> \n<h3>项目配置</h3> \n<p>在项目工程里面，放入针对这个项目的配置，一般是一个项目固定，不经常修改的参数，比如项目名字，如下图：</p> \n<p><img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde96fe363060%3Fw%3D1358%26h%3D828%26f%3Dpng%26s%3D269578\" alt=\"\"></p> \n<h3>注入构建信息</h3> \n<p>QA提一个Bug，我们需要确定，这是哪次的构建，或者要知道commitId，从而方便进行定位。因此在构建时，可以把构建信息注入到APK之中。</p> \n<ol> \n <li>把属性注入到<code>gradle.properties</code></li> \n</ol> \n<pre><code># 应用的后端环境\nAPP_ENV=Beta\n# CI 打包的编号，方便确定测试的版本，不通过 CI 打包，默认是 0\nCI_BUILD_NUMBER=0\n# CI 打包的时间，方便确定测试的版本，不通过 CI 打包，默认是 0\nCI_BUILD_TIMESTAMP=0\n</code></pre> \n<ol> \n <li>在build.gradle里设置buildConfigField</li> \n</ol> \n<pre><code>#使用的是gradle.properties里面注入的值\nbuildConfigField \"String\", \"APP_ENV\", \"\\\"${APP_ENV}\\\"\"\nbuildConfigField \"String\", \"CI_BUILD_NUMBER\", \"\\\"${CI_BUILD_NUMBER}\\\"\"\nbuildConfigField \"String\", \"CI_BUILD_TIMESTAMP\", \"\\\"${CI_BUILD_TIMESTAMP}\\\"\"\nbuildConfigField \"String\", \"GIT_COMMIT_ID\", \"\\\"${getCommitId()}\\\"\"\n\n//获取当前Git commitId\nString getCommitId() {\n    try {\n        def commitId = 'git rev-parse HEAD'.execute().text.trim()\n        return commitId;\n    } catch (Exception e) {\n        e.printStackTrace();\n    }\n}\n</code></pre> \n<ol> \n <li>显示构建信息 在App里，找个合适的位置，比如开发者选项里面，把刚才的信息显示出来。QA提Bug时，要求他们把这个信息一起带上</li> \n</ol> \n<pre><code>mCIIdtv.setText(String.format(\"CI 构建号:%s\", BuildConfig.CI_BUILD_NUMBER));\nmCITimetv.setText(String.format(\"CI 构建时间:%s\", BuildConfig.CI_BUILD_TIMESTAMP));\nmCommitIdtv.setText(String.format(\"Git CommitId:%s\", BuildConfig.GIT_COMMIT_ID));\n</code></pre> \n<h3>仓库的通用Pipeline脚本</h3> \n<p>通用脚本是抽象出来的构建过程，遇到和项目有关的都需要定义成变量，再从变量里进行读取，不要在通用脚本里写死。</p> \n<pre><code>\nnode {\n\ttry{\n\t\tstage('检出代码'){//从git仓库中检出代码\n\t    \tgit branch: \"${BRANCH}\",credentialsId: 'xxxxx-xxxx-xxxx-xxxx-xxxxxxx', url: \"${REPO_URL}\"\n\t       \tloadProjectConfig();\n\t  \t}\n\t   \tstage('编译'){\n\t   \t\t//这里是构建，你可以调用job入参或者项目配置的参数，比如：\n\t   \t\techo \"项目名字 ${APP_CHINESE_NAME}\"\n\t   \t\t//可以判断\n\t   \t\tif (Boolean.valueOf(\"${IS_USE_CODE_CHECK}\")) {\n\t   \t\t\techo \"需要静态代码检查\"\n\t   \t\t} else {\n\t   \t\t\techo \"不需要静态代码检查\"\n\t   \t\t}\n\n\t   \t}\n\t   \tstage('存档'){//这个演示的Android的项目，实际使用中，请根据自己的产物确定\n\t       \tdef apk = getShEchoResult (\"find ./lineup/build/outputs/apk -name '*.apk'\")\n\t       \tdef artifactsDir=\"artifacts\"//存放产物的文件夹\n\t        sh \"mkdir ${artifactsDir}\"\n\t       \tsh \"mv ${apk} ${artifactsDir}\"\n\t       \tarchiveArtifacts \"${artifactsDir}/*\"\n\t   \t}\n\t   \tstage('通知负责人'){\n\t   \t\temailext body: \"构建项目:${BUILD_URL}\\r\\n构建完成\", subject: '构建结果通知【成功】', to: \"${EMAIL}\"\n\t   \t}\n\t} catch (e) {\n\t\temailext body: \"构建项目:${BUILD_URL}\\r\\n构建失败，\\r\\n错误消息：${e.toString()}\", subject: '构建结果通知【失败】', to: \"${EMAIL}\"\n\t} finally{\n\t\t// 清空工作空间\n        cleanWs notFailBuild: true\n\t}\n   \t\n   \n}\n \n// 获取 shell 命令输出内容\ndef getShEchoResult(cmd) {\n    def getShEchoResultCmd = \"ECHO_RESULT=`${cmd}`\\necho \\${ECHO_RESULT}\"\n    return sh (\n        script: getShEchoResultCmd,\n        returnStdout: true\n    ).trim()\n}\n\n//加载项目里面的配置文件\ndef loadProjectConfig(){\n    def jenkinsConfigFile=\"./jenkins.groovy\"\n    if (fileExists(\"${jenkinsConfigFile}\")) {\n        load \"${jenkinsConfigFile}\"\n        echo \"找到打包参数文件${jenkinsConfigFile}，加载成功\"\n    } else {\n        echo \"${jenkinsConfigFile}不存在,请在项目${jenkinsConfigFile}里面配置打包参数\"\n        sh \"exit 1\"\n    }\n}\n\n</code></pre> \n<p>轻轻的点两下<code>Build with Parameters</code> -&gt; <code>开始构建</code>，然后等几分钟的时间，就能够收到邮件。</p> \n<p><img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde9c5d3992f6%3Fw%3D930%26h%3D342%26f%3Dpng%26s%3D70097\" alt=\"\"></p> \n<h2>五、其他构建结构</h2> \n<p>以上，仅仅是针对我们当前遇到问题的一种不错的解决方案，可能并不完全适用于所有场景，但是可以根据上面的结构进行调整，比如：</p> \n<ul> \n <li>根据stage拆分出不同的Pipeline脚本，这样方便CI的维护，一个或者几个人维护构建中的一个stage；</li> \n <li>把构建过程中的stage做成普通的<code>自由风格的软件项目</code>的job，把它们作为基础服务，在Pipeline中调用这些基础服务等。</li> \n</ul> \n<h2>六、当遇上React Native</h2> \n<p>当项目引入了React Native以后，因为技术栈的原因，React Native的页面是由前端团队开发，但容器和原生组件是Android团队维护，构建流程也发生了一些变化。</p> \n<h3>方案对比</h3> \n<table> \n <tbody> \n  <tr> \n   <th align=\"left\">方案</th> \n   <th align=\"left\">说明</th> \n   <th align=\"left\">缺点</th> \n   <th align=\"left\">优点</th> \n  </tr> \n </tbody> \n <tbody> \n  <tr> \n   <td align=\"left\">手动拷贝</td> \n   <td align=\"left\">等JsBundle构建好了，再手动把构建完成的产物，拷贝到Native工程里面</td> \n   <td align=\"left\">1. 每次手动操作，比较麻烦，效率低，容易出错&lt;br /&gt;2. 涉及到跨端合作，每次要去前端团队主动拿JsBundle&lt;br /&gt;3. Git不适合管理大文件和二进制文件</td> \n   <td align=\"left\">简单粗暴</td> \n  </tr> \n  <tr> \n   <td align=\"left\">使用submodule保存构建好的JsBundle</td> \n   <td align=\"left\">直接把JsBundle放在Native仓库的一个submodule里面，由前端团队主动更新，每次更新Native的时候，直接就拿到了最新的JsBundle</td> \n   <td align=\"left\">1. 简单无开发成本&lt;br /&gt;2. 不方便单独控制JsBundle的版本&lt;br /&gt;3. Git不适合管理大文件和二进制文件</td> \n   <td align=\"left\">前端团队可以主动更新JsBundle</td> \n  </tr> \n  <tr> \n   <td align=\"left\">使用submodule管理JsBundle的源码</td> \n   <td align=\"left\">直接把JsBundle的源码放在Native仓库的一个submodule里面，由前端团队开发更新，每次构建Native的时候，先构构建JsBundle</td> \n   <td align=\"left\">1. 不方便单独控制JsBundle的版本&lt;br /&gt;2. 即使JsBundle无更新，也需要构建，构建速度慢，浪费资源</td> \n   <td align=\"left\">方便灵活</td> \n  </tr> \n  <tr> \n   <td align=\"left\">分开构建，产物存档</td> \n   <td align=\"left\">JsBundle和Native分开构建，构建完了的JsBundle分版本存档，Native构建的时候，直接去下载构建好了的JsBundle版本</td> \n   <td align=\"left\">1. 通过配置管理JsBundle，解放Git&lt;br /&gt;2. 方便Jenkins构建的时候，动态配置需要的JsBundle版本</td> \n   <td align=\"left\">1. 需要花费时间建立流程&lt;br /&gt;2. 需要开发Gradle的JsBundle下载插件</td> \n  </tr> \n </tbody> \n</table> \n<p>前端团队开发页面，构建后生成JsBundle，Android团队拿到前端构建的JsBundle，一起打包生成最终的产物。 在我们开发过程中，JsBundle修改以后，不一定需要修改Native，Native构建的时候，也不一定每次都需要重新构建JsBundle。并且这两个部分由两个团队负责，各自独立发版，构建的时候也应该独立构建，不应该融合到一起。</p> \n<p>综合对比，我们选择了使用分开构建的方式来实现。</p> \n<h3>分开构建</h3> \n<p>因为需要分开发布版本，所以JsBundle的构建和Native的构建要分开，使用两个不同的job来完成，这样也方便两个团队自行操作，避免相互影响。 JsBundle的构建，也可以参考上文提到的Pipeline的构建方式来做，这里不再赘述。 在独立构建以后，怎么才能组合到一起呢？我们是这样思考的：JsBundle构建以后，分版本的储存在一个地方，供Native在构建时下载需要版本的JsBundle，大致的流程如下：</p> \n<p><img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde9f89f009e5%3Fw%3D1036%26h%3D866%26f%3Dpng%26s%3D86235\" alt=\"\"></p> \n<p>这个流程有两个核心，一个是构建的JsBundle归档存储，一个是在Native构建时去下载。</p> \n<h3>JsBundle归档存储</h3> \n<table> \n <tbody> \n  <tr> \n   <th align=\"left\">方案</th> \n   <th align=\"left\">缺点</th> \n   <th align=\"left\">优点</th> \n  </tr> \n </tbody> \n <tbody> \n  <tr> \n   <td align=\"left\">直接存档在Jenkins上面</td> \n   <td align=\"left\">1. JsBundle不能汇总浏览&lt;br&gt;2. Jenkins很多人可能要下载，命名带有版本号，时间，分支等，命名不统一，不方便构建下载地址&lt;br&gt;3. 下载Jenkins上面的产物需要登陆授权，比较麻烦</td> \n   <td align=\"left\">1. 实现简单，一句代码就搞定，成本低</td> \n  </tr> \n  <tr> \n   <td align=\"left\">自己构建一个存储服务</td> \n   <td align=\"left\">1. 工程大，开发成本高&lt;br&gt;2. 维护起来麻烦</td> \n   <td align=\"left\">可扩展，灵活性高</td> \n  </tr> \n  <tr> \n   <td align=\"left\">MSS&lt;br&gt;(美团存储服务)</td> \n   <td align=\"left\">无</td> \n   <td align=\"left\">1. 储存空间大&lt;br&gt;2. 可靠性高，配合CDN下载速度快&lt;br&gt;3. 维护成本低， 价格便宜</td> \n  </tr> \n </tbody> \n</table> \n<p>这里我们选择了MSS。 上传文件到MSS，可以使用<code>s3cmd</code>，但毕竟不是每个Slave上面都有安装，通用性不强。为了保证稳定可靠，这里基于<a href=\"https://github.com/meituan/mssapi_java\" rel=\"nofollow\">MSS的SDK</a>写个小工具即可，比较简单，几行代码就可以搞定。</p> \n<pre><code>private static String TenantId = \"mss_TenantId==\";\nprivate static AmazonS3 s3Client;\n\npublic static void main(String[] args) throws IOException {\n\tif (args == null || args.length != 3) {\n\t\tSystem.out.println(\"请依次输入：inputFile、bucketName、objectName\");\n\t\treturn;\n\t}\n\ts3Client = AmazonS3ClientProvider.CreateAmazonS3Conn();\n\tuploadObject(args[0], args[1], args[2]);\n}\n\npublic static void uploadObject(String inputFile, String bucketName, String objectName) {\n\ttry {\n\t\tFile file = new File(inputFile);\n\t\tif (!file.exists()) {\n\t\t\tSystem.out.println(\"文件不存在：\" + file.getPath());\n\t\t\treturn;\n\t\t}\n\t\ts3Client.putObject(new PutObjectRequest(bucketName, objectName, file));\n\t\tSystem.out.printf(\"上传%s到MSS成功: %s/v1/%s/%s/%se\", inputFile, AmazonS3ClientProvider.url, TenantId, bucketName, objectName);\n\t} catch (AmazonServiceException ase) {\n\t\tSystem.out.println(\"Caught an AmazonServiceException, which \" +\n\t\t\t\t\"means your request made it \" +\n\t\t\t\t\"to Amazon S3, but was rejected with an error response\" +\n\t\t\t\t\" for some reason.\");\n\t\tSystem.out.println(\"Error Message:    \" + ase.getMessage());\n\t\tSystem.out.println(\"HTTP Status Code: \" + ase.getStatusCode());\n\t\tSystem.out.println(\"AWS Error Code:   \" + ase.getErrorCode());\n\t\tSystem.out.println(\"Error Type:       \" + ase.getErrorType());\n\t\tSystem.out.println(\"Request ID:       \" + ase.getRequestId());\n\t} catch (AmazonClientException ace) {\n\t\tSystem.out.println(\"Caught an AmazonClientException, which \" +\n\t\t\t\t\"means the client encountered \" +\n\t\t\t\t\"an internal error while trying to \" +\n\t\t\t\t\"communicate with S3, \" +\n\t\t\t\t\"such as not being able to access the network.\");\n\t\tSystem.out.println(\"Error Message: \" + ace.getMessage());\n\t}\n}\n</code></pre> \n<p>我们直接在Pipeline里构建完成后，调用这个工具就可以了。 当然，JsBundle也分类型，在调试的时候可能随时需要更新，这些JsBundle不需要永久保存，一段时间后就可以删除了。在删除时，可以参考<a href=\"https://www.mtyun.com/doc/sdk/mss-sdk/java/sheng-ming-zhu-qi-guan-li\" rel=\"nofollow\">MSS生命周期管理</a>。所以，我们在构建JsBundle的job里，添加一个参数来区分。</p> \n<pre><code>//根据TYPE，上传到不同的bucket里面\ndef bucket = \"rn-bundle-prod\"\nif (\"${TYPE}\" == \"dev\") {\n\tbucket = \"rn-bundle-dev\" //有生命周期管理，一段时间后自动删除\n}\necho \"开始JsBundle上传到MSS\"\n//jar地址需要替换成你自己的\nsh \"curl -s -S -L  http://s3plus.sankuai.com/v1/mss_xxxxx==/rn-bundle-prod/rn.bundle.upload-0.0.1.jar -o upload.jar\"\nsh \"java -jar upload.jar ${archiveZip} ${bucket} ${PROJECT}/${targetZip}\"\necho \"上传JsBundle到MSS:${archiveZip}\"\n</code></pre> \n<h3>Native构建时JsBundle的下载</h3> \n<p>为了实现构建时能够自动下载，我们写了一个Gradle的插件。 首先要在build.gradle里面配置插件依赖：</p> \n<pre><code>classpath 'com.zjiecode:rn-bundle-gradle-plugin:0.0.1'\n</code></pre> \n<p>在需要的Module应用插件：</p> \n<pre><code>apply plugin: 'mt-rn-bundle-download'\n</code></pre> \n<p>在build.gradle里面配置JsBundle的信息：</p> \n<pre><code>RNDownloadConfig {\n    //远程文件目录,因为有多种类型，所以这里可以填多个。\n    paths = [\n            'http://msstest-corp.sankuai.com/v1/mss_xxxx==/rn-bundle-dev/xxx/',\n            'http://msstest-corp.sankuai.com/v1/mss_xxxx==/rn-bundle-prod/xxx/'\n    ]\n    version  = \"1\"//版本号，这里使用的是打包JsBundle的BUILD_NUMBER\n    fileName = 'xxxx.android.bundle-%s.zip' //远程文件的文件名,%s会用上面的version来填充\n    outFile  = 'xxxx/src/main/assets/JsBundle/xxxx.android.bundle.zip' // 下载后的存储路径，相对于项目根目录\n}\n</code></pre> \n<p>插件会在package的task前面，插入一个下载的task，task读取上面的配置信息，在打包阶段检查是否已经存在这个版本的JsBundle。如果不存在，就会去归档的JsBundle里，下载我们需要的JsBundle。 当然，这里的version可以使用上文介绍的<code>注入构建信息</code>的方式，通过job参数的方式进行注入。这样在Jenkins构建Native时，就可以动态地填写需要JsBundle的版本了。 这个Gradle插件，我们已经放到到了github仓库，你可以基于此修改，当然，也欢迎PR。 <a href=\"https://github.com/zjiecode/rn-bundle-gradle-plugin\" rel=\"nofollow\">https://github.com/zjiecode/rn-bundle-gradle-plugin</a></p> \n<h2>六、总结</h2> \n<p>我们把一个构建分成了好几个部分，带来的好处如下：</p> \n<ul> \n <li>核心构建过程，只需要维护一份，减轻维护工作；</li> \n <li>方便多个人维护构建CI，避免Pipeline代码被覆盖；</li> \n <li>方便构建job的版本管理，比如要修复某个已经发布的版本，可以很方便切换到发布版本时候用的Pipeline脚本版本；</li> \n <li>每个项目，配置也比较灵活，如果项目配置不够灵活，可以尝试定义更多的变量；</li> \n <li>构建过程可视化，方便针对性优化和错误定位等。</li> \n</ul> \n<p>当然，Pipeline也存在一些弊端，比如：</p> \n<ul> \n <li>语法不够友好，但好在Jenkins提供了一个比较强大的帮助工具（Pipeline Syntax）；</li> \n <li>代码测试繁琐，没有本地运行环境，每次测试都需要提交运行一个job，等等。</li> \n</ul> \n<p>当项目集成了React Native时，配合Pipeline，我们可以把JsBundle的构建产物上传到MSS归档。在构建Native的时候 ，可以动态地下载。</p> \n<h2>七、作者</h2> \n<p>张杰，美团点评高级Android工程师，2017年加入餐饮平台成都研发中心，主要负责餐饮平台B端应用开发。 王浩，美团点评高级Android工程师，2017年加入餐饮平台成都研发中心，主要负责餐饮平台B端应用开发。</p> \n<h2>八、招聘广告</h2> \n<p><a href=\"mailto:本文作者来自美团成都研发中心（是的，我们在成都建研发中心啦）。我们在成都有众多后端、前端和测试的岗位正在招人，欢迎大家投递简历：songyanwei@meituan.com。\" rel=\"nofollow\">本文作者来自美团成都研发中心（是的，我们在成都建研发中心啦）。我们在成都有众多后端、前端和测试的岗位正在招人，欢迎大家投递简历：songyanwei@meituan.com。</a> <img src=\"http://www.oschina.net/action/blog/img_proxy?url=https%3A%2F%2Fuser-gold-cdn.xitu.io%2F2018%2F8%2F3%2F164fde827b5949e4%3Fw%3D1875%26h%3D835%26f%3Dpng%26s%3D142461\" alt=\"\"></p>",
+    "extra": {
+      "blogCategory": "工作日志",
+      "blogPayNotify": "https://my.oschina.net/action/blog/paySuccess"
+    },
+    "favorite": false,
+    "href": "https://my.oschina.net/meituantech/blog/1922037",
+    "id": 1922037,
+    "newsId": 0,
+    "pubDate": "2018-08-03 11:54:06",
+    "statistics": {
+      "comment": 0,
+      "favCount": 0,
+      "like": 0,
+      "transmit": 0,
+      "view": 1121
+    },
+    "summary": "一、背景 在日常开发中，我们经常会有发布需求，而且还会遇到各种环境，比如：线上环境（Online），模拟环境（Staging），开发环境（Dev）等。最简单的就是手动构建、上传服务器，但这种方式太过于繁琐，使用持续...",
+    "tags": [
+      "original"
+    ],
+    "title": "Jenkins的Pipeline脚本在美团餐饮SaaS中的实践",
+    "type": 3
   },
-  "status": 200
+  "time": "2018-08-08 13:39:06"
 }

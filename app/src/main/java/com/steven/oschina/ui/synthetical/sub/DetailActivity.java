@@ -7,8 +7,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.greenfarm.client.base_library.utils.FragmentManagerHelper;
-import com.greenfarm.client.base_library.utils.StatusBarUtil;
+import com.oschina.client.base_library.utils.FragmentManagerHelper;
+import com.oschina.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;

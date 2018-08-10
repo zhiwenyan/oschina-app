@@ -26,6 +26,8 @@ public class TweetParser extends RichTextParser {
     public Spannable parse(Context context, String content) {
         if (TextUtils.isEmpty(content))
             return null;
+        //"content": "6 <a href='https://www.oschina.net/p/oim' class='project' target='_blank' title='基于 JavaFX 开发的聊天客户端OIM'>#OIM#</a>",
+        //"Rust社区与文档中文化 <a href='http://ruster.xyz/' rel='nofollow' target='_blank'>http://ruster.xyz/</a>",
         content = HTMLUtil.rollbackReplaceTag(content);
         Spannable spannable = parseOnlyAtUser(context, content);
         spannable = parseOnlyGist(context, spannable);

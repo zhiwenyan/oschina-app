@@ -64,7 +64,7 @@ public class BottomSheetBar {
         mBtnCommit = mRootView.findViewById(R.id.btn_comment);
         mBtnCommit.setEnabled(false);
 
-        mDialog = new BottomDialog(mContext, false);
+        mDialog = new BottomDialog(mContext, true);
         mDialog.setContentView(mRootView);
 
         mDialog.setOnDismissListener(dialog -> {
