@@ -64,7 +64,7 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
         final Context context = getContext();
         final Resources resources = getResources();
         final float density = resources.getDisplayMetrics().density;
-
+        System.out.println("density=="+density);
         int vSpace = ( int ) (4 * density);
         int hSpace = vSpace;
 
@@ -194,6 +194,7 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
         int paddingBottom = getPaddingBottom();
 
         int selfWidth = resolveSize(paddingLeft + paddingRight, widthMeasureSpec);
+        System.out.println("selfWidth=="+selfWidth);
         int wantedHeight = paddingBottom + paddingTop;
         final int childCount = getChildCount();
 
@@ -212,7 +213,9 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
                 float density = getResources().getDisplayMetrics().density;
                 // Get max width and height
                 float maxContentW = Math.min(selfWidth - paddingRight - paddingLeft, density * SINGLE_MAX_W);
+                System.out.println("maxContentW=="+maxContentW);
                 float maxContentH = density * SINGLE_MAX_H;
+                System.out.println("maxContentH=="+maxContentH);
 
                 int childW, childH;
 
@@ -247,6 +250,7 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
 
             for (int i = 0; i < childCount; ++i) {
                 View childView = getChildAt(i);
+
                 childView.measure(MeasureSpec.makeMeasureSpec(childSize, MeasureSpec.EXACTLY),
                         MeasureSpec.makeMeasureSpec(childSize, MeasureSpec.EXACTLY));
             }

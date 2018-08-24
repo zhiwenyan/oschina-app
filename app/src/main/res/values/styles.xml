@@ -51,6 +51,11 @@
         <item name="android:textSize">@dimen/text_size_12</item>
     </style>
 
+    <style name="option_item_toggleButton">
+        <item name="android:layout_width">46dp</item>
+        <item name="android:layout_height">20dp</item>
+    </style>
+
     <style name="Theme.Dialog.NoTitle.Translucent" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowFrame">@null</item><!-- 边框 -->
         <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->

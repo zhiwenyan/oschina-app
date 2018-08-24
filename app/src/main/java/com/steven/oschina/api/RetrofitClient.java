@@ -59,13 +59,14 @@ public class RetrofitClient {
         @Override
         public Response intercept(@NonNull Chain chain) throws IOException {
             Request original = chain.request();
+            LogUtils.i("AppToken" + APIVerify.getVerifyString());
             Request request = original.newBuilder()
-                    .header("Accept-Language",Locale.getDefault().toString())
-                    .header("HOST",HOST)
-                    .header("Connection","Keep-Alive")
+                    .header("Accept-Language", Locale.getDefault().toString())
+                    .header("HOST", HOST)
+                    .header("Connection", "Keep-Alive")
                     .header("sessionKey", sessionKey)
                     .header("uuid", OSCSharedPreference.getInstance().getDeviceUUID())
-                    .header("Accept","image/webp")
+                    .header("Accept", "image/webp")
                     .header("AppToken", APIVerify.getVerifyString())
                     .build();
             return chain.proceed(request);

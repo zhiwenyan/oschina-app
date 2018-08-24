@@ -8,6 +8,7 @@ import com.steven.oschina.bean.search.SearchBean;
 import com.steven.oschina.bean.simple.User;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.SubBean;
+import com.steven.oschina.bean.tweet.Topic;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.bean.tweet.TweetComment;
 import com.steven.oschina.bean.tweet.TweetLike;
@@ -31,50 +32,50 @@ import retrofit2.http.QueryMap;
  * @author yanzhiwen
  */
 public interface ServiceApi {
-   int CATALOG_ALL = 0;
-   int CATALOG_SOFTWARE = 1;
-   int CATALOG_QUESTION = 2;
-   int CATALOG_BLOG = 3;
-   int CATALOG_TRANSLATION = 4;
-   int CATALOG_EVENT = 5;
-   int CATALOG_NEWS = 6;
-   int CATALOG_TWEET = 100;
+    int CATALOG_ALL = 0;
+    int CATALOG_SOFTWARE = 1;
+    int CATALOG_QUESTION = 2;
+    int CATALOG_BLOG = 3;
+    int CATALOG_TRANSLATION = 4;
+    int CATALOG_EVENT = 5;
+    int CATALOG_NEWS = 6;
+    int CATALOG_TWEET = 100;
 
-   int COMMENT_SOFT = 1;    // 软件推荐-不支持(默认软件评论其实是动弹)
-   int COMMENT_QUESTION = 2;    // 讨论区帖子
-   int COMMENT_BLOG = 3;    // 博客
-   int COMMENT_TRANSLATION = 4;    // 翻译文章
-   int COMMENT_EVENT = 5;    // 活动类型
-   int COMMENT_NEWS = 6;    // 资讯类型
-   int COMMENT_TWEET = 100;  // 动弹
+    int COMMENT_SOFT = 1;    // 软件推荐-不支持(默认软件评论其实是动弹)
+    int COMMENT_QUESTION = 2;    // 讨论区帖子
+    int COMMENT_BLOG = 3;    // 博客
+    int COMMENT_TRANSLATION = 4;    // 翻译文章
+    int COMMENT_EVENT = 5;    // 活动类型
+    int COMMENT_NEWS = 6;    // 资讯类型
+    int COMMENT_TWEET = 100;  // 动弹
 
-   int COMMENT_HOT_ORDER = 2; //热门评论顺序
-   int COMMENT_NEW_ORDER = 1; //最新评论顺序
+    int COMMENT_HOT_ORDER = 2; //热门评论顺序
+    int COMMENT_NEW_ORDER = 1; //最新评论顺序
 
-   int CATALOG_BANNER_NEWS = 1; // 资讯Banner
-   int CATALOG_BANNER_BLOG = 2; // 博客Banner
-   int CATALOG_BANNER_EVENT = 3; // 活动Banner
+    int CATALOG_BANNER_NEWS = 1; // 资讯Banner
+    int CATALOG_BANNER_BLOG = 2; // 博客Banner
+    int CATALOG_BANNER_EVENT = 3; // 活动Banner
 
-   int CATALOG_BLOG_NORMAL = 1; // 最新
-   int CATALOG_BLOG_HEAT = 2; // 最热
-   int CATALOG_BLOG_RECOMMEND = 3; //推荐
+    int CATALOG_BLOG_NORMAL = 1; // 最新
+    int CATALOG_BLOG_HEAT = 2; // 最热
+    int CATALOG_BLOG_RECOMMEND = 3; //推荐
 
-   String CATALOG_NEWS_DETAIL = "news";
-   String CATALOG_TRANSLATE_DETAIL = "translation";
-   String CATALOG_SOFTWARE_DETAIL = "software";
+    String CATALOG_NEWS_DETAIL = "news";
+    String CATALOG_TRANSLATE_DETAIL = "translation";
+    String CATALOG_SOFTWARE_DETAIL = "software";
 
-   String LOGIN_WEIBO = "weibo";
-   String LOGIN_QQ = "qq";
-   String LOGIN_WECHAT = "wechat";
-   String LOGIN_CSDN = "csdn";
+    String LOGIN_WEIBO = "weibo";
+    String LOGIN_QQ = "qq";
+    String LOGIN_WECHAT = "wechat";
+    String LOGIN_CSDN = "csdn";
 
-   int REGISTER_INTENT = 1;
-   int RESET_PWD_INTENT = 2;
+    int REGISTER_INTENT = 1;
+    int RESET_PWD_INTENT = 2;
 
-   int REQUEST_COUNT = 0x50;//请求分页大小
+    int REQUEST_COUNT = 0x50;//请求分页大小
 
-   int TYPE_USER_FLOWS = 1;//你关注的人
-   int TYPE_USER_FANS = 2;//关注你的人
+    int TYPE_USER_FLOWS = 1;//你关注的人
+    int TYPE_USER_FANS = 2;//关注你的人
 
     @GET("sub_list?")
     Call<ResultBean<PageBean<SubBean>>> getSubList(@Query("token") String token, @Query("pageToken") String nextPageToken);
@@ -91,6 +92,13 @@ public interface ServiceApi {
     //动弹
     @GET("tweet_list?")
     Call<ResultBean<PageBean<Tweet>>> getTweetList(@QueryMap Map<String, Object> params);
+
+    //热门话题
+    @GET("topic?")
+    Call<ResultBean<PageBean<Topic>>> getHotTopic(@Query("type") String type, @Query("pageToken") String nextPageToken);
+
+    @GET("topic_tweets?")
+    Call<ResultBean<PageBean<Tweet>>> getTopicTweets(@QueryMap Map<String, Object> map);
 
     //banner
     @GET("banner?")

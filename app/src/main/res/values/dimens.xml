@@ -65,9 +65,7 @@
 
     <!--toast y offset  官方默认是64dip-->
     <dimen name="toast_y_offset">35dp</dimen>
-
-
-
+    <dimen name="text_margin">16dp</dimen>
 
 
 </resources>

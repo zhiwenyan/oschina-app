@@ -154,6 +154,18 @@
             android:theme="@style/App.Theme.Main"
             android:windowSoftInputMode="adjustResize">
         </activity>
+        <activity
+            android:name=".ui.tweet.topic.TopicDetailActivity"
+            android:label="热门话题"
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
+        </activity>
+        <activity
+            android:name=".ui.user.SettingActivity"
+            android:label="设置"
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
+        </activity>
     </application>
 
 </manifest>

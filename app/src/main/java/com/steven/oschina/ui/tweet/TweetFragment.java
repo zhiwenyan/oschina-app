@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.steven.oschina.CacheManager;
-import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
@@ -28,6 +27,7 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
     public static final int CATALOG_FRIENDS = 0X0004;
     public static final int CATALOG_TAG = 0X0005;
     public static final int CATALOG_SOMEONE = 0X0006;
+    public static final int CATALOG_TOPIC = 0X0007;
     public static final String BUNDLE_KEY_REQUEST_CATALOG = "BUNDLE_KEY_REQUEST_CATALOG";
 
     public static final String CACHE_NEW_TWEET = "cache_new_tweet";
@@ -125,7 +125,7 @@ public class TweetFragment extends BaseRecyclerFragment<Tweet> {
                     return;
                 }
                 showTweetList(tweets);
-                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, tweets);
+                CacheManager.saveToJson(mContext, CACHE_NAME, tweets);
             }
         });
     }

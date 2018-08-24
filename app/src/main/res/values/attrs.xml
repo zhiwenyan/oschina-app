@@ -14,5 +14,16 @@
         <attr name="column" format="integer" />
         <attr name="maxPictureSize" format="dimension" />
     </declare-styleable>
-
+    <declare-styleable name="ToggleButton">
+        <attr name="toggle_border_width" format="dimension">
+        </attr>
+        <attr name="offBorderColor" format="reference|color">
+        </attr>
+        <attr name="offColor" format="reference|color">
+        </attr>
+        <attr name="onColor" format="reference|color">
+        </attr>
+        <attr name="spotColor" format="reference|color">
+        </attr>
+    </declare-styleable>
 </resources>

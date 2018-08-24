@@ -43,11 +43,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                 actionBar.setHomeButtonEnabled(false);
             }
         }
-        StatusBarUtil.setStatusBarTrans(this, true);
-        setDarkToolBar();
+        setUpActionBar();
         initBundle(getIntent().getExtras());
         initData();
 
+    }
+
+    protected void setUpActionBar() {
+        StatusBarUtil.setStatusBarTrans(this, true);
+        setDarkToolBar();
     }
 
     protected void initBundle(Bundle bundle) {

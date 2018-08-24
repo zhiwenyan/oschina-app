@@ -29,6 +29,7 @@ import com.steven.oschina.bean.simple.About;
 import com.steven.oschina.bean.sub.Author;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.comment.CommentBar;
+import com.steven.oschina.share.ShareDialog;
 import com.steven.oschina.utils.PlatformUtil;
 import com.steven.oschina.utils.StringUtils;
 import com.steven.oschina.utils.TweetParser;
@@ -227,13 +228,17 @@ public class TweetDetailActivity extends BaseActivity {
         return true;
     }
 
+    private ShareDialog mShareDialog;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_share:
                 if (tweet == null || tweet.getId() <= 0 || TextUtils.isEmpty(tweet.getContent()))
                     break;
-                // TODO: 7/18/2018  
+                if (mShareDialog == null)
+                    mShareDialog = new ShareDialog(this);
+                mShareDialog.show();
                 break;
         }
         return super.onOptionsItemSelected(item);

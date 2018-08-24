@@ -1,0 +1,1572 @@
+package net.oschina.app.api.remote;
+
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+import com.d.a.a.a;
+import com.d.a.a.ag;
+import com.d.a.a.c;
+import com.d.a.a.z;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import net.oschina.app.api.ApiHttpClient;
+import net.oschina.app.bean.EventApplyData;
+import net.oschina.app.bean.Report;
+import net.oschina.app.improve.account.AccountHelper;
+import net.oschina.app.improve.bean.SignUpEventOptions;
+import net.oschina.app.improve.bean.simple.About;
+import net.oschina.app.improve.bean.simple.About.Share;
+import net.oschina.app.improve.detail.sign.StringParams;
+import net.oschina.app.improve.tweet.service.YouPaiResult;
+import net.oschina.app.improve.write.Blog;
+import net.oschina.app.team.bean.Team;
+import net.oschina.app.util.StringUtils;
+
+public class OSChinaApi
+{
+  public static final int CATALOG_ALL = 0;
+  public static final int CATALOG_BANNER_BLOG = 2;
+  public static final int CATALOG_BANNER_EVENT = 3;
+  public static final int CATALOG_BANNER_NEWS = 1;
+  public static final int CATALOG_BLOG = 3;
+  public static final int CATALOG_BLOG_HEAT = 2;
+  public static final int CATALOG_BLOG_NORMAL = 1;
+  public static final int CATALOG_BLOG_RECOMMEND = 3;
+  public static final int CATALOG_EVENT = 5;
+  public static final int CATALOG_NEWS = 6;
+  public static final String CATALOG_NEWS_DETAIL = "news";
+  public static final int CATALOG_QUESTION = 2;
+  public static final int CATALOG_SOFTWARE = 1;
+  public static final String CATALOG_SOFTWARE_DETAIL = "software";
+  public static final String CATALOG_TRANSLATE_DETAIL = "translation";
+  public static final int CATALOG_TRANSLATION = 4;
+  public static final int CATALOG_TWEET = 100;
+  public static final int COMMENT_BLOG = 3;
+  public static final int COMMENT_EVENT = 5;
+  public static final int COMMENT_HOT_ORDER = 2;
+  public static final int COMMENT_NEWS = 6;
+  public static final int COMMENT_NEW_ORDER = 1;
+  public static final int COMMENT_QUESTION = 2;
+  public static final int COMMENT_SOFT = 1;
+  public static final int COMMENT_TRANSLATION = 4;
+  public static final int COMMENT_TWEET = 100;
+  public static final String LOGIN_CSDN = "csdn";
+  public static final String LOGIN_QQ = "qq";
+  public static final String LOGIN_WECHAT = "wechat";
+  public static final String LOGIN_WEIBO = "weibo";
+  public static final int REGISTER_INTENT = 1;
+  public static final int REQUEST_COUNT = 80;
+  public static final int RESET_PWD_INTENT = 2;
+  public static final int TYPE_USER_FANS = 2;
+  public static final int TYPE_USER_FLOWS = 1;
+
+  public static void addClickCount(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("key", paramString);
+    ApiHttpClient.get("action/apiv2/click_count", localz, paramag);
+  }
+
+  @Deprecated
+  public static void addFavorite(int paramInt1, long paramLong, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("uid", paramInt1);
+    localz.put("objid", paramLong);
+    localz.put("type", paramInt2);
+    ApiHttpClient.post("action/api/favorite_add", localz, paramc);
+  }
+
+  public static void addUserRelationReverse(long paramLong, c paramc)
+  {
+    z localz = new z();
+    localz.put("id", paramLong);
+    ApiHttpClient.get("action/apiv2/user_relation_reverse", localz, paramc);
+  }
+
+  public static void articleFav(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("article", paramString);
+    ApiHttpClient.post("action/apiv2/favorite_hot_article", localz, paramag);
+  }
+
+  public static void cancelApply(long paramLong, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    ApiHttpClient.post("action/apiv2/event_apply_cancel", localz, paramag);
+  }
+
+  public static void checkUpdate(ag paramag)
+  {
+    z localz = new z();
+    localz.put("appId", 1);
+    localz.put("catalog", 1);
+    localz.put("all", Boolean.valueOf(false));
+    ApiHttpClient.get("action/apiv2/product_version", localz, paramag);
+  }
+
+  public static void clearNotice(int paramInt, ag paramag)
+  {
+    Object[] arrayOfObject = new Object[2];
+    arrayOfObject[0] = "clearFlag";
+    arrayOfObject[1] = Integer.valueOf(paramInt);
+    ApiHttpClient.post("action/apiv2/notice_clear", new z(arrayOfObject), paramag);
+  }
+
+  public static void csdnLogin(String paramString1, String paramString2, ag paramag)
+  {
+    new a().get(String.format("http://api.csdn.net/oauth2/access_token?client_id=1100506&client_secret=1583dcf438674318a84af97d40c44a93&grant_type=password&username=%s&password=%s", new Object[] { paramString1, paramString2 }), paramag);
+  }
+
+  @Deprecated
+  public static void delFavorite(int paramInt1, long paramLong, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("uid", paramInt1);
+    localz.put("objid", paramLong);
+    localz.put("type", paramInt2);
+    ApiHttpClient.post("action/api/favorite_delete", localz, paramc);
+  }
+
+  public static void delSoftwareTweet(long paramLong, c paramc)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    ApiHttpClient.post("/action/apiv2/tweet_delete", localz, paramc);
+  }
+
+  public static void deleteBlog(long paramLong, ag paramag)
+  {
+    z localz = new z();
+    localz.put("id", paramLong);
+    ApiHttpClient.get("action/apiv2/delete_blog", localz, paramag);
+  }
+
+  @Deprecated
+  public static void deleteBlogComment(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, c paramc)
+  {
+    z localz = new z();
+    localz.put("uid", paramInt1);
+    localz.put("blogid", paramInt2);
+    localz.put("replyid", paramInt3);
+    localz.put("authorid", paramInt4);
+    localz.put("owneruid", paramInt5);
+    ApiHttpClient.post("action/api/blogcomment_delete", localz, paramc);
+  }
+
+  @Deprecated
+  public static void deleteComment(int paramInt1, int paramInt2, int paramInt3, int paramInt4, c paramc)
+  {
+    z localz = new z();
+    localz.put("id", paramInt1);
+    localz.put("catalog", paramInt2);
+    localz.put("replyid", paramInt3);
+    localz.put("authorid", paramInt4);
+    ApiHttpClient.post("action/api/comment_delete", localz, paramc);
+  }
+
+  @Deprecated
+  public static void deleteNoteBook(int paramInt, long paramLong, c paramc)
+  {
+    z localz = new z();
+    localz.put("uid", paramLong);
+    localz.put("id", paramInt);
+    ApiHttpClient.get("action/api/team_stickynote_recycle", localz, paramc);
+  }
+
+  @Deprecated
+  public static void deleteTweet(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("uid", paramInt1);
+    localz.put("tweetid", paramInt2);
+    ApiHttpClient.post("action/api/tweet_delete", localz, paramc);
+  }
+
+  public static void deleteTweet(long paramLong, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    ApiHttpClient.get("action/apiv2/tweet_delete", localz, paramag);
+  }
+
+  public static void deleteTweetComment(long paramLong1, long paramLong2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong1);
+    localz.put("commentId", paramLong2);
+    ApiHttpClient.get("action/apiv2/tweet_comment_delete", localz, paramag);
+  }
+
+  @Deprecated
+  public static void eventApply(EventApplyData paramEventApplyData, c paramc)
+  {
+    z localz = new z();
+    localz.put("event", paramEventApplyData.getEvent());
+    localz.put("user", paramEventApplyData.getUser());
+    localz.put("name", paramEventApplyData.getName());
+    localz.put("gender", paramEventApplyData.getGender());
+    localz.put("mobile", paramEventApplyData.getPhone());
+    localz.put("company", paramEventApplyData.getCompany());
+    localz.put("job", paramEventApplyData.getJob());
+    if (!StringUtils.isEmpty(paramEventApplyData.getRemark()))
+      localz.put("misc_info", paramEventApplyData.getRemark());
+    ApiHttpClient.post("action/api/event_apply", localz, paramc);
+  }
+
+  public static void eventSignin(long paramLong, String paramString, ag paramag)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("phone", paramString);
+    ApiHttpClient.post("action/apiv2/event_signin", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getAllFriendsList(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("uid", paramInt1);
+    localz.put("relation", paramInt2);
+    localz.put("all", 1);
+    ApiHttpClient.get("action/api/friends_list", localz, paramc);
+  }
+
+  public static void getApplyUsers(long paramLong, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    if (!TextUtils.isEmpty(paramString1))
+      localz.put("pageToken", paramString1);
+    if (!TextUtils.isEmpty("filter"))
+      localz.put("filter", paramString2);
+    ApiHttpClient.post("action/apiv2/event_attendee_list", localz, paramag);
+  }
+
+  public static void getArticleComments(String paramString1, int paramInt, String paramString2, ag paramag)
+  {
+    if (TextUtils.isEmpty(paramString1))
+      return;
+    z localz = new z();
+    localz.put("key", paramString1);
+    localz.put("catalog", paramInt);
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/get_article_comments", localz, paramag);
+  }
+
+  public static void getArticleDetail(String paramString1, String paramString2, int paramInt, ag paramag)
+  {
+    z localz = new z();
+    localz.put("ident", paramString2);
+    localz.put("key", paramString1);
+    localz.put("type", paramInt);
+    ApiHttpClient.get("action/apiv2/get_article_detail", localz, paramag);
+  }
+
+  public static void getArticleDetail(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("ident", paramString2);
+    localz.put("key", paramString1);
+    ApiHttpClient.get("action/apiv2/get_article_detail", localz, paramag);
+  }
+
+  public static void getArticleRecommends(String paramString1, String paramString2, int paramInt, String paramString3, ag paramag)
+  {
+    z localz = new z();
+    localz.put("key", paramString1);
+    localz.put("ident", paramString2);
+    localz.put("type", paramInt);
+    if (!TextUtils.isEmpty(paramString3))
+      localz.put("pageToken", paramString3);
+    ApiHttpClient.get("action/apiv2/get_article_recommends", localz, paramag);
+  }
+
+  public static void getArticleRecommends(String paramString1, String paramString2, String paramString3, ag paramag)
+  {
+    z localz = new z();
+    localz.put("key", paramString1);
+    localz.put("ident", paramString2);
+    if (!TextUtils.isEmpty(paramString3))
+      localz.put("pageToken", paramString3);
+    ApiHttpClient.get("action/apiv2/get_article_recommends", localz, paramag);
+  }
+
+  public static void getArticles(String paramString1, int paramInt, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("ident", paramString1);
+    localz.put("type", paramInt);
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/get_articles", localz, paramag);
+  }
+
+  public static void getArticles(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("ident", paramString1);
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/get_articles", localz, paramag);
+  }
+
+  public static void getBanner(String paramString, ag paramag)
+  {
+    ApiHttpClient.get(paramString, paramag);
+  }
+
+  public static void getBlogCategories(ag paramag)
+  {
+    ApiHttpClient.get("action/apiv2/get_blog_category", paramag);
+  }
+
+  @Deprecated
+  public static void getBlogCommentList(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("id", paramInt1);
+    localz.put("pageIndex", paramInt2);
+    localz.put("pageSize", 20);
+    ApiHttpClient.get("action/api/blogcomment_list", localz, paramc);
+  }
+
+  public static void getBlogDetail(long paramLong, c paramc)
+  {
+    z localz = new z();
+    localz.put("id", paramLong);
+    ApiHttpClient.get("action/apiv2/blog", localz, paramc);
+  }
+
+  public static void getCollectionList(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("catalog", 0);
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/favorites", localz, paramag);
+  }
+
+  public static void getCommentDetail(long paramLong1, long paramLong2, int paramInt, ag paramag)
+  {
+    if (paramLong1 <= 0L)
+      return;
+    z localz = new z();
+    localz.put("id", paramLong1);
+    localz.put("authorId", paramLong2);
+    localz.put("type", paramInt);
+    ApiHttpClient.get("action/apiv2/comment_detail", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getCommentList(int paramInt1, int paramInt2, int paramInt3, c paramc)
+  {
+    z localz = new z();
+    localz.put("catalog", paramInt2);
+    localz.put("id", paramInt1);
+    localz.put("pageIndex", paramInt3);
+    localz.put("pageSize", 20);
+    localz.put("clientType", "android");
+    ApiHttpClient.get("action/api/comment_list", localz, paramc);
+  }
+
+  public static void getComments(long paramLong, int paramInt1, String paramString1, int paramInt2, String paramString2, ag paramag)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    localz.put("type", paramInt1);
+    localz.put("parts", paramString1);
+    localz.put("order", paramInt2);
+    localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/comment_list", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getComments(long paramLong, int paramInt, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    localz.put("type", paramInt);
+    localz.put("parts", paramString1);
+    localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/comment", localz, paramag);
+  }
+
+  public static void getDetail(int paramInt, String paramString, long paramLong, ag paramag)
+  {
+    z localz = new z();
+    localz.put("type", paramInt);
+    localz.put("id", paramLong);
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("ident", paramString);
+    ApiHttpClient.get("action/apiv2/detail", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getDiaryComment(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramInt1);
+    localz.put("id", paramInt2);
+    localz.put("type", "diary");
+    localz.put("pageIndex", 0);
+    localz.put("pageSize", "20");
+    ApiHttpClient.get("action/api/team_reply_list_by_type", localz, paramc);
+  }
+
+  @Deprecated
+  public static void getDiaryDetail(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramInt1);
+    localz.put("diaryid", paramInt2);
+    ApiHttpClient.get("action/api/team_diary_detail", localz, paramc);
+  }
+
+  @Deprecated
+  public static void getDiaryFromWhichWeek(int paramInt1, int paramInt2, int paramInt3, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramInt1);
+    localz.put("year", paramInt2);
+    localz.put("week", paramInt3);
+    ApiHttpClient.get("action/api/team_diary_list", localz, paramc);
+  }
+
+  @Deprecated
+  public static void getDynamicDetail(int paramInt1, int paramInt2, int paramInt3, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramInt2);
+    localz.put("uid", paramInt3);
+    localz.put("activeid", paramInt1);
+    ApiHttpClient.get("action/api/team_active_detail", localz, paramc);
+  }
+
+  @Deprecated
+  public static void getEventApplies(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("pageIndex", paramInt2);
+    localz.put("event_id", paramInt1);
+    localz.put("pageSize", 20);
+    ApiHttpClient.get("action/api/event_attend_user", localz, paramc);
+  }
+
+  public static void getEventDetail(long paramLong, c paramc)
+  {
+    z localz = new z();
+    localz.put("id", paramLong);
+    ApiHttpClient.get("action/apiv2/event", localz, paramc);
+  }
+
+  @Deprecated
+  public static void getEventList(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("pageIndex", paramInt1);
+    localz.put("uid", paramInt2);
+    localz.put("pageSize", 20);
+    ApiHttpClient.get("action/api/event_list", localz, paramc);
+  }
+
+  public static void getFavReverse(long paramLong, int paramInt, c paramc)
+  {
+    z localz = new z();
+    localz.put("id", paramLong);
+    localz.put("type", paramInt);
+    ApiHttpClient.get("action/apiv2/favorite_reverse", localz, paramc);
+  }
+
+  public static void getHotTopic(String paramString, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("pageToken", paramString);
+    localz.put("type", 2);
+    ApiHttpClient.get("action/apiv2/topic", localz, paramag);
+  }
+
+  public static void getLauncher(ag paramag)
+  {
+    ApiHttpClient.get("action/apiv2/get_launcher", paramag);
+  }
+
+  public static void getMessageList(long paramLong, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("authorId", paramLong);
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/messages", localz, paramag);
+  }
+
+  public static void getMsgCommentList(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/user_msg_comments", localz, paramag);
+  }
+
+  public static void getMsgMentionList(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/user_msg_mentions", localz, paramag);
+  }
+
+  public static void getMyIssue(String paramString1, String paramString2, int paramInt, String paramString3, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramString1);
+    localz.put("uid", paramString2);
+    localz.put("pageIndex", paramInt);
+    localz.put("pageSize", 20);
+    localz.put("state", paramString3);
+    localz.put("projectid", "-1");
+    ApiHttpClient.get("action/api/team_issue_list", localz, paramc);
+  }
+
+  @Deprecated
+  public static void getMyIssueState(String paramString1, String paramString2, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramString1);
+    localz.put("uid", paramString2);
+    ApiHttpClient.get("action/api/team_user_issue_information", localz, paramc);
+  }
+
+  public static void getNewsDetail(long paramLong, String paramString, c paramc)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("id", paramLong);
+    ApiHttpClient.get("action/apiv2/" + paramString, localz, paramc);
+  }
+
+  public static void getNotice(ag paramag)
+  {
+    z localz = new z();
+    localz.put("clear", Boolean.valueOf(false));
+    ApiHttpClient.get("action/apiv2/notice", localz, paramag);
+  }
+
+  public static void getPayDonate(long paramLong1, long paramLong2, float paramFloat, int paramInt, ag paramag)
+  {
+    z localz = new z();
+    localz.put("authorId", paramLong1);
+    localz.put("objId", paramLong2);
+    localz.put("money", Float.valueOf(paramFloat).intValue());
+    localz.put("payType", paramInt);
+    ApiHttpClient.get("action/apiv2/blog_donate_prepare", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getPostListByTag(String paramString, int paramInt, c paramc)
+  {
+    z localz = new z();
+    localz.put("tag", paramString);
+    localz.put("pageIndex", paramInt);
+    localz.put("pageSize", 20);
+    ApiHttpClient.get("action/api/post_list", localz, paramc);
+  }
+
+  public static void getPutHistory(String paramString, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/get_articles_history", localz, paramag);
+  }
+
+  public static void getQuestionDetail(long paramLong, c paramc)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("id", paramLong);
+    ApiHttpClient.get("action/apiv2/question", localz, paramc);
+  }
+
+  public static void getRecommendTopic(ag paramag)
+  {
+    ApiHttpClient.get("action/apiv2/topic_recommend", paramag);
+  }
+
+  public static void getShakeNews(ag paramag)
+  {
+    ApiHttpClient.get("action/apiv2/shake_news", paramag);
+  }``
+
+  public static void getShakePresent(long paramLong, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("timestamp", paramLong);
+    localz.put("appToken", paramString1);
+    localz.put("signature", paramString2);
+    ApiHttpClient.post("action/apiv2/shake_present", localz, paramag);
+  }
+
+  public static void getSignUpOptions(long paramLong, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    ApiHttpClient.get("action/apiv2/event_apply_preload", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getSoftwareCatalogList(int paramInt, c paramc)
+  {
+    Object[] arrayOfObject = new Object[2];
+    arrayOfObject[0] = "tag";
+    arrayOfObject[1] = Integer.valueOf(paramInt);
+    ApiHttpClient.get("action/api/softwarecatalog_list", new z(arrayOfObject), paramc);
+  }
+
+  public static void getSoftwareDetail(String paramString1, String paramString2, c paramc)
+  {
+    if (TextUtils.isEmpty(paramString1))
+      return;
+    z localz = new z();
+    localz.put("ident", paramString1);
+    ApiHttpClient.get("action/apiv2/" + paramString2, localz, paramc);
+  }
+
+  @Deprecated
+  public static void getSoftwareList(String paramString, int paramInt, c paramc)
+  {
+    z localz = new z();
+    localz.put("searchTag", paramString);
+    localz.put("pageIndex", paramInt);
+    localz.put("pageSize", 20);
+    ApiHttpClient.get("action/api/software_list", localz, paramc);
+  }
+
+  @Deprecated
+  public static void getSoftwareTagList(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("searchTag", paramInt1);
+    localz.put("pageIndex", paramInt2);
+    localz.put("pageSize", 20);
+    ApiHttpClient.get("action/api/softwaretag_list", localz, paramc);
+  }
+
+  public static void getSoftwareTweetList(String paramString1, String paramString2, ag paramag)
+  {
+    if (TextUtils.isEmpty(paramString1))
+      return;
+    z localz = new z();
+    localz.put("tag", paramString1);
+    localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/tweets", localz, paramag);
+  }
+
+  public static void getSomeoneBlogs(String paramString1, long paramLong, String paramString2, c paramc)
+  {
+    if ((paramLong <= 0L) && (TextUtils.isEmpty(paramString2)))
+      return;
+    z localz = new z();
+    localz.put("pageToken", paramString1);
+    localz.put("authorId", paramLong);
+    localz.put("authorName", paramString2);
+    ApiHttpClient.get("action/apiv2/blog_list", localz, paramc);
+  }
+
+  public static void getSubscription(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("pageToken", paramString2);
+    ApiHttpClient.get(paramString1, localz, paramag);
+  }
+
+  public static void getTags(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("job", paramString1);
+    localz.put("dev", paramString2);
+    ApiHttpClient.get("action/apiv2/get_tags_by_launch", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getTeamMemberList(int paramInt, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramInt);
+    ApiHttpClient.get("action/api/team_member_list", localz, paramc);
+  }
+
+  public static void getTopicDetail(long paramLong, String paramString, ag paramag)
+  {
+    z localz = new z();
+    if (paramLong > 0L)
+      localz.put("id", paramLong);
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("name", paramString);
+    ApiHttpClient.get("action/apiv2/topic_detail", localz, paramag);
+  }
+
+  public static void getTopicTweet(long paramLong, String paramString1, int paramInt, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("pageToken", paramString2);
+    if (!TextUtils.isEmpty(paramString1))
+      localz.put("name", paramString1);
+    localz.put("topicId", paramLong);
+    localz.put("type", paramInt);
+    ApiHttpClient.get("action/apiv2/topic_tweets", localz, paramag);
+  }
+
+  public static void getTweetCommentList(long paramLong, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/tweet_comments", localz, paramag);
+  }
+
+  public static void getTweetDetail(long paramLong, ag paramag)
+  {
+    z localz = new z();
+    localz.put("id", paramLong);
+    ApiHttpClient.get("action/apiv2/tweet", localz, paramag);
+  }
+
+  public static void getTweetLikeList(long paramLong, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/tweet_likes", localz, paramag);
+  }
+
+  public static void getTweetList(Long paramLong, String paramString1, Integer paramInteger1, Integer paramInteger2, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    if (paramLong != null)
+      localz.put("authorId", paramLong);
+    while (true)
+    {
+      localz.put("order", paramInteger2);
+      localz.put("pageToken", paramString2);
+      ApiHttpClient.get("action/apiv2/tweet_list", localz, paramag);
+      return;
+      if (!TextUtils.isEmpty(paramString1))
+        localz.put("tag", paramString1);
+      else
+        localz.put("type", paramInteger1);
+    }
+  }
+
+  public static void getUserActives(long paramLong, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("id", paramLong);
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/user_activity", localz, paramag);
+  }
+
+  @Deprecated
+  public static void getUserDynamic(int paramInt1, String paramString, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramInt1);
+    localz.put("pageIndex", paramInt2);
+    localz.put("pageSize", 20);
+    localz.put("type", "all");
+    localz.put("uid", paramString);
+    ApiHttpClient.get("action/api/team_active_list", localz, paramc);
+  }
+
+  public static void getUserEvent(long paramLong, String paramString1, String paramString2, ag paramag)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("authorId", paramLong);
+    localz.put("authorName", paramString1);
+    localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/event_list", localz, paramag);
+  }
+
+  public static void getUserEvents(long paramLong, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    if (paramLong > 0L)
+      localz.put("authorId", paramLong);
+    if (!TextUtils.isEmpty(paramString1))
+      localz.put("authorName", paramString1);
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/event_list", localz, paramag);
+  }
+
+  public static void getUserFansOrFlows(int paramInt, long paramLong, String paramString, ag paramag)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("id", paramLong);
+    localz.put("pageToken", paramString);
+    String str = "user_follows";
+    if (paramInt == 2)
+      str = "user_fans";
+    ApiHttpClient.get("action/apiv2/" + str, localz, paramag);
+  }
+
+  public static void getUserFavorites(int paramInt, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("catalog", paramInt);
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/favorites", localz, paramag);
+  }
+
+  public static void getUserFriends(long paramLong, String paramString, int paramInt, ag paramag)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("id", paramLong);
+    localz.put("pageToken", paramString);
+    localz.put("count", paramInt);
+    ApiHttpClient.get("action/apiv2/user_follows", localz, paramag);
+  }
+
+  public static void getUserInfo(long paramLong, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    if (paramLong > 0L)
+      localz.put("id", paramLong);
+    localz.put("nickname", paramString1);
+    localz.put("suffix", paramString2);
+    ApiHttpClient.get("action/apiv2/user_info", localz, paramag);
+  }
+
+  public static void getUserInfo(ag paramag)
+  {
+    ApiHttpClient.get("action/apiv2/user_info", paramag);
+  }
+
+  public static void getUserMessageList(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/user_msg_letters", localz, paramag);
+  }
+
+  public static void getUserQuestionList(String paramString, long paramLong, c paramc)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("pageToken", paramString);
+    localz.put("authorId", paramLong);
+    ApiHttpClient.get("action/apiv2/question", localz, paramc);
+  }
+
+  public static void getUserTags(ag paramag)
+  {
+    ApiHttpClient.get("action/apiv2/user_tags", paramag);
+  }
+
+  public static void getUserTweetList(long paramLong, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("authorId", paramLong);
+    localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/tweets", localz, paramag);
+  }
+
+  public static void getWXOAuth(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("appid", "wxa8213dc827399101");
+    localz.put("secret", "5c716417ce72ff69d8cf0c43572c9284");
+    localz.put("code", paramString);
+    localz.put("grant_type", "authorization_code");
+    new a().get("https://api.weixin.qq.com/sns/oauth2/access_token", localz, paramag);
+  }
+
+  public static void getWXRule(ag paramag)
+  {
+    ApiHttpClient.get("action/apiv2/wechat_title_rule", paramag);
+  }
+
+  public static void getWebRule(String paramString, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("url", paramString);
+    ApiHttpClient.get("action/apiv2/get_article_rules", localz, paramag);
+  }
+
+  public static void getYPToken(String paramString1, String paramString2, c paramc)
+  {
+    z localz = new z();
+    localz.put("key", paramString1);
+    localz.put("sign", paramString2);
+    ApiHttpClient.post("action/apiv2/get_upyun_token", localz, paramc);
+  }
+
+  public static void login(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("account", paramString1);
+    localz.put("password", paramString2);
+    ApiHttpClient.post("action/apiv2/account_login", localz, paramag);
+  }
+
+  public static void openLogin(String paramString1, String paramString2, ag paramag)
+  {
+    if (TextUtils.isEmpty(paramString2))
+      return;
+    z localz = new z();
+    localz.put("catalog", paramString1);
+    localz.put("info", paramString2);
+    ApiHttpClient.post("action/apiv2/account_open_login", localz, paramag);
+  }
+
+  public static void pubArticleComment(String paramString1, String paramString2, int paramInt, long paramLong1, long paramLong2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("key", paramString1);
+    localz.put("type", paramInt);
+    localz.put("content", paramString2);
+    if (paramLong1 > 0L)
+      localz.put("referId", paramLong1);
+    if (paramLong2 > 0L)
+      localz.put("reAuthorId", paramLong2);
+    ApiHttpClient.post("action/apiv2/pub_article_comment", localz, paramag);
+  }
+
+  public static void pubArticleComment(String paramString1, String paramString2, long paramLong1, long paramLong2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("key", paramString1);
+    localz.put("content", paramString2);
+    if (paramLong1 > 0L)
+      localz.put("referId", paramLong1);
+    if (paramLong2 > 0L)
+      localz.put("reAuthorId", paramLong2);
+    ApiHttpClient.post("action/apiv2/pub_article_comment", localz, paramag);
+  }
+
+  public static void pubBlog(Blog paramBlog, ag paramag)
+  {
+    z localz = new z();
+    localz.put("title", paramBlog.getTitle());
+    localz.put("abstract", paramBlog.getSummary());
+    localz.put("system", paramBlog.getSystem());
+    localz.put("catalog", paramBlog.getCatalog());
+    localz.put("canVisible", paramBlog.getCanVisible());
+    localz.put("canComment", paramBlog.getCanComment());
+    localz.put("isStick", paramBlog.getIsStick());
+    localz.put("type", paramBlog.getType());
+    localz.put("content", paramBlog.getContent());
+    ApiHttpClient.post("action/apiv2/pub_blog", localz, paramag);
+  }
+
+  public static void pubBlogComment(long paramLong1, long paramLong2, long paramLong3, String paramString, ag paramag)
+  {
+    long l1;
+    long l2;
+    if ((paramLong2 == 0L) || (paramLong2 == paramLong1))
+    {
+      l1 = 0L;
+      l2 = 0L;
+    }
+    while (true)
+    {
+      publishComment(paramLong1, 0L, l1, l2, 3, paramString, paramag);
+      return;
+      l2 = paramLong3;
+      l1 = paramLong2;
+    }
+  }
+
+  public static void pubComment(long paramLong1, int paramInt, String paramString, long paramLong2, long paramLong3, long paramLong4, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong1);
+    localz.put("type", paramInt);
+    localz.put("content", paramString);
+    if (paramLong2 > 0L)
+      localz.put("referId", paramLong2);
+    if (paramLong3 > 0L)
+      localz.put("replyId", paramLong3);
+    if (paramLong4 > 0L)
+      localz.put("reAuthorId", paramLong4);
+    ApiHttpClient.post("action/apiv2/comment_push", localz, paramag);
+  }
+
+  public static void pubEventComment(long paramLong1, long paramLong2, long paramLong3, String paramString, ag paramag)
+  {
+    long l1;
+    long l2;
+    if ((paramLong2 == 0L) || (paramLong2 == paramLong1))
+    {
+      l1 = 0L;
+      l2 = 0L;
+    }
+    while (true)
+    {
+      publishComment(paramLong1, 0L, l1, l2, 5, paramString, paramag);
+      return;
+      l2 = paramLong3;
+      l1 = paramLong2;
+    }
+  }
+
+  @Deprecated
+  public static void pubLikeTweet(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("tweetid", paramInt1);
+    localz.put("uid", AccountHelper.getUserId());
+    localz.put("ownerOfTweet", paramInt2);
+    ApiHttpClient.post("action/api/tweet_like", localz, paramc);
+  }
+
+  public static void pubMessage(long paramLong, File paramFile, ag paramag)
+  {
+    z localz = new z();
+    localz.put("authorId", paramLong);
+    try
+    {
+      localz.put("file", paramFile);
+      ApiHttpClient.post("action/apiv2/messages_pub", localz, paramag);
+      return;
+    }
+    catch (FileNotFoundException localFileNotFoundException)
+    {
+      while (true)
+        localFileNotFoundException.printStackTrace();
+    }
+  }
+
+  public static void pubMessage(long paramLong, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("authorId", paramLong);
+    localz.put("content", paramString);
+    ApiHttpClient.post("action/apiv2/messages_pub", localz, paramag);
+  }
+
+  public static void pubMessage(long paramLong, String paramString, File paramFile, ag paramag)
+  {
+    z localz = new z();
+    localz.put("authorId", paramLong);
+    localz.put("content", paramString);
+    if ((paramFile != null) && (paramFile.exists()));
+    try
+    {
+      localz.put("file", paramFile);
+      ApiHttpClient.post("action/apiv2/messages_pub", localz, paramag);
+      return;
+    }
+    catch (Exception localException)
+    {
+      while (true)
+        localException.printStackTrace();
+    }
+  }
+
+  public static void pubNewsComment(long paramLong1, long paramLong2, long paramLong3, String paramString, ag paramag)
+  {
+    long l1;
+    long l2;
+    if ((paramLong2 == 0L) || (paramLong2 == paramLong1))
+    {
+      l1 = 0L;
+      l2 = 0L;
+    }
+    while (true)
+    {
+      publishComment(paramLong1, 0L, l1, l2, 6, paramString, paramag);
+      return;
+      l2 = paramLong3;
+      l1 = paramLong2;
+    }
+  }
+
+  public static void pubQuestionComment(long paramLong1, long paramLong2, long paramLong3, String paramString, ag paramag)
+  {
+    long l1;
+    long l2;
+    if ((paramLong2 == 0L) || (paramLong2 == paramLong1))
+    {
+      l1 = 0L;
+      l2 = 0L;
+    }
+    while (true)
+    {
+      publishComment(paramLong1, 0L, l1, l2, 2, paramString, paramag);
+      return;
+      l2 = paramLong3;
+      l1 = paramLong2;
+    }
+  }
+
+  public static void pubSoftComment(long paramLong1, long paramLong2, long paramLong3, String paramString, ag paramag)
+  {
+    publishComment(paramLong1, 0L, paramLong2, paramLong3, 1, paramString, paramag);
+  }
+
+  public static void pubSoftwareLike(long paramLong, ag paramag)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    ApiHttpClient.post("action/apiv2/tweet_like_reverse", localz, paramag);
+  }
+
+  public static void pubSoftwareTweet(String paramString, c paramc)
+  {
+    if (!TextUtils.isEmpty(paramString))
+    {
+      z localz = new z();
+      localz.put("content", paramString);
+      ApiHttpClient.post("/action/apiv2/tweet", localz, paramc);
+    }
+  }
+
+  public static void pubTranslateComment(long paramLong1, long paramLong2, long paramLong3, String paramString, ag paramag)
+  {
+    long l1;
+    long l2;
+    if ((paramLong2 == 0L) || (paramLong2 == paramLong1))
+    {
+      l1 = 0L;
+      l2 = 0L;
+    }
+    while (true)
+    {
+      publishComment(paramLong1, 0L, l1, l2, 4, paramString, paramag);
+      return;
+      l2 = paramLong3;
+      l1 = paramLong2;
+    }
+  }
+
+  public static void pubTweet(String paramString1, String paramString2, String paramString3, String paramString4, About.Share paramShare, c paramc)
+  {
+    if (TextUtils.isEmpty(paramString1))
+      throw new NullPointerException("content is not null.");
+    z localz = new z();
+    localz.put("content", paramString1);
+    localz.put("images", paramString3);
+    localz.put("audio", paramString4);
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("imagesList", paramString2);
+    if (About.check(paramShare))
+    {
+      localz.put("aboutId", paramShare.id);
+      localz.put("aboutType", paramShare.type);
+      localz.put("aboutFromTweetId", paramShare.fromTweetId);
+    }
+    ApiHttpClient.post("action/apiv2/tweet", localz, paramc);
+  }
+
+  public static void pubTweetComment(long paramLong1, String paramString, long paramLong2, c paramc)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong1);
+    localz.put("content", paramString);
+    if (paramLong2 > 0L)
+      localz.put("replyId", paramLong2);
+    ApiHttpClient.post("action/apiv2/tweet_comment", localz, paramc);
+  }
+
+  @Deprecated
+  public static void pubUnLikeTweet(int paramInt1, int paramInt2, c paramc)
+  {
+    z localz = new z();
+    localz.put("tweetid", paramInt1);
+    localz.put("uid", AccountHelper.getUserId());
+    localz.put("ownerOfTweet", paramInt2);
+    ApiHttpClient.post("action/api/tweet_unlike", localz, paramc);
+  }
+
+  @Deprecated
+  public static void publicBlogComment(long paramLong, int paramInt, String paramString, c paramc)
+  {
+    z localz = new z();
+    localz.put("blog", paramLong);
+    localz.put("uid", paramInt);
+    localz.put("content", paramString);
+    ApiHttpClient.post("action/api/blogcomment_pub", localz, paramc);
+  }
+
+  @Deprecated
+  public static void publicComment(int paramInt1, long paramLong, int paramInt2, String paramString, int paramInt3, c paramc)
+  {
+    z localz = new z();
+    localz.put("catalog", paramInt1);
+    localz.put("id", paramLong);
+    localz.put("uid", paramInt2);
+    localz.put("content", paramString);
+    localz.put("isPostToMyZone", paramInt3);
+    ApiHttpClient.post("action/api/comment_pub", localz, paramc);
+  }
+
+  public static void publishComment(long paramLong1, long paramLong2, long paramLong3, long paramLong4, int paramInt, String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong1);
+    localz.put("type", paramInt);
+    localz.put("content", paramString);
+    if (paramLong2 > 0L)
+      localz.put("referId", paramLong2);
+    if (paramLong3 > 0L)
+      localz.put("replyId", paramLong3);
+    if (paramLong4 > 0L)
+      localz.put("reAuthorId", paramLong4);
+    ApiHttpClient.post("action/apiv2/comment_push", localz, paramag);
+  }
+
+  public static void pushReadRecord(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("key", paramString);
+    ApiHttpClient.post("action/apiv2/send_read_record", localz, paramag);
+  }
+
+  public static void putArticle(String paramString, ag paramag)
+  {
+    z localz = new z();
+    localz.put("link", paramString);
+    ApiHttpClient.post("action/apiv2/post_link_article", localz, paramag);
+  }
+
+  public static void putUserTags(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString1))
+      localz.put("ids", paramString1);
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("deleteIds", paramString2);
+    ApiHttpClient.post("action/apiv2/put_tags", localz, paramag);
+  }
+
+  public static void questionVote(long paramLong1, long paramLong2, int paramInt, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong1);
+    localz.put("commentId", paramLong2);
+    localz.put("voteOpt", paramInt);
+    ApiHttpClient.post("action/apiv2/question_vote", localz, paramag);
+  }
+
+  public static void readHistory(String paramString, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("pageToken", paramString);
+    ApiHttpClient.get("action/apiv2/user_read_list", paramag);
+  }
+
+  public static void register(String paramString1, String paramString2, int paramInt, String paramString3, ag paramag)
+  {
+    z localz = new z();
+    localz.put("username", paramString1);
+    localz.put("password", paramString2);
+    localz.put("gender", paramInt);
+    localz.put("phoneToken", paramString3);
+    ApiHttpClient.post("action/apiv2/account_register", localz, paramag);
+  }
+
+  @Deprecated
+  public static void replyBlogComment(long paramLong1, long paramLong2, String paramString, long paramLong3, long paramLong4, c paramc)
+  {
+    z localz = new z();
+    localz.put("blog", paramLong1);
+    localz.put("uid", paramLong2);
+    localz.put("content", paramString);
+    localz.put("reply_id", paramLong3);
+    localz.put("objuid", paramLong4);
+    ApiHttpClient.post("action/api/blogcomment_pub", localz, paramc);
+  }
+
+  @Deprecated
+  public static void replyComment(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, String paramString, c paramc)
+  {
+    z localz = new z();
+    localz.put("catalog", paramInt2);
+    localz.put("id", paramInt1);
+    localz.put("uid", paramInt5);
+    localz.put("content", paramString);
+    localz.put("replyid", paramInt3);
+    localz.put("authorid", paramInt4);
+    ApiHttpClient.post("action/api/comment_reply", localz, paramc);
+  }
+
+  public static void report(long paramLong, int paramInt1, String paramString1, int paramInt2, String paramString2, String paramString3, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    localz.put("type", paramInt1);
+    localz.put("href", paramString1);
+    localz.put("reason", paramInt2);
+    localz.put("memo", paramString2);
+    if (!TextUtils.isEmpty(paramString3))
+      localz.put("key", paramString3);
+    ApiHttpClient.post("action/apiv2/report", localz, paramag);
+  }
+
+  @Deprecated
+  public static void report(Report paramReport, c paramc)
+  {
+    z localz = new z();
+    localz.put("obj_id", paramReport.getObjId());
+    localz.put("url", paramReport.getUrl());
+    localz.put("obj_type", paramReport.getObjType());
+    localz.put("reason", paramReport.getReason());
+    if ((paramReport.getOtherReason() != null) && (!StringUtils.isEmpty(paramReport.getOtherReason())))
+      localz.put("memo", paramReport.getOtherReason());
+    ApiHttpClient.post("action/communityManage/report", localz, paramc);
+  }
+
+  public static void resetPwd(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("password", paramString1);
+    localz.put("phoneToken", paramString2);
+    ApiHttpClient.post("action/apiv2/account_password_forgot", localz, paramag);
+  }
+
+  public static void reverseTweetLike(long paramLong, ag paramag)
+  {
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    ApiHttpClient.get("action/apiv2/tweet_like_reverse", localz, paramag);
+  }
+
+  public static void reward(Map<String, String> paramMap, c paramc)
+  {
+    ApiHttpClient.post("action/apiv2/reward_order", new z(paramMap), paramc);
+  }
+
+  @Deprecated
+  public static void scanQrCodeLogin(String paramString, c paramc)
+  {
+    new z().put("uuid", paramString.substring(1 + paramString.lastIndexOf("=")));
+    ApiHttpClient.getDirect(paramString, paramc);
+  }
+
+  public static void search(int paramInt1, int paramInt2, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("pageToken", paramString2);
+    localz.put("type", paramInt1);
+    localz.put("order", paramInt2);
+    localz.put("keyword", paramString1);
+    ApiHttpClient.post("action/apiv2/search_articles", localz, paramag);
+  }
+
+  public static void search(int paramInt, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("catalog", paramInt);
+    localz.put("content", paramString1);
+    localz.put("pageToken", paramString2);
+    ApiHttpClient.get("action/apiv2/search", localz, paramag);
+  }
+
+  public static void searchSoftware(int paramInt, String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("pageToken", paramString2);
+    localz.put("type", paramInt);
+    localz.put("keyword", paramString1);
+    ApiHttpClient.post("action/apiv2/search_articles", localz, paramag);
+  }
+
+  public static void searchUserTags(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("keyword", paramString1);
+    if (!TextUtils.isEmpty(paramString2))
+    {
+      localz.put("pageToken", paramString2);
+      Log.e("pageToken", paramString2);
+    }
+    ApiHttpClient.post("action/apiv2/search_tags_by_name", localz, paramag);
+  }
+
+  public static void sendSmsCode(String paramString, int paramInt, ag paramag)
+  {
+    z localz = new z();
+    localz.put("phone", paramString);
+    localz.put("intent", paramInt);
+    ApiHttpClient.post("action/apiv2/phone_send_code", localz, paramag);
+  }
+
+  public static void signUpEvent(long paramLong, List<SignUpEventOptions> paramList, ag paramag)
+  {
+    StringParams localStringParams = new StringParams();
+    localStringParams.putForm("sourceId", String.valueOf(paramLong));
+    Iterator localIterator = paramList.iterator();
+    while (localIterator.hasNext())
+    {
+      SignUpEventOptions localSignUpEventOptions = (SignUpEventOptions)localIterator.next();
+      localStringParams.putForm(localSignUpEventOptions.getKey(), localSignUpEventOptions.getValue());
+    }
+    ApiHttpClient.post("action/apiv2/event_apply", localStringParams, paramag);
+  }
+
+  @Deprecated
+  public static void signin(String paramString, c paramc)
+  {
+    ApiHttpClient.getDirect(paramString, paramc);
+  }
+
+  public static void syncSignUserInfo(long paramLong, ag paramag)
+  {
+    if (paramLong <= 0L)
+      return;
+    z localz = new z();
+    localz.put("sourceId", paramLong);
+    ApiHttpClient.post("action/apiv2/event_apply_info", localz, paramag);
+  }
+
+  @Deprecated
+  public static void teamDynamic(Team paramTeam, int paramInt, c paramc)
+  {
+    z localz = new z();
+    localz.put("teamid", paramTeam.getId());
+    localz.put("pageIndex", paramInt);
+    localz.put("pageSize", 20);
+    localz.put("type", "all");
+    ApiHttpClient.get("action/api/team_active_list", localz, paramc);
+  }
+
+  @Deprecated
+  public static void teamList(c paramc, Context paramContext)
+  {
+    z localz = new z();
+    localz.put("uid", AccountHelper.getUserId());
+    ApiHttpClient.get("action/api/team_list", localz, paramc);
+  }
+
+  public static void translate(String paramString, int paramInt, ag paramag)
+  {
+    z localz = new z();
+    localz.put("type", paramInt);
+    localz.put("key", paramString);
+    ApiHttpClient.get("action/apiv2/article_translate", localz, paramag);
+  }
+
+  public static void updateUserIcon(File paramFile, String paramString, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString))
+      localz.put("imageUrl", paramString);
+    try
+    {
+      localz.put("portrait", paramFile);
+      ApiHttpClient.post("action/apiv2/user_edit_portrait", localz, paramag);
+      return;
+    }
+    catch (FileNotFoundException localFileNotFoundException)
+    {
+      while (true)
+        localFileNotFoundException.printStackTrace();
+    }
+  }
+
+  public static void updateUserInfo(String paramString1, String paramString2, String paramString3, String paramString4, String paramString5, String paramString6, ag paramag)
+  {
+    z localz = new z();
+    if (!TextUtils.isEmpty(paramString1))
+      localz.put("nickname", paramString1);
+    if (!TextUtils.isEmpty(paramString2))
+      localz.put("signature", paramString2);
+    if (!TextUtils.isEmpty(paramString3))
+      localz.put("skill", paramString3);
+    if (!TextUtils.isEmpty(paramString4))
+      localz.put("field", paramString4);
+    if (!TextUtils.isEmpty(paramString5))
+      localz.put("province", paramString5);
+    if (!TextUtils.isEmpty(paramString6))
+      localz.put("city", paramString6);
+    ApiHttpClient.get("action/apiv2/user_edit_infos", localz, paramag);
+  }
+
+  public static void uploadImage(String paramString1, String paramString2, c paramc)
+  {
+    if (TextUtils.isEmpty(paramString2))
+      throw new NullPointerException("imagePath is not null.");
+    z localz = new z();
+    localz.put("token", paramString1);
+    try
+    {
+      localz.put("resource", new File(paramString2));
+      ApiHttpClient.post("action/apiv2/resource_image", localz, paramc);
+      return;
+    }
+    catch (FileNotFoundException localFileNotFoundException)
+    {
+      while (true)
+        localFileNotFoundException.printStackTrace();
+    }
+  }
+
+  public static void uploadImageForYouPai(String paramString, YouPaiResult paramYouPaiResult, c paramc)
+  {
+    z localz = new z();
+    localz.put("token", paramString);
+    String str = "http://oscimg.oschina.net/" + paramYouPaiResult.getUrl();
+    Log.e("url", str);
+    localz.put("url", str);
+    localz.put("h", paramYouPaiResult.getImageHeight());
+    localz.put("w", paramYouPaiResult.getImageWidth());
+    ApiHttpClient.post("action/apiv2/resource_image", localz, paramc);
+  }
+
+  public static void validateRegisterInfo(String paramString1, String paramString2, ag paramag)
+  {
+    z localz = new z();
+    localz.put("phone", paramString1);
+    localz.put("code", paramString2);
+    ApiHttpClient.post("action/apiv2/phone_validate", localz, paramag);
+  }
+
+  public static void voteArticleComment(long paramLong1, long paramLong2, ag paramag)
+  {
+    if (paramLong1 <= 0L)
+      return;
+    z localz = new z();
+    localz.put("commentId", paramLong1);
+    localz.put("commentAuthorId", paramLong2);
+    ApiHttpClient.post("action/apiv2/comment_vote", localz, paramag);
+  }
+
+  public static void voteComment(int paramInt1, long paramLong1, long paramLong2, int paramInt2, ag paramag)
+  {
+    if (paramLong1 <= 0L)
+      return;
+    z localz = new z();
+    localz.put("sourceType", paramInt1);
+    localz.put("commentId", paramLong1);
+    localz.put("commentAuthorId", paramLong2);
+    localz.put("voteOpt", paramInt2);
+    ApiHttpClient.post("action/apiv2/comment_vote_reverse", localz, paramag);
+  }
+}
