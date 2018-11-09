@@ -13,7 +13,7 @@ import com.steven.oschina.R;
 import com.steven.oschina.base.BaseViewPagerFragment;
 import com.steven.oschina.bean.sub.SubTab;
 import com.steven.oschina.ui.search.SearchActivity;
-import com.steven.oschina.ui.synthetical.article.ArticleFragment;
+import com.steven.oschina.ui.synthetical.article.RecommendArticleFragment;
 import com.steven.oschina.ui.synthetical.article.EnglishArticleFragment;
 import com.steven.oschina.ui.synthetical.sub.SubFragment;
 
@@ -50,7 +50,7 @@ public class SyntheticalPagerFragment extends BaseViewPagerFragment {
     public List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(EnglishArticleFragment.newInstance());
-        fragments.add(ArticleFragment.newInstance());
+        fragments.add(RecommendArticleFragment.newInstance());
         fragments.add(getSubFragment(6,
                 "资讯",
                 "https://www.oschina.net/action/apiv2/sub_list?token=e6142fa662bc4bf21083870a957fbd20",

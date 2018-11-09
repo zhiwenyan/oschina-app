@@ -14,7 +14,7 @@ import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.News;
@@ -23,6 +23,7 @@ import com.steven.oschina.ui.adapter.ArticleAdapter;
 import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.utils.TypeFormat;
 import com.steven.oschina.utils.UIHelper;
@@ -33,15 +34,15 @@ import java.util.List;
 /**
  * 推荐的文章
  */
-public class ArticleFragment extends BaseRecyclerFragment<Article> {
+public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, ArticleViewModel> {
     private List<Article> mArticles;
     private BannerView mBannerView;
     private static final int CATALOG = 1;
     private static final String BANNER_CACHE_NAME = "article_banner";
     private static final String CACHE_NAME = "article_list";
 
-    public static ArticleFragment newInstance() {
-        return new ArticleFragment();
+    public static RecommendArticleFragment newInstance() {
+        return new RecommendArticleFragment();
     }
 
     @Override
@@ -83,11 +84,10 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
                 @Override
                 public void onSuccess(List<Banner> banners, String nextPageToken) {
                     super.onSuccess(banners, nextPageToken);
-                    CacheManager.saveToJson(OSCApplication.getInstance(), BANNER_CACHE_NAME, banners);
-                    showBanner(banners);
 
                 }
             });
+
         }
     }
 
@@ -135,22 +135,19 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
     @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
-        HttpUtils.get(RetrofitClient.getServiceApi().getArticles(OSCSharedPreference.getInstance().getDeviceUUID(),
-                nextPageToken), new HttpCallback<Article>() {
-            @Override
-            public void onSuccess(List<Article> articles, String nextPageToken) {
-                if (mRefreshing) {
-                    mSwipeRefreshRv.setRefreshing(false);
-                }
-                mNextPageToken = nextPageToken;
-                if (articles.size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
-                showArticleList(articles);
-                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, articles);
+        mViewModel.getArticles(OSCSharedPreference.getInstance().getDeviceUUID(), nextPageToken).observe(this, result -> {
+            if (mRefreshing) {
+                mSwipeRefreshRv.setRefreshing(false);
             }
+            mNextPageToken = nextPageToken;
+            if (result.getItems().size() == 0) {
+                mSwipeRefreshRv.showLoadComplete();
+                return;
+            }
+            showArticleList(result.getItems());
+            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
         });
+
     }
 
     private void showArticleList(List<Article> articles) {
@@ -197,7 +194,7 @@ public class ArticleFragment extends BaseRecyclerFragment<Article> {
                         BlogDetailActivity.show(mContext, id);
                         break;
                     case News.TYPE_TRANSLATE:
-                      NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
                         break;
                     case News.TYPE_EVENT:
                         //     EventDetailActivity.show(mContext, id);

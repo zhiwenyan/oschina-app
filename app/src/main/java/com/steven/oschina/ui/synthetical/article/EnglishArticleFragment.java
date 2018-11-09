@@ -4,10 +4,7 @@ package com.steven.oschina.ui.synthetical.article;
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.osc.OSCSharedPreference;
@@ -15,15 +12,18 @@ import com.steven.oschina.ui.adapter.ArticleAdapter;
 import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.utils.UIHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 英文类型的文章
  */
-public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
+public class EnglishArticleFragment extends BaseRecyclerFragment1<Article, ArticleViewModel> {
     //英文类型的文章
     private static final int TYPE_ENGLISH = 8000;
     private List<Article> mArticles;
@@ -62,21 +62,21 @@ public class EnglishArticleFragment extends BaseRecyclerFragment<Article> {
     @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
-        HttpUtils.get(RetrofitClient.getServiceApi().getEnglishArticles(OSCSharedPreference.getInstance().getDeviceUUID(),
-                TYPE_ENGLISH, nextPageToken), new HttpCallback<Article>() {
-            @Override
-            public void onSuccess(List<Article> articles, String nextPageToken) {
-                if (mRefreshing) {
-                    mSwipeRefreshRv.setRefreshing(false);
-                }
-                mNextPageToken = nextPageToken;
-                if (articles.size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
-                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, articles);
-                showArticleList(articles);
+        Map<String, Object> params = new HashMap<>();
+        params.put("ident", OSCSharedPreference.getInstance().getDeviceUUID());
+        params.put("type", TYPE_ENGLISH);
+        params.put("pageToken", nextPageToken);
+        mViewModel.getEnglishArticles(params).observe(this, result -> {
+            if (mRefreshing) {
+                mSwipeRefreshRv.setRefreshing(false);
             }
+            mNextPageToken = nextPageToken;
+            if (result.getItems().size() == 0) {
+                mSwipeRefreshRv.showLoadComplete();
+                return;
+            }
+            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
+            showArticleList(result.getItems());
         });
 
     }

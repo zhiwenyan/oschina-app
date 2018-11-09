@@ -1,17 +1,17 @@
 package com.steven.oschina.ui.synthetical.sub;
 
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.banner.Banner;
+import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.sub.SubTab;
@@ -20,12 +20,13 @@ import com.steven.oschina.header.HeaderView;
 import com.steven.oschina.ui.adapter.BlogSubAdapter;
 import com.steven.oschina.ui.adapter.NewsSubAdapter;
 import com.steven.oschina.ui.adapter.QuestionSubAdapter;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.SubViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SubFragment extends BaseRecyclerFragment<SubBean> {
+public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
     private List<SubBean> mSubBeans;
     protected SubTab mSubTab;
     private HeaderView mHeaderView;
@@ -63,7 +64,6 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
         if (banners != null) {
             mHeaderView.showBanners(banners);
         }
-
     }
 
     public void initHeader() {
@@ -98,21 +98,22 @@ public class SubFragment extends BaseRecyclerFragment<SubBean> {
     @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
-        HttpUtils.get(RetrofitClient.getServiceApi().getSubList(mSubTab.getToken(), nextPageToken), new HttpCallback<SubBean>() {
+        mViewModel.getSubList(mSubTab.getToken(), nextPageToken).observe(this, new Observer<PageBean<SubBean>>() {
             @Override
-            public void onSuccess(List<SubBean> list, String nextPageToken) {
+            public void onChanged(@Nullable PageBean<SubBean> result) {
                 if (mRefreshing) {
                     mSwipeRefreshRv.setRefreshing(false);
                 }
                 mNextPageToken = nextPageToken;
-                if (list.size() == 0) {
+                if (result.getItems().size() == 0) {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
-                showSubList(list);
-                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, list);
+                showSubList(result.getItems());
+                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
             }
         });
+
     }
 
 

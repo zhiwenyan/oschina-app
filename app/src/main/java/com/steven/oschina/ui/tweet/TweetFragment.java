@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TweetFragment extends BaseRecyclerFragment<Tweet> {
+public class
+TweetFragment extends BaseRecyclerFragment<Tweet> {
 
 
     public static final int CATALOG_NEW = 0X0001;

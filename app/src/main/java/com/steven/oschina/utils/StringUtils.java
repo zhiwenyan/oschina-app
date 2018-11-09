@@ -145,7 +145,8 @@ public class StringUtils {
 
     /**
      * format time friendly
-     *
+
+     *  "pubDate": "2018-07-28 08:46:25",
      * @param sdate YYYY-MM-DD HH:mm:ss
      * @return n分钟前, n小时前, 昨天, 前天, n天前, n个月前
      */

@@ -13,7 +13,7 @@ import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.Translate;
@@ -23,10 +23,12 @@ import com.steven.oschina.ui.adapter.ArticleAdapter;
 import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.utils.DataFormat;
 import com.steven.oschina.utils.StringUtils;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.utils.TypeFormat;
+import com.steven.oschina.utils.UIHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class EnglishArticleDetailFragment extends BaseRecyclerFragment {
+public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleViewModel> {
     private View mHeaderView;
     private Article mArticle;
     private String mIdent;
@@ -126,21 +128,17 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment {
         if (!TextUtils.isEmpty(nextPageToken)) {
             params.put("pageToken", nextPageToken);
         }
-
-        HttpUtils.get(RetrofitClient.getServiceApi().getArticleRecommends(params), new HttpCallback<Article>() {
-            @Override
-            public void onSuccess(List<Article> result, String nextPageToken) {
-                super.onSuccess(result, nextPageToken);
-                if (mRefreshing) {
-                    mSwipeRefreshRv.setRefreshing(false);
-                }
-                mNextPageToken = nextPageToken;
-                if (result.size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
-                showArticleList(result);
+        //类似的文章推荐
+        mViewModel.getArticleRecommends(params).observe(this, result -> {
+            if (mRefreshing) {
+                mSwipeRefreshRv.setRefreshing(false);
             }
+            mNextPageToken = nextPageToken;
+            if (result.getItems().size() == 0) {
+                mSwipeRefreshRv.showLoadComplete();
+                return;
+            }
+            showArticleList(result.getItems());
         });
     }
 
@@ -195,7 +193,7 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment {
                 return;
             if (top.getType() == 0) {
                 if (TypeFormat.isGit(top)) {
-                    //     WebActivity.show(mContext, TypeFormat.formatUrl(top));
+                    WebActivity.show(mContext, TypeFormat.formatUrl(top));
                 } else {
                     ArticleDetailActivity.show(mContext, top);
                 }
@@ -213,7 +211,7 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment {
                         BlogDetailActivity.show(mContext, id);
                         break;
                     case News.TYPE_TRANSLATE:
-                        //    NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
                         break;
                     case News.TYPE_EVENT:
                         //     EventDetailActivity.show(mContext, id);
@@ -225,7 +223,7 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment {
                         EnglishArticleDetailActivity.show(mContext, top);
                         break;
                     default:
-                        //       UIHelper.showUrlRedirect(mContext, top.getUrl());
+                        UIHelper.showUrlRedirect(mContext, top.getUrl());
                         break;
                 }
             }

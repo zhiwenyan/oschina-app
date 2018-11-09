@@ -12,16 +12,17 @@ import com.steven.oschina.R;
 import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.News;
+import com.steven.oschina.dialog.DialogHelper;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
 import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.utils.DataFormat;
-import com.steven.oschina.dialog.DialogHelper;
 import com.steven.oschina.utils.StringUtils;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.utils.TypeFormat;
@@ -38,17 +39,17 @@ import java.util.Map;
  *
  * @author yanzhiwen
  */
-public class ArticleDetailFragment extends BaseRecyclerFragment implements View.OnClickListener {
+public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleViewModel> implements View.OnClickListener {
     private View mHeaderView;
     private Article mArticle;
     private String mIdent;
     private String mKey;
     private List<Article> mArticles;
 
-    public static ArticleDetailFragment newInstance(Article article) {
+    public static RecommendArticleDetailFragment newInstance(Article article) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("article", article);
-        ArticleDetailFragment fragment = new ArticleDetailFragment();
+        RecommendArticleDetailFragment fragment = new RecommendArticleDetailFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -85,21 +86,16 @@ public class ArticleDetailFragment extends BaseRecyclerFragment implements View.
         if (!TextUtils.isEmpty(nextPageToken)) {
             params.put("pageToken", nextPageToken);
         }
-
-        HttpUtils.get(RetrofitClient.getServiceApi().getArticleRecommends(params), new HttpCallback<Article>() {
-            @Override
-            public void onSuccess(List<Article> result, String nextPageToken) {
-                super.onSuccess(result, nextPageToken);
-                if (mRefreshing) {
-                    mSwipeRefreshRv.setRefreshing(false);
-                }
-                mNextPageToken = nextPageToken;
-                if (result.size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
-                showArticleList(result);
+        mViewModel.getEnglishArticles(params).observe(this, result -> {
+            if (mRefreshing) {
+                mSwipeRefreshRv.setRefreshing(false);
             }
+            mNextPageToken = nextPageToken;
+            if (result.getItems().size() == 0) {
+                mSwipeRefreshRv.showLoadComplete();
+                return;
+            }
+            showArticleList(result.getItems());
         });
     }
 
@@ -142,7 +138,7 @@ public class ArticleDetailFragment extends BaseRecyclerFragment implements View.
         }
         mArticles.addAll(articles);
         if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(this.getActivity(), mArticles, (article, position) -> {
+            mAdapter = new ArticleAdapter(mContext, mArticles, (article, position) -> {
                 String[] images = article.getImgs();
                 if (images == null || images.length == 0) {
                     return R.layout.item_article_not_img;

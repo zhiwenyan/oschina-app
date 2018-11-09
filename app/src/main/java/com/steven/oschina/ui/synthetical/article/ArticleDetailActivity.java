@@ -49,7 +49,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        addFragment(R.id.fl_content, ArticleDetailFragment.newInstance(mArticle));
+        addFragment(R.id.fl_content, RecommendArticleDetailFragment.newInstance(mArticle));
     }
 
 

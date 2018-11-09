@@ -75,15 +75,15 @@ public interface ServiceApi {
     int REQUEST_COUNT = 0x50;//请求分页大小
 
     int TYPE_USER_FLOWS = 1;//你关注的人
-    int TYPE_USER_FANS = 2;//关注你的人
 
+    int TYPE_USER_FANS = 2;//关注你的人
+    //栏目
     @GET("sub_list?")
     Call<ResultBean<PageBean<SubBean>>> getSubList(@Query("token") String token, @Query("pageToken") String nextPageToken);
 
     //英文
     @GET("get_articles?")
-    Call<ResultBean<PageBean<Article>>> getEnglishArticles(@Query("ident") String ident, @Query("type") int type,
-                                                           @Query("pageToken") String nextPageToken);
+    Call<ResultBean<PageBean<Article>>> getEnglishArticles(@QueryMap Map<String, Object> map);
 
     //推荐
     @GET("get_articles?")

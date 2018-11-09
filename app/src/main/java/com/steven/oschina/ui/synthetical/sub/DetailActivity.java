@@ -59,6 +59,7 @@ public abstract class DetailActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mIdent)) {
             params.put("ident", mIdent);
         }
+        //文章的详情
         HttpUtils._get(RetrofitClient.getServiceApi().getDetail(params), new HttpCallback<SubBean>() {
             @Override
             public void onSuccess(SubBean result) {

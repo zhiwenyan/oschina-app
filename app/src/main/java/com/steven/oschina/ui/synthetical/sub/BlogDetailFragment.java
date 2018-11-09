@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.steven.oschina.R;
+import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.SubBean;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.widget.AutoScrollView;
 
 
-public class BlogDetailFragment extends DetailFragment {
+public class BlogDetailFragment extends DetailFragment<Article,ArticleViewModel> {
 
     public static BlogDetailFragment newInstance(SubBean subBean) {
         BlogDetailFragment fragment = new BlogDetailFragment();

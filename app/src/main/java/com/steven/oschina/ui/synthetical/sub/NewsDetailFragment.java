@@ -8,8 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.steven.oschina.R;
+import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Software;
 import com.steven.oschina.bean.sub.SubBean;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.widget.AutoScrollView;
 
 /**
@@ -18,7 +20,7 @@ import com.steven.oschina.widget.AutoScrollView;
  *
  * @author yanzhiwen
  */
-public class NewsDetailFragment extends DetailFragment {
+public class NewsDetailFragment extends DetailFragment<Article, ArticleViewModel> {
     private TextView mTextSoftwareName;
     private LinearLayout mLinearSoftwareRoot;
 
@@ -35,9 +37,9 @@ public class NewsDetailFragment extends DetailFragment {
         super.initData();
         LinearLayout mLinearSoftware = mHeaderView.findViewById(R.id.ll_software);
         mLinearSoftwareRoot = mHeaderView.findViewById(R.id.ll_software_root);
-        mTextSoftwareName =mHeaderView.findViewById(R.id.tv_software_name);
+        mTextSoftwareName = mHeaderView.findViewById(R.id.tv_software_name);
         mLinearSoftware.setOnClickListener(v -> {
-            if (mSubBean != null && mSubBean.getSoftware() != null){
+            if (mSubBean != null && mSubBean.getSoftware() != null) {
                 //  SoftwareDetailActivity.show(mContext, mSubBean.getSoftware().getId());
 
             }

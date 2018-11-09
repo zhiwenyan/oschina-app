@@ -153,13 +153,9 @@ public class SelectImageFragment extends BaseFragment implements OnItemClickList
         @NonNull
         @Override
         public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-            if (id == 0) {
-                //数据库光标加载器
-                return new CursorLoader(mContext,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        null, null, IMAGE_PROJECTION[2] + " DESC");
-            }
-            return null;
+            return new CursorLoader(mContext,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
+                    null, null, IMAGE_PROJECTION[2] + " DESC");
         }
 
         @Override

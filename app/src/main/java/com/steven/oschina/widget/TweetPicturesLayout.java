@@ -250,7 +250,6 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
 
             for (int i = 0; i < childCount; ++i) {
                 View childView = getChildAt(i);
-
                 childView.measure(MeasureSpec.makeMeasureSpec(childSize, MeasureSpec.EXACTLY),
                         MeasureSpec.makeMeasureSpec(childSize, MeasureSpec.EXACTLY));
             }
@@ -276,6 +275,8 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
                 childView.layout(paddingLeft, paddingTop, paddingLeft + childWidth, paddingTop + childHeight);
             } else {
                 int mWidth = r - l;
+                System.out.println("mWidth="+mWidth);
+                System.out.println("mWidth=="+getMeasuredWidth());
                 int paddingRight = getPaddingRight();
 
                 int lineHeight = 0;

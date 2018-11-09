@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.steven.oschina.R;
+import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.SubBean;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.widget.AutoScrollView;
 
 /**
@@ -15,7 +17,7 @@ import com.steven.oschina.widget.AutoScrollView;
  *
  * @author yanzhiwen
  */
-public class QuestionDetailFragment extends DetailFragment {
+public class QuestionDetailFragment extends DetailFragment<Article,ArticleViewModel> {
 
 
     public static QuestionDetailFragment newInstance(SubBean subBean) {
