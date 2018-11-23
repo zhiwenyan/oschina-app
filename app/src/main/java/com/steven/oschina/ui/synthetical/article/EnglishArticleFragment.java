@@ -48,18 +48,6 @@ public class EnglishArticleFragment extends BaseRecyclerFragment1<Article, Artic
     }
 
     @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
-    }
-
-    @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
         Map<String, Object> params = new HashMap<>();
@@ -67,9 +55,6 @@ public class EnglishArticleFragment extends BaseRecyclerFragment1<Article, Artic
         params.put("type", TYPE_ENGLISH);
         params.put("pageToken", nextPageToken);
         mViewModel.getEnglishArticles(params).observe(this, result -> {
-            if (mRefreshing) {
-                mSwipeRefreshRv.setRefreshing(false);
-            }
             mNextPageToken = nextPageToken;
             if (result.getItems().size() == 0) {
                 mSwipeRefreshRv.showLoadComplete();
@@ -82,6 +67,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment1<Article, Artic
     }
 
     private void showArticleList(List<Article> articles) {
+        mSwipeRefreshRv.setRefreshing(!mRefreshing);
         if (mRefreshing) {
             mArticles.clear();
         }
@@ -106,7 +92,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment1<Article, Artic
             long id = article.getOscId();
             switch (type) {
                 case News.TYPE_SOFTWARE:
-                    //    SoftwareDetailActivity.show(mContext, id);
+                    //   SoftwareDetailActivity.show(mContext, id);
                     break;
                 case News.TYPE_QUESTION:
                     QuestionDetailActivity.show(mContext, id);

@@ -1,8 +1,11 @@
 package com.steven.oschina.ui.synthetical.sub.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
+import com.steven.oschina.api.RetrofitClient;
+import com.steven.oschina.api.ServiceApi;
 import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.base.ResultBean;
 import com.steven.oschina.bean.sub.Article;
@@ -19,7 +22,14 @@ import retrofit2.Response;
  *
  * @author yanzhiwen
  */
-public class ArticleViewModel extends BaseViewModel<PageBean<Article>> {
+public class ArticleViewModel extends ViewModel {
+
+
+    private final ServiceApi mServiceApi = RetrofitClient.getServiceApi();
+    //列表LiveData
+    private final MutableLiveData<PageBean<Article>> mArticlesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<PageBean<Article>> mArticleRecommendsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<PageBean<Article>> mEnglishArticlesLiveData = new MutableLiveData<>();
 
     public MutableLiveData<PageBean<Article>> getArticleRecommends(Map<String, Object> params) {
         mServiceApi.getArticleRecommends(params).enqueue(new Callback<ResultBean<PageBean<Article>>>() {
@@ -27,7 +37,7 @@ public class ArticleViewModel extends BaseViewModel<PageBean<Article>> {
             public void onResponse(@NonNull Call<ResultBean<PageBean<Article>>> call, @NonNull
                     Response<ResultBean<PageBean<Article>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isOk()) {
-                    mObservableListLiveData.setValue(response.body().getResult());
+                    mArticleRecommendsLiveData.setValue(response.body().getResult());
                 }
             }
 
@@ -36,7 +46,7 @@ public class ArticleViewModel extends BaseViewModel<PageBean<Article>> {
 
             }
         });
-        return mObservableListLiveData;
+        return mArticleRecommendsLiveData;
     }
 
     public MutableLiveData<PageBean<Article>> getEnglishArticles(Map<String, Object> params) {
@@ -45,7 +55,7 @@ public class ArticleViewModel extends BaseViewModel<PageBean<Article>> {
             public void onResponse(@NonNull Call<ResultBean<PageBean<Article>>> call, @NonNull
                     Response<ResultBean<PageBean<Article>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isOk()) {
-                    mObservableListLiveData.setValue(response.body().getResult());
+                    mEnglishArticlesLiveData.setValue(response.body().getResult());
                 }
             }
 
@@ -53,7 +63,7 @@ public class ArticleViewModel extends BaseViewModel<PageBean<Article>> {
             public void onFailure(@NonNull Call<ResultBean<PageBean<Article>>> call, @NonNull Throwable t) {
             }
         });
-        return mObservableListLiveData;
+        return mEnglishArticlesLiveData;
     }
 
 
@@ -63,7 +73,7 @@ public class ArticleViewModel extends BaseViewModel<PageBean<Article>> {
             public void onResponse(@NonNull Call<ResultBean<PageBean<Article>>> call, @NonNull
                     Response<ResultBean<PageBean<Article>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isOk()) {
-                    mObservableListLiveData.setValue(response.body().getResult());
+                    mArticlesLiveData.setValue(response.body().getResult());
                 }
             }
 
@@ -71,24 +81,8 @@ public class ArticleViewModel extends BaseViewModel<PageBean<Article>> {
             public void onFailure(@NonNull Call<ResultBean<PageBean<Article>>> call, @NonNull Throwable t) {
             }
         });
-        return mObservableListLiveData;
+        return mArticlesLiveData;
     }
-//
-//    public MutableLiveData<PageBean<Banner>> getBanner(int catalog) {
-//        mServiceApi.getBanner(catalog).enqueue(new Callback<ResultBean<PageBean<Banner>>>() {
-//            @Override
-//            public void onResponse(@NonNull Call<ResultBean<PageBean<Banner>>> call, @NonNull Response<ResultBean<PageBean<Banner>>> response) {
-//                if (response.isSuccessful() && response.body() != null && response.body().isOk()) {
-//                    mObservableListLiveData.setValue(response.body().getResult());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<ResultBean<PageBean<Banner>>> call, @NonNull Throwable t) {
-//
-//            }
-//        });
-//        return mObservableListLiveData;
-//
-//    }
+
+
 }

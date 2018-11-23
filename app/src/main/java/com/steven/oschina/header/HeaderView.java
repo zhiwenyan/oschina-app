@@ -1,6 +1,8 @@
 package com.steven.oschina.header;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,9 +17,10 @@ import com.steven.oschina.api.HttpCallback;
 import com.steven.oschina.api.HttpUtils;
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.bean.banner.Banner;
-import com.steven.oschina.media.Util;
 import com.steven.oschina.bean.sub.News;
+import com.steven.oschina.media.Util;
 import com.steven.oschina.ui.synthetical.article.WebActivity;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.BannerViewModel;
 import com.steven.oschina.utils.UIHelper;
 
 import java.util.List;
@@ -36,13 +39,18 @@ public abstract class HeaderView extends LinearLayout implements OnItemClickList
     private int mCatalog;
     private RecyclerView mRecyclerView;
     protected View mBannerView;
+    private BannerViewModel mBannerViewModel;
+    private Context mContext;
 
     public HeaderView(Context context, String api, String cacheName, int catalog) {
         super(context, null);
+        this.mContext = context;
         this.mAPI = api;
         this.mCacheName = cacheName;
         this.mCatalog = catalog;
+        this.mBannerViewModel = ViewModelProviders.of(( FragmentActivity ) context).get(BannerViewModel.class);
         init(context);
+
     }
 
 
@@ -66,6 +74,12 @@ public abstract class HeaderView extends LinearLayout implements OnItemClickList
                 CacheManager.saveToJson(getContext(), mCacheName, result);
             }
         });
+//        mBannerViewModel.getBanner(catalog).observe(( LifecycleOwner ) this, new Observer<PageBean<Banner>>() {
+//            @Override
+//            public void onChanged(@Nullable PageBean<Banner> banners) {
+//                showBanners(banners.getItems());
+//            }
+//        });
     }
 
     public void showBanners(List<Banner> banners) {

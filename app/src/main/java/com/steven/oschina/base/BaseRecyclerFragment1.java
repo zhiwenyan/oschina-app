@@ -1,15 +1,12 @@
 package com.steven.oschina.base;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 
 import com.oschina.client.base_library.utils.NetworkUtils;
 import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.R;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.BaseViewModel;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
 
 import java.lang.reflect.ParameterizedType;
@@ -21,7 +18,7 @@ import java.lang.reflect.Type;
  *
  * @author yanzhiwen
  */
-public class BaseRecyclerFragment1<T, V extends BaseViewModel> extends BaseFragment implements SwipeRefreshRecyclerView.OnRefreshLoadListener {
+public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRefreshRecyclerView.OnRefreshLoadListener {
     public SwipeRefreshRecyclerView mSwipeRefreshRv;
     //上拉加载下一个页面的Token
     protected String mNextPageToken = "";
@@ -54,14 +51,15 @@ public class BaseRecyclerFragment1<T, V extends BaseViewModel> extends BaseFragm
     private void initViewModel() {
         if (mViewModel == null) {
             Class modelClass;
-            Type type = getClass().getGenericSuperclass();
-            if (type instanceof ParameterizedType) {
-                modelClass = ( Class ) (( ParameterizedType ) type).getActualTypeArguments()[1];
-            } else {
-                //如果没有指定泛型参数，则默认使用BaseViewModel
-                modelClass = BaseViewModel.class;
-            }
-            mViewModel = ( V ) createViewModel(( FragmentActivity ) mContext, modelClass);
+//            if (type instanceof ParameterizedType) {
+//                modelClass = ( Class ) (( ParameterizedType ) type).getActualTypeArguments()[1];
+//            } else {
+//                //如果没有指定泛型参数，则默认使用BaseViewModel
+//                modelClass = BaseViewModel.class;
+//            }
+            Type[] types = ((ParameterizedType) (this.getClass().getGenericSuperclass())).getActualTypeArguments();
+            modelClass = ( Class ) types[1];
+            mViewModel = ( V ) createViewModel(this, modelClass);
 
         }
 
@@ -78,8 +76,8 @@ public class BaseRecyclerFragment1<T, V extends BaseViewModel> extends BaseFragm
      * @param <T> viewModel
      * @return viewModel
      */
-    public static <T extends ViewModel> T createViewModel(FragmentActivity activity, Class<T> cls) {
-        return ViewModelProviders.of(activity).get(cls);
+    public static <T extends ViewModel> T createViewModel(Fragment fragment, Class<T> cls) {
+        return ViewModelProviders.of(fragment).get(cls);
     }
 
 
@@ -90,7 +88,7 @@ public class BaseRecyclerFragment1<T, V extends BaseViewModel> extends BaseFragm
             return;
         }
         mSwipeRefreshRv.setRefreshing(mRefreshing);
-        mViewModel.getObservableError().observe(this, mErrorObserver);
+//        mViewModel.getObservableError().observe(this, mErrorObserver);
     }
 
     /**
@@ -99,6 +97,8 @@ public class BaseRecyclerFragment1<T, V extends BaseViewModel> extends BaseFragm
     @Override
     public void onRefresh() {
         mRefreshing = true;
+        onRequestData("");
+
     }
 
     /**
@@ -107,12 +107,14 @@ public class BaseRecyclerFragment1<T, V extends BaseViewModel> extends BaseFragm
     @Override
     public void onLoadMore() {
         mRefreshing = false;
+        onRequestData(mNextPageToken);
+
     }
 
-    public Observer<String> mErrorObserver = new Observer<String>() {
-        @Override
-        public void onChanged(@Nullable String s) {
-
-        }
-    };
+//    public Observer<String> mErrorObserver = new Observer<String>() {
+//        @Override
+//        public void onChanged(@Nullable String s) {
+//
+//        }
+//    };
 }

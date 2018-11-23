@@ -17,7 +17,7 @@ import com.steven.oschina.widget.AutoScrollView;
  *
  * @author yanzhiwen
  */
-public class QuestionDetailFragment extends DetailFragment<Article,ArticleViewModel> {
+public class QuestionDetailFragment extends DetailFragment<Article, ArticleViewModel> {
 
 
     public static QuestionDetailFragment newInstance(SubBean subBean) {

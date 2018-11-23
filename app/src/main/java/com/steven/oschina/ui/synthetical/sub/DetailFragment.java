@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseRecyclerFragment1;
-import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.comment.Comment;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Author;
@@ -28,7 +27,6 @@ import com.steven.oschina.ui.OWebView;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
 import com.steven.oschina.ui.synthetical.article.ArticleDetailActivity;
 import com.steven.oschina.ui.synthetical.article.WebActivity;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.BaseViewModel;
 import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.utils.StringUtils;
 import com.steven.oschina.utils.TypeFormat;
@@ -39,8 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class DetailFragment<T, D extends BaseViewModel<PageBean<Article>>>
-        extends BaseRecyclerFragment1<Article, ArticleViewModel> {
+public abstract class DetailFragment<T,V> extends BaseRecyclerFragment1<Article, ArticleViewModel> {
     protected SubBean mSubBean;
     protected OWebView mWebView;
     protected View mHeaderView;
@@ -167,17 +164,6 @@ public abstract class DetailFragment<T, D extends BaseViewModel<PageBean<Article
         mArticleTitle.setText(spannable);
     }
 
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
-    }
-
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
 
     private void showArticleList(List<Article> articles) {
         if (mRefreshing) {

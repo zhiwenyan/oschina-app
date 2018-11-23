@@ -1,19 +1,13 @@
 package com.steven.oschina.ui.synthetical.article;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
 
-import com.oschina.client.base_library.banner.BannerAdapter;
 import com.oschina.client.base_library.banner.BannerView;
 import com.steven.oschina.CacheManager;
-import com.steven.oschina.ImageLoader;
 import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.sub.Article;
@@ -24,6 +18,7 @@ import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
 import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
+import com.steven.oschina.ui.synthetical.sub.viewmodel.BannerViewModel;
 import com.steven.oschina.utils.TDevice;
 import com.steven.oschina.utils.TypeFormat;
 import com.steven.oschina.utils.UIHelper;
@@ -40,6 +35,7 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
     private static final int CATALOG = 1;
     private static final String BANNER_CACHE_NAME = "article_banner";
     private static final String CACHE_NAME = "article_list";
+    private BannerViewModel mBannerViewModel;
 
     public static RecommendArticleFragment newInstance() {
         return new RecommendArticleFragment();
@@ -48,6 +44,7 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
     @Override
     public void initData() {
         mArticles = new ArrayList<>();
+        mBannerViewModel = ViewModelProviders.of(this).get(BannerViewModel.class);
         super.initData();
     }
 
@@ -59,20 +56,8 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
         }
         List<Banner> banners = CacheManager.readListJson(OSCApplication.getInstance(), BANNER_CACHE_NAME, Banner.class);
         if (banners != null) {
-            showBanner(banners);
+            mBannerViewModel.showBanner(mContext, mBannerView, banners);
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
     }
 
     private void requestBanner() {
@@ -80,65 +65,18 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
             mBannerView = ( BannerView ) LayoutInflater.from(mContext)
                     .inflate(R.layout.news_banner_layout, mSwipeRefreshRv, false);
             mSwipeRefreshRv.addHeaderView(mBannerView);
-            HttpUtils.get(RetrofitClient.getServiceApi().getBanner(CATALOG), new HttpCallback<Banner>() {
-                @Override
-                public void onSuccess(List<Banner> banners, String nextPageToken) {
-                    super.onSuccess(banners, nextPageToken);
-
-                }
+            mBannerViewModel.getBanner(CATALOG).observe(this, banners -> {
+                assert banners != null;
+                mBannerViewModel.showBanner(mContext, mBannerView, banners.getItems());
             });
-
         }
     }
 
-    private void showBanner(List<Banner> banners) {
-        mBannerView.setBannerTitle(banners.get(0).getName());
-        mBannerView.setAdapter(new BannerAdapter() {
-            @Override
-            public View getView(int position, View convertView) {
-                ImageView bannerIv;
-                if (convertView != null) {
-                    bannerIv = ( ImageView ) convertView;
-                    bannerIv.setScaleType(ImageView.ScaleType.FIT_XY);
-                } else {
-                    bannerIv = new ImageView(getActivity());
-                }
-                ImageLoader.load(getActivity(), bannerIv, banners.get(position).getImg());
-                return bannerIv;
-            }
-
-            @Override
-            public int getCount() {
-                return banners.size();
-            }
-
-            @Override
-            public String getBannerDesc(int position) {
-                return banners.get(position).getName();
-            }
-        });
-        mBannerView.startLoop();
-        mBannerView.setOnBannerItemClickListener(position -> {
-            Banner banner = banners.get(position);
-            if (banner != null) {
-                int type = banner.getType();
-                long id = banner.getId();
-                if (type == News.TYPE_HREF) {
-                    WebActivity.show(getContext(), banner.getHref());
-                } else {
-                    UIHelper.showDetail(getContext(), type, id, banner.getHref());
-                }
-            }
-        });
-    }
 
     @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
         mViewModel.getArticles(OSCSharedPreference.getInstance().getDeviceUUID(), nextPageToken).observe(this, result -> {
-            if (mRefreshing) {
-                mSwipeRefreshRv.setRefreshing(false);
-            }
             mNextPageToken = nextPageToken;
             if (result.getItems().size() == 0) {
                 mSwipeRefreshRv.showLoadComplete();
@@ -152,6 +90,7 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
 
     private void showArticleList(List<Article> articles) {
         if (mRefreshing) {
+            mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
         }
         mArticles.addAll(articles);
@@ -206,7 +145,7 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
                         EnglishArticleDetailActivity.show(mContext, top);
                         break;
                     default:
-                        //       UIHelper.showUrlRedirect(mContext, top.getUrl());
+                        UIHelper.showUrlRedirect(mContext, top.getUrl());
                         break;
                 }
             }

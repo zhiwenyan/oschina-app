@@ -71,7 +71,7 @@ public abstract class BaseFragment extends Fragment {
 
 
     public void showToast(String message) {
-        ToastUtil.toast(mContext.getApplicationContext(), message);
+        ToastUtil.toast(mContext, message);
     }
 
     public void startActivity(Class<?> activity) {

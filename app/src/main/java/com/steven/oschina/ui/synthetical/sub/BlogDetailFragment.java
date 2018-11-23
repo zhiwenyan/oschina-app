@@ -13,7 +13,7 @@ import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
 import com.steven.oschina.widget.AutoScrollView;
 
 
-public class BlogDetailFragment extends DetailFragment<Article,ArticleViewModel> {
+public class BlogDetailFragment extends DetailFragment<Article, ArticleViewModel> {
 
     public static BlogDetailFragment newInstance(SubBean subBean) {
         BlogDetailFragment fragment = new BlogDetailFragment();

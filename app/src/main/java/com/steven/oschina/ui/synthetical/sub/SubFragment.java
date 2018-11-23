@@ -21,6 +21,7 @@ import com.steven.oschina.ui.adapter.BlogSubAdapter;
 import com.steven.oschina.ui.adapter.NewsSubAdapter;
 import com.steven.oschina.ui.adapter.QuestionSubAdapter;
 import com.steven.oschina.ui.synthetical.sub.viewmodel.SubViewModel;
+import com.steven.oschina.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +70,9 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
     public void initHeader() {
         if (mSubTab.getBanner() != null) {
             if (mSubTab.getBanner().getCatalog() == SubTab.BANNER_CATEGORY_NEWS) {
-                //mHeaderView = new NewsHeaderView(mContext, mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType());
+                // mHeaderView = new NewsHeaderView(mContext, mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType());
             } else if (mSubTab.getBanner().getCatalog() == SubTab.BANNER_CATEGORY_EVENT) {
-                //  mEventHeaderView = new EventHeaderView(mContext, getImgLoader(), mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType());
+                // mEventHeaderView = new EventHeaderView(mContext, getImgLoader(), mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType());
             } else if (mSubTab.getBanner().getCatalog() == SubTab.BANNER_CATEGORY_BLOG) {
                 mHeaderView = new BlogHeaderView(mContext, mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType(), SubTab.BANNER_CATEGORY_BLOG);
             }
@@ -81,29 +82,13 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
         }
     }
 
-
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
-    }
-
     @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
         mViewModel.getSubList(mSubTab.getToken(), nextPageToken).observe(this, new Observer<PageBean<SubBean>>() {
             @Override
             public void onChanged(@Nullable PageBean<SubBean> result) {
-                if (mRefreshing) {
-                    mSwipeRefreshRv.setRefreshing(false);
-                }
+                mSwipeRefreshRv.setRefreshing(!mRefreshing);
                 mNextPageToken = nextPageToken;
                 if (result.getItems().size() == 0) {
                     mSwipeRefreshRv.showLoadComplete();
@@ -151,7 +136,7 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
                     NewsDetailActivity.show(mContext, subBean);
                     break;
                 default:
-                    //     UIHelper.showUrlRedirect(mContext, mSubTab.getHref());
+                    UIHelper.showUrlRedirect(mContext, mSubTab.getHref());
                     break;
             }
         });

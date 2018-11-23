@@ -14,6 +14,9 @@ import java.io.Serializable;
  * @author yanzhiwen
  */
 public class SubTab implements Serializable {
+    public static final String TOKEN_NEWS = "e6142fa662bc4bf21083870a957fbd20";
+    public static final String TOKEN_QA = "98d04eb58a1d12b75d254deecbc83790";
+    public static final String TOKEN_BLOG = "df985be3c5d5449f8dfb47e06e098ef9";
 
     public static final String TAG_NEW = "new";
     public static final String TAG_HOT = "hot";
