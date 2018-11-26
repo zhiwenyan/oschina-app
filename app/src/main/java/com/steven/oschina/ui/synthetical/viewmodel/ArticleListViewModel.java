@@ -1,4 +1,4 @@
-package com.steven.oschina.ui.synthetical.sub.viewmodel;
+package com.steven.oschina.ui.synthetical.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
@@ -22,7 +22,7 @@ import retrofit2.Response;
  *
  * @author yanzhiwen
  */
-public class ArticleViewModel extends ViewModel {
+public class ArticleListViewModel extends ViewModel {
 
 
     private final ServiceApi mServiceApi = RetrofitClient.getServiceApi();

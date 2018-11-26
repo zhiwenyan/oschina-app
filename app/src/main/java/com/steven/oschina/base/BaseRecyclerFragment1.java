@@ -57,7 +57,7 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
 //                //如果没有指定泛型参数，则默认使用BaseViewModel
 //                modelClass = BaseViewModel.class;
 //            }
-            Type[] types = ((ParameterizedType) (this.getClass().getGenericSuperclass())).getActualTypeArguments();
+            Type[] types = (( ParameterizedType ) (this.getClass().getGenericSuperclass())).getActualTypeArguments();
             modelClass = ( Class ) types[1];
             mViewModel = ( V ) createViewModel(this, modelClass);
 

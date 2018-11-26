@@ -57,7 +57,7 @@ public  class NewsDetailActivity extends DetailActivity {
         context.startActivity(intent);
     }
     @Override
-    public DetailFragment getDetailFragment() {
+    public BaseSubDetailFragment getDetailFragment() {
         return  NewsDetailFragment.newInstance(mSubBean);
     }
 }

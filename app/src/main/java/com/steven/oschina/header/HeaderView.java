@@ -20,7 +20,7 @@ import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.media.Util;
 import com.steven.oschina.ui.synthetical.article.WebActivity;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.BannerViewModel;
+import com.steven.oschina.ui.synthetical.viewmodel.BannerViewModel;
 import com.steven.oschina.utils.UIHelper;
 
 import java.util.List;

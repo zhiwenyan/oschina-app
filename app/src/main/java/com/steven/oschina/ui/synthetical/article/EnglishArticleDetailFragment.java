@@ -1,6 +1,7 @@
 package com.steven.oschina.ui.synthetical.article;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,25 +11,16 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.sub.Article;
-import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.Translate;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.OWebView;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
-import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
+import com.steven.oschina.ui.synthetical.viewmodel.ArticleListViewModel;
+import com.steven.oschina.ui.synthetical.viewmodel.ArticleViewModel;
 import com.steven.oschina.utils.DataFormat;
 import com.steven.oschina.utils.StringUtils;
-import com.steven.oschina.utils.TDevice;
-import com.steven.oschina.utils.TypeFormat;
-import com.steven.oschina.utils.UIHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleViewModel> {
+public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleListViewModel> {
     private View mHeaderView;
     private Article mArticle;
     private String mIdent;
@@ -51,6 +43,8 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
     private TextView mTextCount;
     private TextView mTextTime;
     boolean isEnglish;
+
+    private ArticleViewModel mArticleViewModel;
 
     public static EnglishArticleDetailFragment newInstance(Article article) {
         Bundle bundle = new Bundle();
@@ -80,6 +74,7 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         mTextCount = mHeaderView.findViewById(R.id.tv_text_count);
         mTextTime = mHeaderView.findViewById(R.id.tv_text_time);
         mArticles = new ArrayList<>();
+        mArticleViewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
         super.initData();
     }
 
@@ -88,20 +83,19 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         super.onRequestData(nextPageToken);
         if (!TextUtils.isEmpty(mArticle.getTitleTranslated())) {
             isEnglish = true;
-            getEnglishDetailCN();
+            getTranslateArticle();
         } else {
             isEnglish = false;
-            getEnglishDetailEN();
+            getEnglishArticle();
         }
         getArticleRecommends(nextPageToken);
 
     }
 
 
-    private void getEnglishDetailCN() {
-        HttpUtils._get(RetrofitClient.getServiceApi().article_translate(mKey, Article.TYPE_ENGLISH), new HttpCallback<Article>() {
-            @Override
-            public void onSuccess(Article article) {
+    private void getTranslateArticle() {
+        mArticleViewModel.getTranslateArticle(mKey, Article.TYPE_ENGLISH).observe(this, article -> {
+            if (article != null) {
                 showArticle(article);
                 parseTranslate(article);
 
@@ -109,14 +103,11 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         });
     }
 
-    private void getEnglishDetailEN() {
-        HttpUtils._get(RetrofitClient.getServiceApi().getEnglishArticleDetailEN(mIdent, mKey, Article.TYPE_ENGLISH), new HttpCallback<Article>() {
-            @Override
-            public void onSuccess(Article article) {
+    private void getEnglishArticle() {
+        mArticleViewModel.getEnglishArticle(mIdent, mKey, Article.TYPE_ENGLISH).observe(this, article -> {
+            if (article != null) {
                 showArticle(article);
-                mOWebView.loadDetailDataAsync(article.getContent(), null);
-                mTextCount.setText(StringUtils.formatTextCount(article.getWordCount()));
-                mTextTime.setText(StringUtils.formatTime(article.getReadTime()));
+                showArticleEnglish(article);
             }
         });
     }
@@ -130,28 +121,13 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         }
         //类似的文章推荐
         mViewModel.getArticleRecommends(params).observe(this, result -> {
-            if (mRefreshing) {
-                mSwipeRefreshRv.setRefreshing(false);
-            }
-            mNextPageToken = nextPageToken;
+            mNextPageToken = result.getNextPageToken();
             if (result.getItems().size() == 0) {
                 mSwipeRefreshRv.showLoadComplete();
                 return;
             }
             showArticleList(result.getItems());
         });
-    }
-
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
     }
 
 
@@ -169,6 +145,7 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
 
     private void showArticleList(List<Article> articles) {
         if (mRefreshing) {
+            mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
         }
         mArticles.addAll(articles);
@@ -187,47 +164,6 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mAdapter.setOnItemClickListener(position -> {
-            Article top = mArticles.get(position);
-            if (!TDevice.hasWebView(mContext))
-                return;
-            if (top.getType() == 0) {
-                if (TypeFormat.isGit(top)) {
-                    WebActivity.show(mContext, TypeFormat.formatUrl(top));
-                } else {
-                    ArticleDetailActivity.show(mContext, top);
-                }
-            } else {
-                int type = top.getType();
-                long id = top.getOscId();
-                switch (type) {
-                    case News.TYPE_SOFTWARE:
-                        //   SoftwareDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_QUESTION:
-                        QuestionDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_BLOG:
-                        BlogDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_TRANSLATE:
-                        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
-                        break;
-                    case News.TYPE_EVENT:
-                        //     EventDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_NEWS:
-                        NewsDetailActivity.show(mContext, id);
-                        break;
-                    case Article.TYPE_ENGLISH:
-                        EnglishArticleDetailActivity.show(mContext, top);
-                        break;
-                    default:
-                        UIHelper.showUrlRedirect(mContext, top.getUrl());
-                        break;
-                }
-            }
-        });
     }
 
     /**
@@ -253,6 +189,12 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         if (mContext == null)
             return;
         mOWebView.loadDetailDataAsync(content);
+        mTextCount.setText(StringUtils.formatTextCount(article.getWordCount()));
+        mTextTime.setText(StringUtils.formatTime(article.getReadTime()));
+    }
+
+    private void showArticleEnglish(Article article) {
+        mOWebView.loadDetailDataAsync(article.getContent(), null);
         mTextCount.setText(StringUtils.formatTextCount(article.getWordCount()));
         mTextTime.setText(StringUtils.formatTime(article.getReadTime()));
     }

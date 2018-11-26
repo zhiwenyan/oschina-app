@@ -11,7 +11,17 @@ import com.oschina.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
 import com.steven.oschina.bean.sub.Article;
+import com.steven.oschina.bean.sub.News;
+import com.steven.oschina.ui.synthetical.article.ArticleDetailActivity;
+import com.steven.oschina.ui.synthetical.article.EnglishArticleDetailActivity;
+import com.steven.oschina.ui.synthetical.article.WebActivity;
+import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
 import com.steven.oschina.utils.DataFormat;
+import com.steven.oschina.utils.TDevice;
+import com.steven.oschina.utils.TypeFormat;
+import com.steven.oschina.utils.UIHelper;
 
 import java.util.List;
 
@@ -23,9 +33,11 @@ import java.util.List;
  */
 
 public class ArticleAdapter extends CommonRecyclerAdapter<Article> {
+    private Context mContext;
 
     public ArticleAdapter(Context context, List<Article> articles, MultiTypeSupport<Article> multiTypeSupport) {
         super(context, articles, multiTypeSupport);
+        this.mContext = context;
     }
 
     @Override
@@ -68,6 +80,49 @@ public class ArticleAdapter extends CommonRecyclerAdapter<Article> {
                     ImageLoader.load(context, imageView, imagePath);
                 }
             });
+
         }
+
+        //setOnClickListener
+        holder.itemView.setOnClickListener(v -> {
+            if (!TDevice.hasWebView(mContext))
+                return;
+            if (article.getType() == 0) {
+                if (TypeFormat.isGit(article)) {
+                    WebActivity.show(mContext, TypeFormat.formatUrl(article));
+                } else {
+                    ArticleDetailActivity.show(mContext, article);
+                }
+            } else {
+                int type = article.getType();
+                long id = article.getOscId();
+                switch (type) {
+                    case News.TYPE_SOFTWARE:
+                        //   SoftwareDetailActivity.show(mContext, id);
+                        break;
+                    case News.TYPE_QUESTION:
+                        QuestionDetailActivity.show(mContext, id);
+                        break;
+                    case News.TYPE_BLOG:
+                        BlogDetailActivity.show(mContext, id);
+                        break;
+                    case News.TYPE_TRANSLATE:
+                        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
+                        break;
+                    case News.TYPE_EVENT:
+                        //     EventDetailActivity.show(mContext, id);
+                        break;
+                    case News.TYPE_NEWS:
+                        NewsDetailActivity.show(mContext, id);
+                        break;
+                    case Article.TYPE_ENGLISH:
+                        EnglishArticleDetailActivity.show(mContext, article);
+                        break;
+                    default:
+                        UIHelper.showUrlRedirect(mContext, article.getUrl());
+                        break;
+                }
+            }
+        });
     }
 }

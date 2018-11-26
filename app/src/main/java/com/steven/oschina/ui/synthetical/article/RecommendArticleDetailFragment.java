@@ -1,5 +1,6 @@
 package com.steven.oschina.ui.synthetical.article;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,24 +10,15 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.sub.Article;
-import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.dialog.DialogHelper;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
-import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
+import com.steven.oschina.ui.synthetical.viewmodel.ArticleListViewModel;
+import com.steven.oschina.ui.synthetical.viewmodel.ArticleViewModel;
 import com.steven.oschina.utils.DataFormat;
 import com.steven.oschina.utils.StringUtils;
-import com.steven.oschina.utils.TDevice;
-import com.steven.oschina.utils.TypeFormat;
-import com.steven.oschina.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,12 +31,13 @@ import java.util.Map;
  *
  * @author yanzhiwen
  */
-public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleViewModel> implements View.OnClickListener {
+public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleListViewModel> implements View.OnClickListener {
     private View mHeaderView;
     private Article mArticle;
     private String mIdent;
     private String mKey;
     private List<Article> mArticles;
+    private ArticleViewModel mArticleViewModel;
 
     public static RecommendArticleDetailFragment newInstance(Article article) {
         Bundle bundle = new Bundle();
@@ -67,18 +60,15 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
         mHeaderView = LayoutInflater.from(mContext).inflate(R.layout.layout_article_header, null);
         mArticles = new ArrayList<>();
         mHeaderView.findViewById(R.id.btn_read_all).setOnClickListener(this);
+        mArticleViewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
         super.initData();
     }
 
     @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
-        HttpUtils._get(RetrofitClient.getServiceApi().getArticleDetail(mIdent, mKey), new HttpCallback<Article>() {
-            @Override
-            public void onSuccess(Article article) {
-                showArticle(article);
-            }
-        });
+
+        mArticleViewModel.getArticle(mIdent, mKey).observe(this, this::showArticle);
 
         Map<String, Object> params = new HashMap<>();
         params.put("key", mKey);
@@ -87,29 +77,17 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
             params.put("pageToken", nextPageToken);
         }
         mViewModel.getEnglishArticles(params).observe(this, result -> {
-            if (mRefreshing) {
-                mSwipeRefreshRv.setRefreshing(false);
+            if (result != null) {
+                mNextPageToken = result.getNextPageToken();
+                if (result.getItems().size() == 0) {
+                    mSwipeRefreshRv.showLoadComplete();
+                    return;
+                }
+                showArticleList(result.getItems());
             }
-            mNextPageToken = nextPageToken;
-            if (result.getItems().size() == 0) {
-                mSwipeRefreshRv.showLoadComplete();
-                return;
-            }
-            showArticleList(result.getItems());
         });
     }
 
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
-    }
 
     private void showArticle(Article article) {
         TextView tv_title = mHeaderView.findViewById(R.id.tv_title);
@@ -134,6 +112,7 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
 
     private void showArticleList(List<Article> articles) {
         if (mRefreshing) {
+            mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
         }
         mArticles.addAll(articles);
@@ -152,47 +131,6 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mAdapter.setOnItemClickListener(position -> {
-            Article top = mArticles.get(position);
-            if (!TDevice.hasWebView(mContext))
-                return;
-            if (top.getType() == 0) {
-                if (TypeFormat.isGit(top)) {
-                    WebActivity.show(mContext, TypeFormat.formatUrl(top));
-                } else {
-                    ArticleDetailActivity.show(mContext, top);
-                }
-            } else {
-                int type = top.getType();
-                long id = top.getOscId();
-                switch (type) {
-                    case News.TYPE_SOFTWARE:
-                        //   SoftwareDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_QUESTION:
-                        QuestionDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_BLOG:
-                        BlogDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_TRANSLATE:
-                        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
-                        break;
-                    case News.TYPE_EVENT:
-                        //  EventDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_NEWS:
-                        NewsDetailActivity.show(mContext, id);
-                        break;
-                    case Article.TYPE_ENGLISH:
-                        EnglishArticleDetailActivity.show(mContext, top);
-                        break;
-                    default:
-                        UIHelper.showUrlRedirect(mContext, top.getUrl());
-                        break;
-                }
-            }
-        });
     }
 
     @Override

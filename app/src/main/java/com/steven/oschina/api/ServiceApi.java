@@ -117,7 +117,7 @@ public interface ServiceApi {
     Call<ResultBean<Article>> getArticleDetail(@Query("ident") String ident, @Query("key") String key);
 
     @GET("get_article_detail?")
-    Call<ResultBean<Article>> getEnglishArticleDetailEN(@Query("ident") String ident, @Query("key") String key, @Query("type") int type);
+    Call<ResultBean<Article>> getEnglishArticle(@Query("ident") String ident, @Query("key") String key, @Query("type") int type);
 
     @GET("article_translate?")
     Call<ResultBean<Article>> article_translate(@Query("key") String key, @Query("type") int type);

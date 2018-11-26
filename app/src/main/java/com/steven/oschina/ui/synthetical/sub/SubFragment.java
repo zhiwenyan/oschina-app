@@ -1,9 +1,7 @@
 package com.steven.oschina.ui.synthetical.sub;
 
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.CacheManager;
@@ -11,7 +9,6 @@ import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.banner.Banner;
-import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.sub.SubTab;
@@ -20,8 +17,7 @@ import com.steven.oschina.header.HeaderView;
 import com.steven.oschina.ui.adapter.BlogSubAdapter;
 import com.steven.oschina.ui.adapter.NewsSubAdapter;
 import com.steven.oschina.ui.adapter.QuestionSubAdapter;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.SubViewModel;
-import com.steven.oschina.utils.UIHelper;
+import com.steven.oschina.ui.synthetical.viewmodel.SubViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,25 +81,23 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
     @Override
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
-        mViewModel.getSubList(mSubTab.getToken(), nextPageToken).observe(this, new Observer<PageBean<SubBean>>() {
-            @Override
-            public void onChanged(@Nullable PageBean<SubBean> result) {
-                mSwipeRefreshRv.setRefreshing(!mRefreshing);
-                mNextPageToken = nextPageToken;
+        mViewModel.getSubList(mSubTab.getToken(), nextPageToken).observe(this, result -> {
+            if (result != null) {
+                mNextPageToken = result.getNextPageToken();
                 if (result.getItems().size() == 0) {
                     mSwipeRefreshRv.showLoadComplete();
                     return;
                 }
                 showSubList(result.getItems());
-                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
             }
+            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
         });
 
     }
 
-
     private void showSubList(List<SubBean> subBeans) {
         if (mRefreshing) {
+            mSwipeRefreshRv.setRefreshing(false);
             mSubBeans.clear();
         }
         mSubBeans.addAll(subBeans);
@@ -114,32 +108,7 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mAdapter.setOnItemClickListener(position -> {
-            SubBean subBean = mSubBeans.get(position);
-            switch (mSubTab.getType()) {
-                case News.TYPE_SOFTWARE:
-                    //SoftwareDetailActivity.show(mContext, subBean);
-                    break;
-                case News.TYPE_QUESTION:
-                    QuestionDetailActivity.show(mContext, subBean);
-                    break;
-                case News.TYPE_BLOG:
-                    BlogDetailActivity.show(mContext, subBean);
-                    break;
-                case News.TYPE_TRANSLATE:
-                    NewsDetailActivity.show(mContext, subBean);
-                    break;
-                case News.TYPE_EVENT:
-                    //EventDetailActivity.show(mContext, subBean);
-                    break;
-                case News.TYPE_NEWS:
-                    NewsDetailActivity.show(mContext, subBean);
-                    break;
-                default:
-                    UIHelper.showUrlRedirect(mContext, mSubTab.getHref());
-                    break;
-            }
-        });
+
     }
 
     private CommonRecyclerAdapter<SubBean> getAdapter() {

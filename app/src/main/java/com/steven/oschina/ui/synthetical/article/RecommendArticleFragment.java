@@ -11,17 +11,10 @@ import com.steven.oschina.R;
 import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.sub.Article;
-import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
-import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.BannerViewModel;
-import com.steven.oschina.utils.TDevice;
-import com.steven.oschina.utils.TypeFormat;
-import com.steven.oschina.utils.UIHelper;
+import com.steven.oschina.ui.synthetical.viewmodel.ArticleListViewModel;
+import com.steven.oschina.ui.synthetical.viewmodel.BannerViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +22,7 @@ import java.util.List;
 /**
  * 推荐的文章
  */
-public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, ArticleViewModel> {
+public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, ArticleListViewModel> {
     private List<Article> mArticles;
     private BannerView mBannerView;
     private static final int CATALOG = 1;
@@ -77,7 +70,7 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
     public void onRequestData(String nextPageToken) {
         super.onRequestData(nextPageToken);
         mViewModel.getArticles(OSCSharedPreference.getInstance().getDeviceUUID(), nextPageToken).observe(this, result -> {
-            mNextPageToken = nextPageToken;
+            mNextPageToken = result.getNextPageToken();
             if (result.getItems().size() == 0) {
                 mSwipeRefreshRv.showLoadComplete();
                 return;
@@ -109,46 +102,6 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mAdapter.setOnItemClickListener(position -> {
-            Article top = mArticles.get(position);
-            if (!TDevice.hasWebView(mContext))
-                return;
-            if (top.getType() == 0) {
-                if (TypeFormat.isGit(top)) {
-                    WebActivity.show(mContext, TypeFormat.formatUrl(top));
-                } else {
-                    ArticleDetailActivity.show(mContext, top);
-                }
-            } else {
-                int type = top.getType();
-                long id = top.getOscId();
-                switch (type) {
-                    case News.TYPE_SOFTWARE:
-                        //   SoftwareDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_QUESTION:
-                        QuestionDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_BLOG:
-                        BlogDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_TRANSLATE:
-                        NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
-                        break;
-                    case News.TYPE_EVENT:
-                        //     EventDetailActivity.show(mContext, id);
-                        break;
-                    case News.TYPE_NEWS:
-                        NewsDetailActivity.show(mContext, id);
-                        break;
-                    case Article.TYPE_ENGLISH:
-                        EnglishArticleDetailActivity.show(mContext, top);
-                        break;
-                    default:
-                        UIHelper.showUrlRedirect(mContext, top.getUrl());
-                        break;
-                }
-            }
-        });
+
     }
 }

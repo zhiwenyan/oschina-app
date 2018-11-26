@@ -18,18 +18,14 @@ import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.comment.Comment;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Author;
-import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.SubBean;
 import com.steven.oschina.bean.sub.UserRelation;
 import com.steven.oschina.media.Util;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.OWebView;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
-import com.steven.oschina.ui.synthetical.article.ArticleDetailActivity;
-import com.steven.oschina.ui.synthetical.article.WebActivity;
-import com.steven.oschina.ui.synthetical.sub.viewmodel.ArticleViewModel;
+import com.steven.oschina.ui.synthetical.viewmodel.ArticleListViewModel;
 import com.steven.oschina.utils.StringUtils;
-import com.steven.oschina.utils.TypeFormat;
 import com.steven.oschina.widget.CommentView;
 
 import java.util.ArrayList;
@@ -37,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class DetailFragment<T,V> extends BaseRecyclerFragment1<Article, ArticleViewModel> {
+public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<Article, ArticleListViewModel> {
     protected SubBean mSubBean;
     protected OWebView mWebView;
     protected View mHeaderView;
@@ -63,7 +59,7 @@ public abstract class DetailFragment<T,V> extends BaseRecyclerFragment1<Article,
         mHeaderView = getHeaderView();
         if (mHeaderView != null) {
             mWebView = mHeaderView.findViewById(R.id.webView);
-            mWebView.setUseShareCss(true);
+            //   mWebView.setUseShareCss(true);
             mAvatarIv = mHeaderView.findViewById(R.id.iv_avatar);
             mArticleTitle = mHeaderView.findViewById(R.id.tv_title);
             mAuthorName = mHeaderView.findViewById(R.id.tv_author);
@@ -94,9 +90,7 @@ public abstract class DetailFragment<T,V> extends BaseRecyclerFragment1<Article,
         }
         //类似的文章推荐
         mViewModel.getArticleRecommends(params).observe(this, result -> {
-            if (mRefreshing) {
-                mSwipeRefreshRv.setRefreshing(false);
-            }
+
             mNextPageToken = nextPageToken;
             if (result.getItems().size() == 0) {
                 mSwipeRefreshRv.showLoadComplete();
@@ -167,6 +161,7 @@ public abstract class DetailFragment<T,V> extends BaseRecyclerFragment1<Article,
 
     private void showArticleList(List<Article> articles) {
         if (mRefreshing) {
+            mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
         }
         mArticles.addAll(articles);
@@ -181,55 +176,12 @@ public abstract class DetailFragment<T,V> extends BaseRecyclerFragment1<Article,
                 return R.layout.item_article_three_img;
             });
             mSwipeRefreshRv.setAdapter(mAdapter);
+            mSwipeRefreshRv.addHeaderView(mHeaderView);
             showAuthor();
             showCommentView();
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mAdapter.setOnItemClickListener(position -> {
-            Article top = mArticles.get(position);
-            if (top == null)
-                return;
-            if (top.getType() == 0) {
-                if (TypeFormat.isGit(top)) {
-                    WebActivity.show(mContext, TypeFormat.formatUrl(top));
-                } else {
-                    ArticleDetailActivity.show(mContext, top);
-                }
-            } else {
-                try {
-                    int type = top.getType();
-                    long id = top.getOscId();
-                    switch (type) {
-                        case News.TYPE_SOFTWARE:
-                            //SoftwareDetailActivity.show(mContext, id);
-                            break;
-                        case News.TYPE_QUESTION:
-                            QuestionDetailActivity.show(mContext, id);
-                            break;
-                        case News.TYPE_BLOG:
-                            BlogDetailActivity.show(mContext, id);
-                            break;
-                        case News.TYPE_TRANSLATE:
-                            NewsDetailActivity.show(mContext, id, News.TYPE_TRANSLATE);
-                            break;
-                        case News.TYPE_EVENT:
-                            //EventDetailActivity.show(mContext, id);
-                            break;
-                        case News.TYPE_NEWS:
-                            NewsDetailActivity.show(mContext, id);
-                            break;
-                        default:
-                            //UIHelper.showUrlRedirect(mContext, top.getUrl());
-                            break;
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ArticleDetailActivity.show(mContext, top);
-                }
-            }
-        });
     }
 
     private void showCommentView() {

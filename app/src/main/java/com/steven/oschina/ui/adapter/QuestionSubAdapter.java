@@ -7,8 +7,13 @@ import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.oschina.client.recyclerview.adapter.ViewHolder;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
+import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.SubBean;
+import com.steven.oschina.ui.synthetical.sub.BlogDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.NewsDetailActivity;
+import com.steven.oschina.ui.synthetical.sub.QuestionDetailActivity;
 import com.steven.oschina.utils.StringUtils;
+import com.steven.oschina.utils.UIHelper;
 
 import java.util.List;
 
@@ -19,9 +24,11 @@ import java.util.List;
  * @author yanzhiwen
  */
 public class QuestionSubAdapter extends CommonRecyclerAdapter<SubBean> {
+    private Context mContext;
 
     public QuestionSubAdapter(Context context, List<SubBean> data, int layoutId) {
         super(context, data, layoutId);
+        this.mContext = context;
     }
 
     @Override
@@ -37,5 +44,33 @@ public class QuestionSubAdapter extends CommonRecyclerAdapter<SubBean> {
                         ImageLoader.load(context, imageView, imagePath);
                     }
                 });
+
+
+        //setOnClickListener
+        holder.itemView.setOnClickListener(v -> {
+            switch (item.getType()) {
+                case News.TYPE_SOFTWARE:
+                    //SoftwareDetailActivity.show(mContext, subBean);
+                    break;
+                case News.TYPE_QUESTION:
+                    QuestionDetailActivity.show(mContext, item);
+                    break;
+                case News.TYPE_BLOG:
+                    BlogDetailActivity.show(mContext, item);
+                    break;
+                case News.TYPE_TRANSLATE:
+                    NewsDetailActivity.show(mContext, item);
+                    break;
+                case News.TYPE_EVENT:
+                    //EventDetailActivity.show(mContext, subBean);
+                    break;
+                case News.TYPE_NEWS:
+                    NewsDetailActivity.show(mContext, item);
+                    break;
+                default:
+                    UIHelper.showUrlRedirect(mContext, item.getHref());
+                    break;
+            }
+        });
     }
 }

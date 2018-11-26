@@ -41,7 +41,7 @@ public class BlogDetailActivity extends DetailActivity {
     }
 
     @Override
-    public DetailFragment getDetailFragment() {
+    public BaseSubDetailFragment getDetailFragment() {
         return BlogDetailFragment.newInstance(mSubBean);
     }
 }

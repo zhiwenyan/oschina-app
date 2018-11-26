@@ -42,7 +42,7 @@ public class QuestionDetailActivity extends DetailActivity {
     }
 
     @Override
-    public DetailFragment getDetailFragment() {
+    public BaseSubDetailFragment getDetailFragment() {
         return QuestionDetailFragment.newInstance(mSubBean);
     }
 

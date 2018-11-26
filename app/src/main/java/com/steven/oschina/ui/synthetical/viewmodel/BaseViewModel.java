@@ -1,4 +1,4 @@
-package com.steven.oschina.ui.synthetical.sub.viewmodel;
+package com.steven.oschina.ui.synthetical.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;

@@ -30,7 +30,7 @@ public abstract class DetailActivity extends BaseActivity {
     FrameLayout mLayContainer;
     @BindView(R.id.ll_comment)
     LinearLayout mLlComment;
-    private DetailFragment mDetailFragment;
+    private BaseSubDetailFragment mDetailFragment;
     public SubBean mSubBean;
     private String mIdent;
     @BindView(R.id.lay_error)
@@ -76,10 +76,10 @@ public abstract class DetailActivity extends BaseActivity {
         });
     }
 
-    private void addFragment(int layoutId, DetailFragment fragment) {
+    private void addFragment(int layoutId, BaseSubDetailFragment fragment) {
         FragmentManagerHelper fragmentManagerHelper = new FragmentManagerHelper(getSupportFragmentManager(), layoutId);
         fragmentManagerHelper.add(fragment);
     }
 
-    public abstract DetailFragment getDetailFragment();
+    public abstract BaseSubDetailFragment getDetailFragment();
 }
