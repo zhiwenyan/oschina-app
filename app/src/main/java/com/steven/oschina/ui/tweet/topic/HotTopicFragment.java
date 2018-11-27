@@ -1,128 +1,83 @@
 package com.steven.oschina.ui.tweet.topic;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.steven.oschina.CacheManager;
+import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.tweet.Topic;
-import com.steven.oschina.bean.tweet.Tweet;
-import com.steven.oschina.ui.adapter.TweetAdapter;
-import com.steven.oschina.ui.tweet.TweetDetailActivity;
+import com.steven.oschina.ui.adapter.TopicAdapter;
+import com.steven.oschina.ui.tweet.viewmodel.HotTopicViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class HotTopicFragment extends BaseRecyclerFragment {
-    private Topic mTopic;
-    private int mType;
-    private List<Tweet> mTweets;
-    //最热话题
-    private static final String HOTTEST_CACHE_NAME = "hottest_topic";
-    //最新话题
-    private static final String UP_CACHE_NAME = "up_topic";
 
-    public static HotTopicFragment newInstance(Topic topic, int type) {
+public class HotTopicFragment extends BaseRecyclerFragment1<Topic, HotTopicViewModel> {
+    private static final String CACHE_NAME = "hot_topic";
+    private static final String TOPIC_TYPE = "2";
+    private List<Topic> mTopics;
+
+    public static HotTopicFragment newInstance() {
         Bundle args = new Bundle();
-        args.putSerializable("topic", topic);
-        args.putInt("type", type);
         HotTopicFragment fragment = new HotTopicFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void initBundle(Bundle bundle) {
-        super.initBundle(bundle);
-        mTopic = ( Topic ) bundle.getSerializable("topic");
-        mType = bundle.getInt("type");
-    }
-
-    @Override
     public void initData() {
-        mTweets = new ArrayList<>();
+        mTopics = new ArrayList<>();
         super.initData();
     }
 
     @Override
-    public void requestCacheData() {
-        super.requestCacheData();
-        List<Tweet> tweets = null;
-        switch (mType) {
-            case 1:
-                tweets = CacheManager.readListJson(mContext, UP_CACHE_NAME, Tweet.class);
-                break;
-            case 2:
-                tweets = CacheManager.readListJson(mContext, HOTTEST_CACHE_NAME, Tweet.class);
-                break;
+    public void readCacheData() {
+        super.readCacheData();
+        List<Topic> topics = CacheManager.readListJson(mContext, CACHE_NAME, Topic.class);
+        if (topics != null) {
+            showTopicList(topics);
         }
-        if (tweets != null) {
-            showTweetList(tweets);
-        }
+
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
-        Map<String, Object> map = new HashMap<>();
-        if (!TextUtils.isEmpty(nextPageToken)) {
-            map.put("pageToken", nextPageToken);
-        }
-        map.put("topicId", mTopic.getId());
-        map.put("type", mType);
-        HttpUtils.get(RetrofitClient.getServiceApi().getTopicTweets(map), new HttpCallback<Tweet>() {
-            @Override
-            public void onSuccess(List<Tweet> tweets, String nextPageToken) {
-                if (mRefreshing) {
-                    mSwipeRefreshRv.setRefreshing(false);
-                }
-                mNextPageToken = nextPageToken;
-                if (tweets.size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
-                showTweetList(tweets);
-                if (mType == 1) {
-                    CacheManager.saveToJson(mContext, UP_CACHE_NAME, tweets);
-                } else {
-                    CacheManager.saveToJson(mContext, HOTTEST_CACHE_NAME, tweets);
-                }
-            }
+    public void onRequestData() {
+        super.onRequestData();
+        mViewModel.getHotTopics(TOPIC_TYPE, mNextPageToken).observe(this, topic -> {
+            assert topic != null;
+            mNextPageToken = topic.getNextPageToken();
+            showTopicList(topic.getItems());
+            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, topic.getItems());
         });
+
     }
 
-    private void showTweetList(List<Tweet> tweets) {
-        if (mRefreshing) {
-            mTweets.clear();
+    private void showTopicList(List<Topic> topics) {
+        if (mSwipeRefreshRv.isRefreshing()) {
+            mSwipeRefreshRv.setRefreshing(false);
+            mTopics.clear();
         }
-        mTweets.addAll(tweets);
+        if (topics.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
+        }
+        mTopics.addAll(topics);
         if (mAdapter == null) {
-            mAdapter = new TweetAdapter(mContext, mTweets, R.layout.item_list_tweet);
+            mAdapter = new TopicAdapter(mContext, mTopics, R.layout.item_list_topic);
             mSwipeRefreshRv.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {
-            TweetDetailActivity.show(mContext, mTweets.get(position));
+            Topic topic = mTopics.get(position);
+            Intent intent = new Intent(mContext, TopicDetailActivity.class);
+            intent.putExtra("topic", topic);
+            intent.putExtra("position", position);
+            startActivity(intent);
         });
-    }
-
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
     }
 }
