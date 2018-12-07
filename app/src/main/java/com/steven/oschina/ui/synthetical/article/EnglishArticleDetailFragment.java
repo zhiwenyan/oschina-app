@@ -79,8 +79,8 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
+    public void onRequestData() {
+        super.onRequestData();
         if (!TextUtils.isEmpty(mArticle.getTitleTranslated())) {
             isEnglish = true;
             getTranslateArticle();
@@ -88,7 +88,7 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
             isEnglish = false;
             getEnglishArticle();
         }
-        getArticleRecommends(nextPageToken);
+        getArticleRecommends();
 
     }
 
@@ -112,21 +112,23 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         });
     }
 
-    private void getArticleRecommends(String nextPageToken) {
+    private void getArticleRecommends() {
         Map<String, Object> params = new HashMap<>();
         params.put("key", mKey);
         params.put("ident", mIdent);
-        if (!TextUtils.isEmpty(nextPageToken)) {
-            params.put("pageToken", nextPageToken);
+        if (!TextUtils.isEmpty(mNextPageToken)) {
+            params.put("pageToken", mNextPageToken);
         }
         //类似的文章推荐
         mViewModel.getArticleRecommends(params).observe(this, result -> {
-            mNextPageToken = result.getNextPageToken();
-            if (result.getItems().size() == 0) {
-                mSwipeRefreshRv.showLoadComplete();
-                return;
+            if (result != null) {
+                mNextPageToken = result.getNextPageToken();
+                if (result.getItems().size() == 0) {
+                    mSwipeRefreshRv.showLoadComplete();
+                    return;
+                }
+                showArticleList(result.getItems());
             }
-            showArticleList(result.getItems());
         });
     }
 
@@ -144,7 +146,7 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
     }
 
     private void showArticleList(List<Article> articles) {
-        if (mRefreshing) {
+        if (mSwipeRefreshRv.isRefreshing()) {
             mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
         }

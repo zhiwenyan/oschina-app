@@ -1,14 +1,11 @@
 package com.steven.oschina.ui.tweet.topic;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,10 +30,10 @@ public class TopicDetailActivity extends BaseActivity {
     TabLayout mTabLayout;
     @BindView(R.id.iv_topic)
     ImageView mTopicIv;
-    //  @BindView(R.id.tv_count)
-//  TextView mJoinCount;
-//  @BindView(R.id.tv_topic_desc)
-//  TextView mTopicDesc;
+    @BindView(R.id.tv_count)
+    TextView mJoinCount;
+    @BindView(R.id.tv_topic_desc)
+    TextView mTopicDesc;
     private Topic mTopic;
     private ShareDialog mShareDialog;
 
@@ -58,13 +55,13 @@ public class TopicDetailActivity extends BaseActivity {
         mTopic = ( Topic ) getIntent().getSerializableExtra("topic");
         int position = getIntent().getIntExtra("position", 0);
         mTopicIv.setImageResource(images[position % 5]);
-        mTopicTitle.setText("#" + mTopic.getTitle() + "#");
-//      mJoinCount.setText(String.format("共有%s人参与", mTopic.getJoinCount()));
-//      mTopicDesc.setText(mTopic.getContent());
+        mTopicTitle.setText(String.format("#%s#", mTopic.getTitle()));
+        mJoinCount.setText(String.format("共有%s人参与", mTopic.getJoinCount()));
+        mTopicDesc.setText(mTopic.getContent());
         String[] pageTitle = getResources().getStringArray(R.array.topic);
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(HotTopicFragment.newInstance(mTopic, HOT_TYPE));
-        fragments.add(HotTopicFragment.newInstance(mTopic, UP_TYPE));
+        //fragments.add(TweetTopicFragment.newInstance(mTopic, HOT_TYPE));
+        fragments.add(TweetTopicFragment.newInstance(mTopic, UP_TYPE));
         TopicPagerAdapter adapter = new TopicPagerAdapter(getSupportFragmentManager(), pageTitle, fragments);
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -75,15 +72,8 @@ public class TopicDetailActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
         }
-        View decorView = this.getWindow().getDecorView();
-        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        decorView.setSystemUiVisibility(option);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
+//        StatusBarUtil.statusBarTranslucent(this);
     }
-
 
     @OnClick(R.id.iv_share)
     public void onViewClicked() {
@@ -96,7 +86,7 @@ public class TopicDetailActivity extends BaseActivity {
         private String[] mPageTitle;
         private List<Fragment> mFragments;
 
-        public TopicPagerAdapter(FragmentManager fm, String[] pageTitle, List<Fragment> fragments) {
+        TopicPagerAdapter(FragmentManager fm, String[] pageTitle, List<Fragment> fragments) {
             super(fm);
             this.mPageTitle = pageTitle;
             this.mFragments = fragments;

@@ -51,7 +51,7 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
     }
 
     @Override
-    public void requestCacheData() {
+    public void readCacheData() {
         List<SubBean> subBeans = CacheManager.readListJson(mContext, mSubTab.getToken(), SubBean.class);
         if (subBeans != null) {
             showSubList(subBeans);
@@ -63,7 +63,7 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
         }
     }
 
-    public void initHeader() {
+    public void initHeaderView() {
         if (mSubTab.getBanner() != null) {
             if (mSubTab.getBanner().getCatalog() == SubTab.BANNER_CATEGORY_NEWS) {
                 // mHeaderView = new NewsHeaderView(mContext, mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType());
@@ -79,32 +79,33 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
-        mViewModel.getSubList(mSubTab.getToken(), nextPageToken).observe(this, result -> {
-            if (result != null) {
+    public void onRequestData() {
+        super.onRequestData();
+        if (mObserver == null) {
+            mObserver = result -> {
+                assert result != null;
                 mNextPageToken = result.getNextPageToken();
-                if (result.getItems().size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
                 showSubList(result.getItems());
-            }
-            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
-        });
-
+                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
+            };
+        }
+        mViewModel.getSubList(mSubTab.getToken(), mNextPageToken).observe(this, mObserver);
     }
 
     private void showSubList(List<SubBean> subBeans) {
-        if (mRefreshing) {
+        if (mSwipeRefreshRv.isRefreshing()) {
             mSwipeRefreshRv.setRefreshing(false);
             mSubBeans.clear();
+        }
+        if (subBeans.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
         }
         mSubBeans.addAll(subBeans);
         if (mAdapter == null) {
             mAdapter = getAdapter();
             mSwipeRefreshRv.setAdapter(mAdapter);
-            initHeader();
+            initHeaderView();
         } else {
             mAdapter.notifyDataSetChanged();
         }
@@ -113,10 +114,10 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
 
     private CommonRecyclerAdapter<SubBean> getAdapter() {
         if (mSubTab.getType() == News.TYPE_BLOG)
-            return new BlogSubAdapter(getActivity(), mSubBeans, R.layout.item_sub_news);
+            return new BlogSubAdapter(mContext, mSubBeans, R.layout.item_sub_news);
         else if (mSubTab.getType() == News.TYPE_QUESTION)
-            return new QuestionSubAdapter(getActivity(), mSubBeans, R.layout.item_list_sub_question);
-        return new NewsSubAdapter(getActivity(), mSubBeans, R.layout.item_sub_news);
+            return new QuestionSubAdapter(mContext, mSubBeans, R.layout.item_list_sub_question);
+        return new NewsSubAdapter(mContext, mSubBeans, R.layout.item_sub_news);
     }
 }
 

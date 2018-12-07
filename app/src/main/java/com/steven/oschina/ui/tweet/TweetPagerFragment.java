@@ -8,7 +8,7 @@ import com.steven.oschina.R;
 import com.steven.oschina.base.BaseViewPagerFragment;
 import com.steven.oschina.bean.sub.SubTab;
 import com.steven.oschina.ui.synthetical.sub.SubFragment;
-import com.steven.oschina.ui.tweet.topic.TopicFragment;
+import com.steven.oschina.ui.tweet.topic.HotTopicFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class TweetPagerFragment extends BaseViewPagerFragment {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(TweetFragment.newInstance(TweetFragment.CATALOG_NEW));
         fragments.add(TweetFragment.newInstance(TweetFragment.CATALOG_HOT));
-        fragments.add(TopicFragment.newInstance());
+        fragments.add(HotTopicFragment.newInstance());
         fragments.add(getSubFragment());
         return fragments;
     }

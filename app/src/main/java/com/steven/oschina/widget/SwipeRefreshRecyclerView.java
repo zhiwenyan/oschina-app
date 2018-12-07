@@ -31,7 +31,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
     private View mLoadMoreView;
     private ProgressBar mLoadMorePb;
     private TextView mLoadMoreTv;
-    private boolean mLoadEnable = true;
+    private boolean mLoadEnable = false;
     private final int STATUS_LOAD = 2, STATUS_REFRESH = 1;
     private int mStatus = STATUS_REFRESH;
     private int mBottomViewCount;
@@ -39,6 +39,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
     private int mYDown;
     private int mLastY;
     private int mTouchSlop;
+    private int scrollState;
 
     public SwipeRefreshRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -54,6 +55,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                scrollState = newState;
                 /*
                  * The RecyclerView is not currently scrolling.（静止没有滚动）
                  */
@@ -128,9 +130,11 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
      * 显示加载完成
      */
     public void showLoadComplete() {
-        mLoadEnable = false;
-        mLoadMorePb.setVisibility(View.GONE);
-        mLoadMoreTv.setText("已全部加载完毕");
+        if (mRecyclerView.getAdapter() != null) {
+            mLoadEnable = false;
+            mLoadMorePb.setVisibility(View.GONE);
+            mLoadMoreTv.setText("已全部加载完毕");
+        }
     }
 
     /**
@@ -156,6 +160,7 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
      * 判断RecyclerView是否到了最底部
      */
     private boolean isScrollBottom() {
+        mLoadEnable = true;
         //第一个可见item的位置 + 当前可见的item个数 >= item的总个数-头部底部的View的个数
         //这样就可以判断出来，是在底部了。
         return (mRecyclerView != null && mRecyclerView.getAdapter() != null)

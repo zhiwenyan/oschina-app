@@ -35,7 +35,7 @@ public class EnglishArticleFragment extends BaseRecyclerFragment1<Article, Artic
     }
 
     @Override
-    public void requestCacheData() {
+    public void readCacheData() {
         List<Article> articles = CacheManager.readListJson(mContext, CACHE_NAME, Article.class);
         if (articles != null) {
             showArticleList(articles);
@@ -43,32 +43,35 @@ public class EnglishArticleFragment extends BaseRecyclerFragment1<Article, Artic
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
+    public void onRequestData() {
+        super.onRequestData();
         Map<String, Object> params = new HashMap<>();
         params.put("ident", OSCSharedPreference.getInstance().getDeviceUUID());
         params.put("type", TYPE_ENGLISH);
-        params.put("pageToken", nextPageToken);
+        params.put("pageToken", mNextPageToken);
         mViewModel.getEnglishArticles(params).observe(this, result -> {
+            assert result != null;
             mNextPageToken = result.getNextPageToken();
-            if (result.getItems().size() == 0) {
-                mSwipeRefreshRv.showLoadComplete();
-                return;
-            }
-            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
+
             showArticleList(result.getItems());
+            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
+
         });
 
     }
 
     private void showArticleList(List<Article> articles) {
-        if (mRefreshing) {
+        if (mSwipeRefreshRv.isRefreshing()) {
             mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
         }
+        if (articles.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
+        }
         mArticles.addAll(articles);
         if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(this.getActivity(), mArticles, (article, position) -> {
+            mAdapter = new ArticleAdapter(mContext, mArticles, (article, position) -> {
                 String[] images = article.getImgs();
                 if (images == null || images.length == 0) {
                     return R.layout.item_article_not_img;

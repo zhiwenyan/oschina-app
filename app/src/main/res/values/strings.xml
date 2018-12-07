@@ -434,7 +434,7 @@
         <item>非IT话题</item>
     </string-array>
     <string-array name="topic">
-        <item>最热</item>
+        <!--<item>最热</item>-->
         <item>最新</item>
     </string-array>
 

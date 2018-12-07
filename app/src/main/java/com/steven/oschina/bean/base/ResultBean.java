@@ -61,7 +61,7 @@ public class ResultBean<T> {
 
     public boolean isSuccess() {
         // 每次回来后通知消息到达
-      //  NoticeManager.publish(this, this.notice);
+        //  NoticeManager.publish(this, this.notice);
         return code == RESULT_SUCCESS && result != null;
     }
 

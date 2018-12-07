@@ -54,12 +54,11 @@ public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<
 
     @Override
     public void initData() {
-        mRefreshing = false;
         mArticles = new ArrayList<>();
         mHeaderView = getHeaderView();
         if (mHeaderView != null) {
             mWebView = mHeaderView.findViewById(R.id.webView);
-            //   mWebView.setUseShareCss(true);
+            mWebView.setUseShareCss(true);
             mAvatarIv = mHeaderView.findViewById(R.id.iv_avatar);
             mArticleTitle = mHeaderView.findViewById(R.id.tv_title);
             mAuthorName = mHeaderView.findViewById(R.id.tv_author);
@@ -79,28 +78,55 @@ public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
+    public void onRequestData() {
+        super.onRequestData();
         Map<String, Object> params = new HashMap<>();
         String ident = OSCSharedPreference.getInstance().getDeviceUUID();
         params.put("key", String.format("osc_%s_%s", mSubBean.getType(), mSubBean.getId()));
         params.put("ident", ident);
-        if (!TextUtils.isEmpty(nextPageToken)) {
-            params.put("pageToken", nextPageToken);
+        if (!TextUtils.isEmpty(mNextPageToken)) {
+            params.put("pageToken", mNextPageToken);
         }
-        //类似的文章推荐
-        mViewModel.getArticleRecommends(params).observe(this, result -> {
-
-            mNextPageToken = nextPageToken;
-            if (result.getItems().size() == 0) {
-                mSwipeRefreshRv.showLoadComplete();
-                return;
-            }
+        mObserver=result->{
+            assert result != null;
+            mNextPageToken = result.getNextPageToken();
             if (mOnCompleteListener != null) {
                 mOnCompleteListener.onComplete();
             }
             showArticleList(result.getItems());
-        });
+        };
+        //类似的文章推荐
+        mViewModel.getArticleRecommends(params).observe(this, mObserver);
+    }
+
+
+    private void showArticleList(List<Article> articles) {
+        if (mSwipeRefreshRv.isRefreshing()) {
+            mSwipeRefreshRv.setRefreshing(false);
+            mArticles.clear();
+        }
+        if (articles.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
+        }
+        mArticles.addAll(articles);
+        if (mAdapter == null) {
+            mAdapter = new ArticleAdapter(mContext, mArticles, (article, position) -> {
+                String[] images = article.getImgs();
+                if (images == null || images.length == 0) {
+                    return R.layout.item_article_not_img;
+                }
+                if (images.length < 3)
+                    return R.layout.item_article_one_img;
+                return R.layout.item_article_three_img;
+            });
+            mSwipeRefreshRv.setAdapter(mAdapter);
+            mSwipeRefreshRv.addHeaderView(mHeaderView);
+            showAuthor();
+            showCommentView();
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private void showAuthor() {
@@ -158,31 +184,6 @@ public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<
         mArticleTitle.setText(spannable);
     }
 
-
-    private void showArticleList(List<Article> articles) {
-        if (mRefreshing) {
-            mSwipeRefreshRv.setRefreshing(false);
-            mArticles.clear();
-        }
-        mArticles.addAll(articles);
-        if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(this.getActivity(), mArticles, (article, position) -> {
-                String[] images = article.getImgs();
-                if (images == null || images.length == 0) {
-                    return R.layout.item_article_not_img;
-                }
-                if (images.length < 3)
-                    return R.layout.item_article_one_img;
-                return R.layout.item_article_three_img;
-            });
-            mSwipeRefreshRv.setAdapter(mAdapter);
-            mSwipeRefreshRv.addHeaderView(mHeaderView);
-            showAuthor();
-            showCommentView();
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
 
     private void showCommentView() {
         SubBean.Statistics statistics = mSubBean.getStatistics();

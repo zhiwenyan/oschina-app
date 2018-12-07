@@ -1,7 +1,6 @@
 package com.steven.oschina.ui.synthetical.article;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -65,27 +64,22 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
-
+    public void onRequestData() {
+        super.onRequestData();
         mArticleViewModel.getArticle(mIdent, mKey).observe(this, this::showArticle);
-
         Map<String, Object> params = new HashMap<>();
+
         params.put("key", mKey);
         params.put("ident", mIdent);
-        if (!TextUtils.isEmpty(nextPageToken)) {
-            params.put("pageToken", nextPageToken);
+        if (!TextUtils.isEmpty(mNextPageToken)) {
+            params.put("pageToken", mNextPageToken);
         }
-        mViewModel.getEnglishArticles(params).observe(this, result -> {
-            if (result != null) {
-                mNextPageToken = result.getNextPageToken();
-                if (result.getItems().size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
-                showArticleList(result.getItems());
-            }
-        });
+        mObserver = result -> {
+            assert result != null;
+            mNextPageToken = result.getNextPageToken();
+            showArticleList(result.getItems());
+        };
+        mViewModel.getEnglishArticles(params).observe(this, mObserver);
     }
 
 
@@ -111,9 +105,13 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
     }
 
     private void showArticleList(List<Article> articles) {
-        if (mRefreshing) {
+        if (mSwipeRefreshRv.isRefreshing()) {
             mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
+        }
+        if (articles.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
         }
         mArticles.addAll(articles);
         if (mAdapter == null) {
@@ -143,13 +141,10 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
                     view,
                     "继续访问",
                     "取消",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ArticleWebActivity.show(mContext, mArticle);
-                            if (checkBox.isChecked()) {
-                                OSCSharedPreference.getInstance().putFirstOpenUrl();
-                            }
+                    (dialog, which) -> {
+                        ArticleWebActivity.show(mContext, mArticle);
+                        if (checkBox.isChecked()) {
+                            OSCSharedPreference.getInstance().putFirstOpenUrl();
                         }
                     }).show();
         } else {

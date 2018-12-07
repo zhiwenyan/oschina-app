@@ -1,0 +1,126 @@
+{
+  "message": "\u6570\u636e\u8bf7\u6c42\u6210\u529f",
+  "code": "200",
+  "result": {
+    "borrowInfo": [
+      {
+        "id": "32",
+        "money": "1000",
+        "duration": "14",
+        "repayment_type": "1",
+        "rate": "9.00",
+        "interest": "3.50",
+        "audit": "0.00",
+        "audit_rate": "0.00",
+        "created": "0.00",
+        "created_rate": "0.00",
+        "enbled": "0.00",
+        "enabled_rate": "9.30",
+        "pay_fee": "1.00",
+        "pay_rate": "0.00",
+        "total_rate": "0.00",
+        "renewal_fee": "20.00",
+        "due_rate": "0.1000",
+        "late_rate": "1.0000",
+        "is_on": "1",
+        "renewal_day": "14",
+        "add_time": "1543285317",
+        "xuqi_day": "0",
+        "type": "1",
+        "total": "1013.80"
+      },
+      {
+        "id": "33",
+        "money": "1000",
+        "duration": "14",
+        "repayment_type": "1",
+        "rate": "9.00",
+        "interest": "3.50",
+        "audit": "0.00",
+        "audit_rate": "0.00",
+        "created": "0.00",
+        "created_rate": "0.00",
+        "enbled": "0.00",
+        "enabled_rate": "9.30",
+        "pay_fee": "1.00",
+        "pay_rate": "0.00",
+        "total_rate": "0.00",
+        "renewal_fee": "20.00",
+        "due_rate": "0.1000",
+        "late_rate": "1.0000",
+        "is_on": "1",
+        "renewal_day": "14",
+        "add_time": "1543285370",
+        "xuqi_day": "0",
+        "type": "1",
+        "total": "1013.80"
+      },
+      {
+        "id": "30",
+        "money": "1200",
+        "duration": "14",
+        "repayment_type": "1",
+        "rate": "9.00",
+        "interest": "1.75",
+        "audit": "0.00",
+        "audit_rate": "0.00",
+        "created": "0.00",
+        "created_rate": "0.00",
+        "enbled": "0.00",
+        "enabled_rate": "11.30",
+        "pay_fee": "1.00",
+        "pay_rate": "0.00",
+        "total_rate": "0.00",
+        "renewal_fee": "20.00",
+        "due_rate": "0.1000",
+        "late_rate": "1.0000",
+        "is_on": "1",
+        "renewal_day": "14",
+        "add_time": "1543285043",
+        "xuqi_day": "0",
+        "type": "1",
+        "total": "1214.05"
+      },
+      {
+        "id": "31",
+        "money": "1200",
+        "duration": "14",
+        "repayment_type": "1",
+        "rate": "9.00",
+        "interest": "1.75",
+        "audit": "0.00",
+        "audit_rate": "0.00",
+        "created": "0.00",
+        "created_rate": "0.00",
+        "enbled": "0.00",
+        "enabled_rate": "11.30",
+        "pay_fee": "1.00",
+        "pay_rate": "0.00",
+        "total_rate": "0.00",
+        "renewal_fee": "20.00",
+        "due_rate": "0.1000",
+        "late_rate": "1.0000",
+        "is_on": "1",
+        "renewal_day": "14",
+        "add_time": "1543285232",
+        "xuqi_day": "0",
+        "type": "1",
+        "total": "1214.05"
+      }
+    ],
+    "money": [
+      {
+        "money": "1000"
+      },
+      {
+        "money": "1200"
+      }
+    ],
+    "duration": [
+      {
+        "duration": "14"
+      }
+    ],
+    "orHaveCreateFee": 1
+  }
+}

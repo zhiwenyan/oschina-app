@@ -6,21 +6,19 @@ import android.text.TextUtils;
 
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.tweet.Topic;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.ui.adapter.TweetAdapter;
 import com.steven.oschina.ui.tweet.TweetDetailActivity;
+import com.steven.oschina.ui.tweet.viewmodel.TweetTopicViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TweetTopicFragment extends BaseRecyclerFragment {
+public class TweetTopicFragment extends BaseRecyclerFragment1<Tweet, TweetTopicViewModel> {
     private Topic mTopic;
     private int mType;
     private List<Tweet> mTweets;
@@ -54,52 +52,47 @@ public class TweetTopicFragment extends BaseRecyclerFragment {
     @Override
     public void readCacheData() {
         super.readCacheData();
-        List<Tweet> tweets = null;
-        switch (mType) {
-            case 1:
-                tweets = CacheManager.readListJson(mContext, UP_CACHE_NAME, Tweet.class);
-                break;
-            case 2:
-                tweets = CacheManager.readListJson(mContext, HOTTEST_CACHE_NAME, Tweet.class);
-                break;
+        List<Tweet> tweets;
+        if (mType == 1) {
+            tweets = CacheManager.readListJson(mContext, UP_CACHE_NAME, Tweet.class);
+        } else {
+            tweets = CacheManager.readListJson(mContext, HOTTEST_CACHE_NAME, Tweet.class);
         }
         if (tweets != null) {
-            showTweetList(tweets);
+            showTweetTopicList(tweets);
         }
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
+    public void onRequestData() {
+        super.onRequestData();
         Map<String, Object> params = new HashMap<>();
-        if (!TextUtils.isEmpty(nextPageToken)) {
-            params.put("pageToken", nextPageToken);
+        if (!TextUtils.isEmpty(mNextPageToken)) {
+            params.put("pageToken", mNextPageToken);
         }
         params.put("topicId", mTopic.getId());
         params.put("type", mType);
-        HttpUtils.get(RetrofitClient.getServiceApi().getTopicTweets(params), new HttpCallback<Tweet>() {
-            @Override
-            public void onSuccess(List<Tweet> tweets, String nextPageToken) {
-                if (mRefreshing) {
-                    mSwipeRefreshRv.setRefreshing(false);
-                }
-                mNextPageToken = nextPageToken;
-                if (tweets.size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
-                }
-                showTweetList(tweets);
-                if (mType == 1) {
-                    CacheManager.saveToJson(mContext, UP_CACHE_NAME, tweets);
-                } else {
-                    CacheManager.saveToJson(mContext, HOTTEST_CACHE_NAME, tweets);
-                }
+        mViewModel.getTweetTopics(params).observe(this, tweet -> {
+            assert tweet != null;
+            mNextPageToken = tweet.getNextPageToken();
+            if (tweet.getItems().size() == 0) {
+                mSwipeRefreshRv.showLoadComplete();
+                return;
+            }
+            showTweetTopicList(tweet.getItems());
+            if (mType == 1) {
+                CacheManager.saveToJson(mContext, UP_CACHE_NAME, tweet.getItems());
+            } else {
+                CacheManager.saveToJson(mContext, HOTTEST_CACHE_NAME, tweet.getItems());
             }
         });
+
     }
 
-    private void showTweetList(List<Tweet> tweets) {
-        if (mRefreshing) {
+
+    private void showTweetTopicList(List<Tweet> tweets) {
+        if (mSwipeRefreshRv.isRefreshing()) {
+            mSwipeRefreshRv.setRefreshing(false);
             mTweets.clear();
         }
         mTweets.addAll(tweets);
@@ -109,20 +102,7 @@ public class TweetTopicFragment extends BaseRecyclerFragment {
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        mAdapter.setOnItemClickListener(position -> {
-            TweetDetailActivity.show(mContext, mTweets.get(position));
-        });
-    }
 
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
+        mAdapter.setOnItemClickListener(position -> TweetDetailActivity.show(mContext, mTweets.get(position)));
     }
 }

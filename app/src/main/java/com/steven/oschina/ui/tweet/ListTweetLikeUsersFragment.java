@@ -3,13 +3,11 @@ package com.steven.oschina.ui.tweet;
 import android.os.Bundle;
 
 import com.steven.oschina.R;
-import com.steven.oschina.api.HttpCallback;
-import com.steven.oschina.api.HttpUtils;
-import com.steven.oschina.api.RetrofitClient;
-import com.steven.oschina.base.BaseRecyclerFragment;
+import com.steven.oschina.base.BaseRecyclerFragment1;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.bean.tweet.TweetLike;
 import com.steven.oschina.ui.adapter.TweetLikeAdapter;
+import com.steven.oschina.ui.tweet.viewmodel.TweetLikesUserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
  *
  * @author yanzhiwen
  */
-public class ListTweetLikeUsersFragment extends BaseRecyclerFragment {
+public class ListTweetLikeUsersFragment extends BaseRecyclerFragment1<TweetLike, TweetLikesUserViewModel> {
     private Tweet mTweet;
     private List<TweetLike> mTweetLikes;
 
@@ -45,44 +43,35 @@ public class ListTweetLikeUsersFragment extends BaseRecyclerFragment {
     }
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
-        HttpUtils.get(RetrofitClient.getServiceApi().getTweetLikeList(mTweet.getId(), nextPageToken), new HttpCallback<TweetLike>() {
-            @Override
-            public void onSuccess(List<TweetLike> result, String nextPageToken) {
-                super.onSuccess(result, nextPageToken);
-                mNextPageToken = nextPageToken;
-                showTweetLike(result);
-            }
-        });
+    public void onRequestData() {
+        super.onRequestData();
+        if (mObserver == null) {
+            mObserver = result -> {
+                assert result != null;
+                mNextPageToken = result.getNextPageToken();
+                showTweetLike(result.getItems());
+            };
+        }
+        mViewModel.getTweetLikesUser(mTweet.getId(), mNextPageToken).observe(this, mObserver);
     }
 
-    private void showTweetLike(List<TweetLike> result) {
-        if (mRefreshing) {
+    private void showTweetLike(List<TweetLike> tweetLikes) {
+        if (mSwipeRefreshRv.isRefreshing()) {
             mSwipeRefreshRv.setRefreshing(false);
             mTweetLikes.clear();
         }
-        mTweetLikes.addAll(result);
+
+        if (tweetLikes.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
+        }
+        mTweetLikes.addAll(tweetLikes);
         if (mAdapter == null) {
             mAdapter = new TweetLikeAdapter(mContext, mTweetLikes, R.layout.item_tweet_likes);
             mSwipeRefreshRv.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
-        if (result.size() == 0) {
-            mSwipeRefreshRv.showLoadComplete();
-        }
-    }
 
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        onRequestData("");
-    }
-
-    @Override
-    public void onLoadMore() {
-        super.onLoadMore();
-        onRequestData(mNextPageToken);
     }
 }

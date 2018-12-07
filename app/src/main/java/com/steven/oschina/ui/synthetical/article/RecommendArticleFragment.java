@@ -42,7 +42,7 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
     }
 
     @Override
-    public void requestCacheData() {
+    public void readCacheData() {
         List<Article> articles = CacheManager.readListJson(OSCApplication.getInstance(), CACHE_NAME, Article.class);
         if (articles != null) {
             showArticleList(articles);
@@ -67,28 +67,31 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
 
 
     @Override
-    public void onRequestData(String nextPageToken) {
-        super.onRequestData(nextPageToken);
-        mViewModel.getArticles(OSCSharedPreference.getInstance().getDeviceUUID(), nextPageToken).observe(this, result -> {
+    public void onRequestData() {
+        super.onRequestData();
+        mObserver = result -> {
+            assert result != null;
             mNextPageToken = result.getNextPageToken();
-            if (result.getItems().size() == 0) {
-                mSwipeRefreshRv.showLoadComplete();
-                return;
-            }
             showArticleList(result.getItems());
             CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
-        });
+        };
+        mViewModel.getArticles(OSCSharedPreference.getInstance().getDeviceUUID(), mNextPageToken)
+                .observe(this, mObserver);
 
     }
 
     private void showArticleList(List<Article> articles) {
-        if (mRefreshing) {
+        if (mSwipeRefreshRv.isRefreshing()) {
             mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
         }
+        if (articles.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
+        }
         mArticles.addAll(articles);
         if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(this.getActivity(), mArticles, (article, position) -> {
+            mAdapter = new ArticleAdapter(mContext, mArticles, (article, position) -> {
                 String[] images = article.getImgs();
                 if (images == null || images.length == 0) {
                     return R.layout.item_article_not_img;

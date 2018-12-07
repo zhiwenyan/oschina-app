@@ -27,11 +27,11 @@ public class BaseRecyclerFragment<T> extends BaseFragment implements SwipeRefres
     public void initData() {
         mSwipeRefreshRv = mRootView.findViewById(R.id.swipe_refresh_recycler);
         mSwipeRefreshRv.setOnRefreshLoadListener(this);
-        requestCacheData();
+        readCacheData();
         onRequestData(mNextPageToken);
     }
 
-    public void requestCacheData() {
+    public void readCacheData() {
 
     }
 

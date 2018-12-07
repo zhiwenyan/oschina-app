@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.tweet.topic.TopicDetailActivity">
 
 
@@ -22,66 +23,66 @@
 
             <ImageView
                 android:id="@+id/iv_topic"
-                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:src="@mipmap/bg_topic_1"
                 app:layout_collapseMode="pin"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_marginTop="@dimen/lay_24"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
+                android:layout_marginTop="@dimen/lay_24"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                 <TextView
                     android:id="@+id/tv_topic_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="#fff"
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="18sp"/>
 
                 <ImageView
                     android:id="@+id/iv_share"
-                    android:layout_marginRight="16dp"
-                    android:layout_gravity="right"
-                    android:src="@mipmap/btn_share_white_normal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="16dp"
+                    android:src="@mipmap/btn_share_white_normal"/>
             </android.support.v7.widget.Toolbar>
 
-            <!--<LinearLayout-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_marginBottom="8dp"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-            <!--<TextView-->
-            <!--android:id="@+id/tv_count"-->
-            <!--android:layout_marginTop="@dimen/lay_8"-->
-            <!--android:text="共有88人参与"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"/>-->
+                <TextView
+                    android:id="@+id/tv_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/lay_8"
+                    android:text="共有88人参与"
+                    android:textColor="@color/white"/>
 
-            <!--<TextView-->
-            <!---->
-            <!--android:id="@+id/tv_topic_desc"-->
-            <!--android:layout_marginTop="@dimen/lay_8"-->
-            <!--android:layout_marginRight="@dimen/lay_32"-->
-            <!--android:layout_marginLeft="@dimen/lay_32"-->
-            <!--android:text="最近研究了这个项目，学习rx系列,修复了楼主的bug 主要原因在mainActivity里面资讯fragment的构建"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"/>-->
+                <TextView
+
+                    android:id="@+id/tv_topic_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/lay_32"
+                    android:layout_marginTop="@dimen/lay_8"
+                    android:layout_marginRight="@dimen/lay_32"
+                    android:text="最近研究了这个项目，学习rx系列,修复了楼主的bug 主要原因在mainActivity里面资讯fragment的构建"
+                    android:textColor="@color/white"/>
 
 
-            <!--</LinearLayout>-->
+            </LinearLayout>
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -104,9 +105,9 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
-        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

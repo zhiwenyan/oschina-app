@@ -47,13 +47,16 @@ public class HotTopicFragment extends BaseRecyclerFragment1<Topic, HotTopicViewM
     @Override
     public void onRequestData() {
         super.onRequestData();
-        mViewModel.getHotTopics(TOPIC_TYPE, mNextPageToken).observe(this, topic -> {
-            assert topic != null;
-            mNextPageToken = topic.getNextPageToken();
-            showTopicList(topic.getItems());
-            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, topic.getItems());
-        });
+        if (mObserver == null) {
+            mObserver = topic -> {
+                assert topic != null;
+                mNextPageToken = topic.getNextPageToken();
+                showTopicList(topic.getItems());
+                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, topic.getItems());
 
+            };
+        }
+        mViewModel.getHotTopics(TOPIC_TYPE, mNextPageToken).observe(this, mObserver);
     }
 
     private void showTopicList(List<Topic> topics) {

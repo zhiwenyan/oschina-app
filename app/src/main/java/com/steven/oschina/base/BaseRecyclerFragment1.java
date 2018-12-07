@@ -1,5 +1,6 @@
 package com.steven.oschina.base;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import com.oschina.client.base_library.utils.NetworkUtils;
 import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.R;
+import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.widget.SwipeRefreshRecyclerView;
 
 import java.lang.reflect.ParameterizedType;
@@ -24,8 +26,7 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
     protected String mNextPageToken = "";
     protected CommonRecyclerAdapter<T> mAdapter;
     protected V mViewModel;
-    public boolean mRefreshing = true;
-
+    protected Observer<PageBean<T>> mObserver;
 
     @Override
     public int getLayoutId() {
@@ -36,12 +37,14 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
     public void initData() {
         setupSwipeRefreshLayout();
         initViewModel();
-        requestCacheData();
-        onRequestData(mNextPageToken);
+        readCacheData();
+        onRequestData();
+
     }
 
     private void setupSwipeRefreshLayout() {
         mSwipeRefreshRv = mRootView.findViewById(R.id.swipe_refresh_recycler);
+        mSwipeRefreshRv.setRefreshing(true);
         mSwipeRefreshRv.setOnRefreshLoadListener(this);
     }
 
@@ -65,7 +68,7 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
 
     }
 
-    public void requestCacheData() {
+    public void readCacheData() {
 
     }
 
@@ -81,13 +84,11 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
     }
 
 
-    public void onRequestData(String nextPageToken) {
+    public void onRequestData() {
         if (!NetworkUtils.isConnectedByState(mContext)) {
             showToast("请检查你的网络！！！");
             mSwipeRefreshRv.setRefreshing(false);
-            return;
         }
-        mSwipeRefreshRv.setRefreshing(mRefreshing);
 //        mViewModel.getObservableError().observe(this, mErrorObserver);
     }
 
@@ -96,8 +97,8 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
      */
     @Override
     public void onRefresh() {
-        mRefreshing = true;
-        onRequestData("");
+        mNextPageToken = "";
+        onRequestData();
 
     }
 
@@ -106,8 +107,7 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
      */
     @Override
     public void onLoadMore() {
-        mRefreshing = false;
-        onRequestData(mNextPageToken);
+        onRequestData();
 
     }
 
