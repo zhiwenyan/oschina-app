@@ -64,8 +64,7 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
         final Context context = getContext();
         final Resources resources = getResources();
         final float density = resources.getDisplayMetrics().density;
-        System.out.println("density=="+density);
-        int vSpace = ( int ) (4 * density);
+        int vSpace = (int) (4 * density);
         int hSpace = vSpace;
 
         if (attrs != null) {
@@ -151,7 +150,7 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
                     view.findViewById(R.id.iv_is_gif).setVisibility(VISIBLE);
                 }
                 addView(view);
-                builder.into(( ImageView ) view.findViewById(R.id.iv_picture));
+                builder.into((ImageView) view.findViewById(R.id.iv_picture));
             }
 
             // all do requestLayout
@@ -194,7 +193,6 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
         int paddingBottom = getPaddingBottom();
 
         int selfWidth = resolveSize(paddingLeft + paddingRight, widthMeasureSpec);
-        System.out.println("selfWidth=="+selfWidth);
         int wantedHeight = paddingBottom + paddingTop;
         final int childCount = getChildCount();
 
@@ -212,26 +210,24 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
 
                 float density = getResources().getDisplayMetrics().density;
                 // Get max width and height
-                float maxContentW = Math.min(selfWidth - paddingRight - paddingLeft, density * SINGLE_MAX_W);
-                System.out.println("maxContentW=="+maxContentW);
-                float maxContentH = density * SINGLE_MAX_H;
-                System.out.println("maxContentH=="+maxContentH);
+                float maxContentW = Math.min(selfWidth - paddingRight - paddingLeft, density * SINGLE_MAX_W);  //360
+                float maxContentH = density * SINGLE_MAX_H;  //540
 
                 int childW, childH;
 
-                float hToW = imageH / ( float ) imageW;
+                float hToW = imageH / (float) imageW;
                 if (hToW > (maxContentH / maxContentW)) {
-                    childH = ( int ) maxContentH;
-                    childW = ( int ) (maxContentH / hToW);
+                    childH = (int) maxContentH;
+                    childW = (int) (maxContentH / hToW);
                 } else {
-                    childW = ( int ) maxContentW;
-                    childH = ( int ) (maxContentW * hToW);
+                    childW = (int) maxContentW;
+                    childH = (int) (maxContentW * hToW);
                 }
                 // Check the width and height below Min values
-                int minW = ( int ) (SINGLE_MIN_W * density);
+                int minW = (int) (SINGLE_MIN_W * density);
                 if (childW < minW)
                     childW = minW;
-                int minH = ( int ) (SINGLE_MIN_H * density);
+                int minH = (int) (SINGLE_MIN_H * density);
                 if (childH < minH)
                     childH = minH;
 
@@ -246,7 +242,7 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
             // Measure all child
             final float maxContentWidth = selfWidth - paddingRight - paddingLeft - mHorizontalSpacing * (mColumn - 1);
             // Get child size
-            final int childSize = getMaxChildSize(( int ) (maxContentWidth / mColumn));
+            final int childSize = getMaxChildSize((int) (maxContentWidth / mColumn));
 
             for (int i = 0; i < childCount; ++i) {
                 View childView = getChildAt(i);
@@ -254,8 +250,8 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
                         MeasureSpec.makeMeasureSpec(childSize, MeasureSpec.EXACTLY));
             }
 
-            int lines = ( int ) (childCount / ( float ) mColumn + 0.9);
-            wantedHeight += ( int ) (lines * childSize + mVerticalSpacing * (lines - 1));
+            int lines = (int) (childCount / (float) mColumn + 0.9);
+            wantedHeight += (int) (lines * childSize + mVerticalSpacing * (lines - 1));
         }
 
         setMeasuredDimension(selfWidth, resolveSize(wantedHeight, heightMeasureSpec));
@@ -275,8 +271,6 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
                 childView.layout(paddingLeft, paddingTop, paddingLeft + childWidth, paddingTop + childHeight);
             } else {
                 int mWidth = r - l;
-                System.out.println("mWidth="+mWidth);
-                System.out.println("mWidth=="+getMeasuredWidth());
                 int paddingRight = getPaddingRight();
 
                 int lineHeight = 0;
@@ -317,7 +311,7 @@ public class TweetPicturesLayout extends ViewGroup implements View.OnClickListen
         if (obj == null || !(obj instanceof Integer))
             return;
 
-        int index = ( int ) obj;
+        int index = (int) obj;
         if (index < 0)
             index = 0;
         if (index >= images.length)

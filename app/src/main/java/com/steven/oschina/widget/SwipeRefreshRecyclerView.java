@@ -11,9 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -26,20 +24,17 @@ import com.steven.oschina.R;
  *
  * @author yanzhiwen
  */
-public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
+public class SwipeRefreshRecyclerView extends SwipeRefreshLayout implements SwipeRefreshLayout.OnRefreshListener {
     private WrapRecyclerView mRecyclerView;
     private View mLoadMoreView;
     private ProgressBar mLoadMorePb;
     private TextView mLoadMoreTv;
-    private boolean mLoadEnable = false;
-    private final int STATUS_LOAD = 2, STATUS_REFRESH = 1;
-    private int mStatus = STATUS_REFRESH;
+
     private int mBottomViewCount;
     private int mHeaderViewCount;
-    private int mYDown;
-    private int mLastY;
-    private int mTouchSlop;
-    private int scrollState;
+
+    private boolean mLoading = false;
+    private boolean mLoadEnable = true;
 
     public SwipeRefreshRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -47,7 +42,6 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
 
     public SwipeRefreshRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mRecyclerView = new WrapRecyclerView(context);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         addView(mRecyclerView);
@@ -55,7 +49,6 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                scrollState = newState;
                 /*
                  * The RecyclerView is not currently scrolling.（静止没有滚动）
                  */
@@ -79,21 +72,32 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 //上拉加载更多
-                if (mListener != null && isScrollBottom() && mLoadEnable) {
+                if (mListener != null && isScrollBottom() && mLoadEnable && !mLoading) {
+                    mLoading = true;
                     mListener.onLoadMore();
-                    mStatus = STATUS_LOAD;
                 }
             }
         });
         //下拉刷新
-        this.setOnRefreshListener(() -> {
-            if (mListener != null) {
-                mListener.onRefresh();
-                mStatus = STATUS_REFRESH;
-            }
-        });
+        this.setOnRefreshListener(this);
         this.setColorSchemeColors(ContextCompat.getColor(context, R.color.main_green));
 
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mListener != null) {
+            mLoading = false;
+            mListener.onRefresh();
+        }
+    }
+
+    public void setLoading(boolean loading) {
+        this.mLoading = loading;
+    }
+
+    public boolean isLoading() {
+        return mLoading;
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
@@ -108,22 +112,6 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
         }
         mRecyclerView.addFooterView(mLoadMoreView);
         mBottomViewCount++;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        final int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mYDown = ( int ) event.getRawY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                mLastY = ( int ) event.getRawY();
-                break;
-            default:
-                break;
-        }
-        return super.dispatchTouchEvent(event);
     }
 
     /**
@@ -160,20 +148,10 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
      * 判断RecyclerView是否到了最底部
      */
     private boolean isScrollBottom() {
-        mLoadEnable = true;
         //第一个可见item的位置 + 当前可见的item个数 >= item的总个数-头部底部的View的个数
         //这样就可以判断出来，是在底部了。
         return (mRecyclerView != null && mRecyclerView.getAdapter() != null)
                 && getLastVisiblePosition() == (mRecyclerView.getAdapter().getItemCount() - mHeaderViewCount - mBottomViewCount);
-    }
-
-    /**
-     * 是否是上拉操作
-     *
-     * @return isPullUp
-     */
-    private boolean isPullUp() {
-        return (mYDown - mLastY) >= mTouchSlop;
     }
 
     /**
@@ -184,11 +162,11 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
     public int getLastVisiblePosition() {
         int position;
         if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-            position = (( LinearLayoutManager ) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+            position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
         } else if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
-            position = (( GridLayoutManager ) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+            position = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
         } else if (mRecyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
-            StaggeredGridLayoutManager layoutManager = ( StaggeredGridLayoutManager ) mRecyclerView.getLayoutManager();
+            StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) mRecyclerView.getLayoutManager();
             int[] lastPositions = layoutManager.findLastVisibleItemPositions(new int[layoutManager.getSpanCount()]);
             position = getMaxPosition(lastPositions);
         } else {
@@ -212,16 +190,12 @@ public class SwipeRefreshRecyclerView extends SwipeRefreshLayout {
         return maxPosition;
     }
 
-    public int getStatus() {
-        return mStatus;
-    }
-
-
     private OnRefreshLoadListener mListener;
 
     public void setOnRefreshLoadListener(OnRefreshLoadListener listener) {
         this.mListener = listener;
     }
+
 
     public interface OnRefreshLoadListener {
         void onRefresh();

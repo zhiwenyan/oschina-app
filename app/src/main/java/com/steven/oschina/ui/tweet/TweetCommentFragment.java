@@ -3,7 +3,7 @@ package com.steven.oschina.ui.tweet;
 import android.os.Bundle;
 
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.bean.tweet.TweetComment;
 import com.steven.oschina.ui.adapter.TweetCommentAdapter;
@@ -18,9 +18,9 @@ import java.util.List;
  *
  * @author yanzhiwen
  */
-public class TweetCommentFragment extends BaseRecyclerFragment1<TweetComment, TweetCommentViewModel> {
+public class TweetCommentFragment extends BaseRefreshFragment<TweetComment, TweetCommentViewModel> {
     private Tweet mTweet;
-    private List<TweetComment> mTweetComments;
+    private List<TweetComment> mTweetComments = new ArrayList<>();
 
     public static TweetCommentFragment newInstance(Tweet tweet) {
         Bundle args = new Bundle();
@@ -33,13 +33,14 @@ public class TweetCommentFragment extends BaseRecyclerFragment1<TweetComment, Tw
     @Override
     public void initBundle(Bundle bundle) {
         super.initBundle(bundle);
-        mTweet = ( Tweet ) bundle.getSerializable("tweet");
+        mTweet = (Tweet) bundle.getSerializable("tweet");
     }
 
     @Override
     public void initData() {
-        mTweetComments = new ArrayList<>();
         super.initData();
+        mAdapter = new TweetCommentAdapter(mContext, mTweetComments, R.layout.item_tweet_comment);
+        mSwipeRefreshRv.setAdapter(mAdapter);
     }
 
     @Override
@@ -57,19 +58,15 @@ public class TweetCommentFragment extends BaseRecyclerFragment1<TweetComment, Tw
 
     private void showTweetComment(List<TweetComment> tweetComments) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mTweetComments.clear();
+            mSwipeRefreshRv.setRefreshing(false);
         }
         if (tweetComments.size() == 0) {
             mSwipeRefreshRv.showLoadComplete();
             return;
         }
         mTweetComments.addAll(tweetComments);
-        if (mAdapter == null) {
-            mAdapter = new TweetCommentAdapter(mContext, mTweetComments, R.layout.item_tweet_comment);
-            mSwipeRefreshRv.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
     }
 }

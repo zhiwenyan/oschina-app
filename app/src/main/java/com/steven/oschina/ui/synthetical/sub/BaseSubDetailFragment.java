@@ -12,9 +12,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.oschina.client.recyclerview.adapter.MultiTypeSupport;
 import com.steven.oschina.ImageLoader;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.comment.Comment;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Author;
@@ -33,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<Article, ArticleListViewModel> {
+public abstract class BaseSubDetailFragment<T, V> extends BaseRefreshFragment<Article, ArticleListViewModel> {
     protected SubBean mSubBean;
     protected OWebView mWebView;
     protected View mHeaderView;
@@ -49,12 +50,12 @@ public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<
     @Override
     public void initBundle(Bundle bundle) {
         super.initBundle(bundle);
-        mSubBean = ( SubBean ) bundle.getSerializable("sub_tab");
+        mSubBean = (SubBean) bundle.getSerializable("sub_tab");
     }
 
     @Override
-    public void initData() {
-        mArticles = new ArrayList<>();
+    public void initView() {
+        super.initView();
         mHeaderView = getHeaderView();
         if (mHeaderView != null) {
             mWebView = mHeaderView.findViewById(R.id.webView);
@@ -74,6 +75,17 @@ public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<
                 mWebView.loadDetailDataAsync(mSubBean.getBody());
             }
         }
+
+    }
+
+    @Override
+    public void initData() {
+        mArticles = new ArrayList<>();
+        mAdapter = new ArticleAdapter(mContext, mArticles, mMultiTypeSupport);
+        mSwipeRefreshRv.setAdapter(mAdapter);
+        mSwipeRefreshRv.addHeaderView(mHeaderView);
+        showAuthor();
+        showCommentView();
         super.initData();
     }
 
@@ -87,14 +99,16 @@ public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<
         if (!TextUtils.isEmpty(mNextPageToken)) {
             params.put("pageToken", mNextPageToken);
         }
-        mObserver=result->{
-            assert result != null;
-            mNextPageToken = result.getNextPageToken();
-            if (mOnCompleteListener != null) {
-                mOnCompleteListener.onComplete();
-            }
-            showArticleList(result.getItems());
-        };
+        if (mObserver == null) {
+            mObserver = result -> {
+                assert result != null;
+                mNextPageToken = result.getNextPageToken();
+                if (mOnCompleteListener != null) {
+                    mOnCompleteListener.onComplete();
+                }
+                showArticleList(result.getItems());
+            };
+        }
         //类似的文章推荐
         mViewModel.getArticleRecommends(params).observe(this, mObserver);
     }
@@ -102,32 +116,27 @@ public abstract class BaseSubDetailFragment<T, V> extends BaseRecyclerFragment1<
 
     private void showArticleList(List<Article> articles) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
+            mSwipeRefreshRv.setRefreshing(false);
         }
         if (articles.size() == 0) {
             mSwipeRefreshRv.showLoadComplete();
             return;
         }
         mArticles.addAll(articles);
-        if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(mContext, mArticles, (article, position) -> {
-                String[] images = article.getImgs();
-                if (images == null || images.length == 0) {
-                    return R.layout.item_article_not_img;
-                }
-                if (images.length < 3)
-                    return R.layout.item_article_one_img;
-                return R.layout.item_article_three_img;
-            });
-            mSwipeRefreshRv.setAdapter(mAdapter);
-            mSwipeRefreshRv.addHeaderView(mHeaderView);
-            showAuthor();
-            showCommentView();
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
     }
+
+    private MultiTypeSupport<Article> mMultiTypeSupport = (article, position) -> {
+        String[] images = article.getImgs();
+        if (images == null || images.length == 0) {
+            return R.layout.item_article_not_img;
+        }
+        if (images.length < 3)
+            return R.layout.item_article_one_img;
+        return R.layout.item_article_three_img;
+    };
 
     private void showAuthor() {
         Author author = mSubBean.getAuthor();

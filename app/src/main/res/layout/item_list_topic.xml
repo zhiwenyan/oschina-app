@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     android:layout_marginTop="16dp"
+    android:layout_marginRight="16dp"
     android:orientation="vertical"
     app:cardCornerRadius="4dp"
     app:cardElevation="1dp">
 
     <LinearLayout
         android:id="@+id/layout_wrapper"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
 
         <RelativeLayout
@@ -26,22 +25,22 @@
 
             <ImageView
                 android:id="@+id/iv_wallpaper"
-                android:src="@mipmap/bg_topic_1"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:scaleType="centerCrop"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@null"
-                android:layout_marginBottom="4dp"/>
+                android:scaleType="centerCrop"
+                android:src="@mipmap/bg_topic_1" />
 
 
             <TextView
                 android:id="@+id/tv_topic_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:text="#秀出你的十年变化生活照#"
                 android:textColor="#fff"
-                android:layout_centerInParent="true"
-                android:textSize="18sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="18sp" />
 
         </RelativeLayout>
 
@@ -59,7 +58,7 @@
                 android:id="@+id/iv_avatar_topic_1"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@mipmap/widget_default_face"/>
+                android:src="@mipmap/widget_default_face" />
 
             <TextView
                 android:id="@+id/tv_topic_content_1"
@@ -69,9 +68,9 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:text="犹豫毁一生踌躇穷三代。投身互联网，成就好未来。巴林的狗尾草Java毁一生C#...穷三代，若要好前程，置身IT外。 到底谁说的..."
                 android:textColor="#111"
-                android:textSize="16sp"
-                android:text="犹豫毁一生踌躇穷三代。投身互联网，成就好未来。巴林的狗尾草Java毁一生C#...穷三代，若要好前程，置身IT外。 到底谁说的..."/>
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -88,7 +87,7 @@
                 android:id="@+id/iv_avatar_topic_2"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@mipmap/widget_default_face"/>
+                android:src="@mipmap/widget_default_face" />
 
             <TextView
                 android:id="@+id/tv_topic_content_2"
@@ -98,9 +97,9 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:text="我上辈子的情人找到我了"
                 android:textColor="#111"
-                android:textSize="16sp"
-                android:text="我上辈子的情人找到我了"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +116,8 @@
                 android:id="@+id/iv_avatar_topic_3"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@mipmap/widget_default_face"/>
+                android:src="@mipmap/widget_default_face"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_topic_content_3"
@@ -127,38 +127,39 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:text="突然想起来一个面试问题：7年以后你打算做什么？我的回答把自己的一些...想法实现。你们都是怎么回答的，这个问题是想得到什么信息呢？"
                 android:textColor="#111"
                 android:textSize="16sp"
-                android:text="突然想起来一个面试问题：7年以后你打算做什么？我的回答把自己的一些...想法实现。你们都是怎么回答的，这个问题是想得到什么信息呢？"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginTop="4dp"
-            android:background="?attr/dividerHorizontal"/>
+            android:background="?attr/dividerHorizontal" />
 
         <RelativeLayout
             android:id="@+id/layout_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:background="#F8F8F8">
+            android:background="#F8F8F8"
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/tv_count"
-                android:textSize="14sp"
-                android:textColor="#9D9D9D"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="共有212人参与"/>
+                android:text="共有212人参与"
+                android:textColor="#9D9D9D"
+                android:textSize="14sp" />
 
             <ImageView
-                android:src="@mipmap/ic_arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:src="@mipmap/ic_arrow_right" />
 
         </RelativeLayout>
 

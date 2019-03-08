@@ -7,7 +7,7 @@ import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.banner.Banner;
 import com.steven.oschina.bean.sub.News;
 import com.steven.oschina.bean.sub.SubBean;
@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
-    private List<SubBean> mSubBeans;
+public class SubFragment extends BaseRefreshFragment<SubBean, SubViewModel> {
+    private List<SubBean> mSubBeans = new ArrayList<>();
     protected SubTab mSubTab;
     private HeaderView mHeaderView;
     private String CACHE_NAME;
@@ -40,13 +40,15 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
     @Override
     public void initBundle(Bundle bundle) {
         super.initBundle(bundle);
-        mSubTab = ( SubTab ) bundle.getSerializable("sub_tab");
+        mSubTab = (SubTab) bundle.getSerializable("sub_tab");
+        CACHE_NAME = mSubTab.getToken();
     }
 
     @Override
     public void initData() {
-        mSubBeans = new ArrayList<>();
-        CACHE_NAME = mSubTab.getToken();
+        mAdapter = getAdapter();
+        mSwipeRefreshRv.setAdapter(mAdapter);
+        setupHeaderView();
         super.initData();
     }
 
@@ -63,7 +65,7 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
         }
     }
 
-    public void initHeaderView() {
+    public void setupHeaderView() {
         if (mSubTab.getBanner() != null) {
             if (mSubTab.getBanner().getCatalog() == SubTab.BANNER_CATEGORY_NEWS) {
                 // mHeaderView = new NewsHeaderView(mContext, mSubTab.getBanner().getHref(), mSubTab.getToken() + "banner" + mSubTab.getType());
@@ -74,7 +76,6 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
             }
             mHeaderView.requestBanner(mSubTab.getBanner().getCatalog());
             mSwipeRefreshRv.addHeaderView(mHeaderView);
-
         }
     }
 
@@ -94,22 +95,16 @@ public class SubFragment extends BaseRecyclerFragment1<SubBean, SubViewModel> {
 
     private void showSubList(List<SubBean> subBeans) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mSubBeans.clear();
+            mSwipeRefreshRv.setRefreshing(false);
         }
         if (subBeans.size() == 0) {
             mSwipeRefreshRv.showLoadComplete();
             return;
         }
         mSubBeans.addAll(subBeans);
-        if (mAdapter == null) {
-            mAdapter = getAdapter();
-            mSwipeRefreshRv.setAdapter(mAdapter);
-            initHeaderView();
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
-
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
     }
 
     private CommonRecyclerAdapter<SubBean> getAdapter() {

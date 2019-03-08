@@ -194,7 +194,7 @@ public class WrapRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     public void adjustSpanSize(RecyclerView recycler) {
         if (recycler.getLayoutManager() instanceof GridLayoutManager) {
-            final GridLayoutManager layoutManager = (GridLayoutManager ) recycler.getLayoutManager();
+            final GridLayoutManager layoutManager = (GridLayoutManager) recycler.getLayoutManager();
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {

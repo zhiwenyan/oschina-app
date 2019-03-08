@@ -55,7 +55,6 @@ public abstract class BaseViewPagerFragment extends BaseFragment {
         }
 
         void setupWithFragments(List<Fragment> fragments, String[] titles) {
-            mFragments.clear();
             this.mFragments.addAll(fragments);
             this.mTitles = titles;
         }

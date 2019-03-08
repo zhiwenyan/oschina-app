@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.tweet.Topic;
 import com.steven.oschina.ui.adapter.TopicAdapter;
 import com.steven.oschina.ui.tweet.viewmodel.HotTopicViewModel;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HotTopicFragment extends BaseRecyclerFragment1<Topic, HotTopicViewModel> {
+public class HotTopicFragment extends BaseRefreshFragment<Topic, HotTopicViewModel> {
     private static final String CACHE_NAME = "hot_topic";
     private static final String TOPIC_TYPE = "2";
     private List<Topic> mTopics;
@@ -61,8 +61,8 @@ public class HotTopicFragment extends BaseRecyclerFragment1<Topic, HotTopicViewM
 
     private void showTopicList(List<Topic> topics) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mTopics.clear();
+            mSwipeRefreshRv.setRefreshing(false);
         }
         if (topics.size() == 0) {
             mSwipeRefreshRv.showLoadComplete();
@@ -73,6 +73,7 @@ public class HotTopicFragment extends BaseRecyclerFragment1<Topic, HotTopicViewM
             mAdapter = new TopicAdapter(mContext, mTopics, R.layout.item_list_topic);
             mSwipeRefreshRv.setAdapter(mAdapter);
         } else {
+            mSwipeRefreshRv.setLoading(false);
             mAdapter.notifyDataSetChanged();
         }
         mAdapter.setOnItemClickListener(position -> {

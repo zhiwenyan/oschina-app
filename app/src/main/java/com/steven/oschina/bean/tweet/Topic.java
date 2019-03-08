@@ -16,6 +16,7 @@ public class Topic implements Serializable {
     private int sort;
     private String title;
     private String content;
+    private String desc;
     private Tweet[] tweets;
 
 
@@ -61,6 +62,12 @@ public class Topic implements Serializable {
 
     public Tweet[] getTweets() {
         return tweets;
+    }
+
+
+
+    public String getDesc() {
+        return desc;
     }
 
     public void setTweets(Tweet[] tweets) {

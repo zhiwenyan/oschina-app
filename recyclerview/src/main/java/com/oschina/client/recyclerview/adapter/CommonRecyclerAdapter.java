@@ -79,7 +79,6 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<View
                 }
             });
         }
-
         // 绑定怎么办？回传出去
         convert(holder, mData.get(position));
     }

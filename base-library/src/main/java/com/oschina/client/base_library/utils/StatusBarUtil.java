@@ -18,11 +18,13 @@ import java.lang.reflect.Method;
  */
 public class StatusBarUtil {
 
-    /**设置状态栏透明与字体颜色*/
+    /**
+     * 设置状态栏透明与字体颜色
+     */
     public static void setStatusBarTrans(Activity activity, boolean lightStatusBar) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -46,7 +48,9 @@ public class StatusBarUtil {
         IMPL.setLightStatusBar(activity.getWindow(), lightStatusBar);
     }
 
-    /**小米状态栏设置类*/
+    /**
+     * 小米状态栏设置类
+     */
     public static class MIUILightStatusBarImpl implements ILightStatusBar {
         static boolean isMe() {
             return "Xiaomi".equals(Build.MANUFACTURER);
@@ -65,7 +69,9 @@ public class StatusBarUtil {
         }
     }
 
-    /**魅族状态栏设置类*/
+    /**
+     * 魅族状态栏设置类
+     */
     public static class MeizuLightStatusBarImpl implements ILightStatusBar {
         static boolean isMe() {
             final Method method;
@@ -121,8 +127,8 @@ public class StatusBarUtil {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             // 在原来的位置上添加一个状态栏
             View statusBarView = createStatusBarView(activity);
-            ViewGroup androidContainer = (ViewGroup ) activity.getWindow().getDecorView();
-            androidContainer = (ViewGroup ) androidContainer.getChildAt(0);
+            ViewGroup androidContainer = (ViewGroup) activity.getWindow().getDecorView();
+            androidContainer = (ViewGroup) androidContainer.getChildAt(0);
             androidContainer.addView(statusBarView, 0);
             statusBarView.setBackgroundColor(color);
         }
@@ -159,7 +165,8 @@ public class StatusBarUtil {
         // 代表 5.0 及以上
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             View decorView = activity.getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+            int option = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             decorView.setSystemUiVisibility(option);
             activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
             return;

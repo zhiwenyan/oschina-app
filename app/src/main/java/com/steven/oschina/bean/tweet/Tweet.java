@@ -320,7 +320,7 @@ public class Tweet implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o != null && o instanceof Tweet) {
-            return (( Tweet ) o).getId() == id;
+            return ((Tweet) o).getId() == id;
         }
         return false;
     }

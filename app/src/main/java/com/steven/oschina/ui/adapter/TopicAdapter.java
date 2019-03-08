@@ -1,6 +1,7 @@
 package com.steven.oschina.ui.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.oschina.client.recyclerview.adapter.CommonRecyclerAdapter;
@@ -39,7 +40,6 @@ public class TopicAdapter extends CommonRecyclerAdapter<Topic> {
         holder.setText(R.id.tv_topic_title, "#" + item.getTitle() + "#")
                 .setText(R.id.tv_topic_content_1, TweetParser.getInstance().parse(mContext, tweets[0].getContent()))
                 .setText(R.id.tv_topic_content_2, TweetParser.getInstance().parse(mContext, tweets[1].getContent()))
-                .setText(R.id.tv_topic_content_3, TweetParser.getInstance().parse(mContext, tweets[2].getContent()))
                 .setImageByUrl(R.id.iv_avatar_topic_1, new ViewHolder.HolderImageLoader(tweets[0].getAuthor().getPortrait()) {
                     @Override
                     public void displayImage(Context context, ImageView imageView, String imagePath) {
@@ -51,12 +51,18 @@ public class TopicAdapter extends CommonRecyclerAdapter<Topic> {
                 ImageLoader.load(context, imageView, imagePath);
 
             }
-        }).setImageByUrl(R.id.iv_avatar_topic_3, new ViewHolder.HolderImageLoader(tweets[2].getAuthor().getPortrait()) {
-            @Override
-            public void displayImage(Context context, ImageView imageView, String imagePath) {
-                ImageLoader.load(context, imageView, imagePath);
-
-            }
         }).setText(R.id.tv_count, String.format("共有%s参与", item.getJoinCount() + ""));
+        if (tweets.length == 3) {
+            holder.getView(R.id.tv_topic_content_3).setVisibility(View.VISIBLE);
+            holder.getView(R.id.iv_avatar_topic_3).setVisibility(View.VISIBLE);
+            holder.setText(R.id.tv_topic_content_3, TweetParser.getInstance().parse(mContext, tweets[2].getContent()))
+                    .setImageByUrl(R.id.iv_avatar_topic_3, new ViewHolder.HolderImageLoader(tweets[2].getAuthor().getPortrait()) {
+                        @Override
+                        public void displayImage(Context context, ImageView imageView, String imagePath) {
+                            ImageLoader.load(context, imageView, imagePath);
+
+                        }
+                    });
+        }
     }
 }

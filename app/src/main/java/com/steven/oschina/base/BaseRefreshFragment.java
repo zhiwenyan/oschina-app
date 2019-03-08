@@ -20,13 +20,14 @@ import java.lang.reflect.Type;
  *
  * @author yanzhiwen
  */
-public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRefreshRecyclerView.OnRefreshLoadListener {
+public class BaseRefreshFragment<T, V> extends BaseFragment implements SwipeRefreshRecyclerView.OnRefreshLoadListener {
     public SwipeRefreshRecyclerView mSwipeRefreshRv;
     //上拉加载下一个页面的Token
     protected String mNextPageToken = "";
     protected CommonRecyclerAdapter<T> mAdapter;
     protected V mViewModel;
     protected Observer<PageBean<T>> mObserver;
+    private boolean mRefreshing = true;
 
     @Override
     public int getLayoutId() {
@@ -34,18 +35,18 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
     }
 
     @Override
+    public void initView() {
+        super.initView();
+        mSwipeRefreshRv = mRootView.findViewById(R.id.swipe_refresh_recycler);
+        mSwipeRefreshRv.setRefreshing(mRefreshing);
+        mSwipeRefreshRv.setOnRefreshLoadListener(this);
+    }
+
+    @Override
     public void initData() {
-        setupSwipeRefreshLayout();
         initViewModel();
         readCacheData();
         onRequestData();
-
-    }
-
-    private void setupSwipeRefreshLayout() {
-        mSwipeRefreshRv = mRootView.findViewById(R.id.swipe_refresh_recycler);
-        mSwipeRefreshRv.setRefreshing(true);
-        mSwipeRefreshRv.setOnRefreshLoadListener(this);
     }
 
     /**
@@ -60,9 +61,9 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
 //                //如果没有指定泛型参数，则默认使用BaseViewModel
 //                modelClass = BaseViewModel.class;
 //            }
-            Type[] types = (( ParameterizedType ) (this.getClass().getGenericSuperclass())).getActualTypeArguments();
-            modelClass = ( Class ) types[1];
-            mViewModel = ( V ) createViewModel(this, modelClass);
+            Type[] types = ((ParameterizedType) (this.getClass().getGenericSuperclass())).getActualTypeArguments();
+            modelClass = (Class) types[1];
+            mViewModel = (V) createViewModel(this, modelClass);
 
         }
 
@@ -89,6 +90,8 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
             showToast("请检查你的网络！！！");
             mSwipeRefreshRv.setRefreshing(false);
         }
+        mSwipeRefreshRv.setRefreshing(mRefreshing);
+
 //        mViewModel.getObservableError().observe(this, mErrorObserver);
     }
 
@@ -98,6 +101,7 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
     @Override
     public void onRefresh() {
         mNextPageToken = "";
+        mRefreshing = true;
         onRequestData();
 
     }
@@ -107,8 +111,8 @@ public class BaseRecyclerFragment1<T, V> extends BaseFragment implements SwipeRe
      */
     @Override
     public void onLoadMore() {
+        mRefreshing = false;
         onRequestData();
-
     }
 
 //    public Observer<String> mErrorObserver = new Observer<String>() {

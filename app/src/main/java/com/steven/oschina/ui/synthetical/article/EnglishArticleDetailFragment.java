@@ -10,8 +10,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.oschina.client.recyclerview.adapter.MultiTypeSupport;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.bean.sub.Translate;
 import com.steven.oschina.osc.OSCSharedPreference;
@@ -29,12 +30,12 @@ import java.util.List;
 import java.util.Map;
 
 
-public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleListViewModel> {
+public class EnglishArticleDetailFragment extends BaseRefreshFragment<Article, ArticleListViewModel> {
+    private List<Article> mArticles = new ArrayList<>();
     private View mHeaderView;
     private Article mArticle;
     private String mIdent;
     private String mKey;
-    private List<Article> mArticles;
     private OWebView mOWebView;
     private TextView tv_title;
     private TextView tv_name;
@@ -58,13 +59,14 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
     @Override
     public void initBundle(Bundle bundle) {
         super.initBundle(bundle);
-        mArticle = ( Article ) bundle.getSerializable("article");
+        mArticle = (Article) bundle.getSerializable("article");
         mIdent = OSCSharedPreference.getInstance().getDeviceUUID();
         mKey = mArticle.getKey();
     }
 
     @Override
-    public void initData() {
+    public void initView() {
+        super.initView();
         mHeaderView = LayoutInflater.from(mContext).inflate(R.layout.layout_english_article_detail_header, null);
         mOWebView = mHeaderView.findViewById(R.id.webView);
         tv_title = mHeaderView.findViewById(R.id.tv_title);
@@ -73,9 +75,15 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         tv_origin = mHeaderView.findViewById(R.id.tv_origin);
         mTextCount = mHeaderView.findViewById(R.id.tv_text_count);
         mTextTime = mHeaderView.findViewById(R.id.tv_text_time);
-        mArticles = new ArrayList<>();
         mArticleViewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
+    }
+
+    @Override
+    public void initData() {
         super.initData();
+        mAdapter = new ArticleAdapter(this.getActivity(), mArticles, mMultiTypeSupport);
+        mSwipeRefreshRv.setAdapter(mAdapter);
+        mSwipeRefreshRv.addHeaderView(mHeaderView);
     }
 
     @Override
@@ -119,17 +127,20 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
         if (!TextUtils.isEmpty(mNextPageToken)) {
             params.put("pageToken", mNextPageToken);
         }
-        //类似的文章推荐
-        mViewModel.getArticleRecommends(params).observe(this, result -> {
-            if (result != null) {
-                mNextPageToken = result.getNextPageToken();
-                if (result.getItems().size() == 0) {
-                    mSwipeRefreshRv.showLoadComplete();
-                    return;
+        if (mObserver == null) {
+            mObserver = result -> {
+                if (result != null) {
+                    mNextPageToken = result.getNextPageToken();
+                    if (result.getItems().size() == 0) {
+                        mSwipeRefreshRv.showLoadComplete();
+                        return;
+                    }
+                    showArticleList(result.getItems());
                 }
-                showArticleList(result.getItems());
-            }
-        });
+            };
+        }
+        //类似的文章推荐
+        mViewModel.getArticleRecommends(params).observe(this, mObserver);
     }
 
 
@@ -147,26 +158,24 @@ public class EnglishArticleDetailFragment extends BaseRecyclerFragment1<Article,
 
     private void showArticleList(List<Article> articles) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
+            mSwipeRefreshRv.setRefreshing(false);
         }
         mArticles.addAll(articles);
-        if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(this.getActivity(), mArticles, (article, position) -> {
-                String[] images = article.getImgs();
-                if (images == null || images.length == 0) {
-                    return R.layout.item_article_not_img;
-                }
-                if (images.length < 3)
-                    return R.layout.item_article_one_img;
-                return R.layout.item_article_three_img;
-            });
-            mSwipeRefreshRv.setAdapter(mAdapter);
-            mSwipeRefreshRv.addHeaderView(mHeaderView);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
+
     }
+
+    private MultiTypeSupport<Article> mMultiTypeSupport = (article, position) -> {
+        String[] images = article.getImgs();
+        if (images == null || images.length == 0) {
+            return R.layout.item_article_not_img;
+        }
+        if (images.length < 3)
+            return R.layout.item_article_one_img;
+        return R.layout.item_article_three_img;
+    };
 
     /**
      * 解析翻译结果

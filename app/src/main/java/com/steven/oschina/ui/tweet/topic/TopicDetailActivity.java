@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.oschina.client.base_library.utils.StatusBarUtil;
 import com.steven.oschina.R;
 import com.steven.oschina.base.BaseActivity;
 import com.steven.oschina.bean.tweet.Topic;
@@ -52,15 +53,15 @@ public class TopicDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mTopic = ( Topic ) getIntent().getSerializableExtra("topic");
+        mTopic = (Topic) getIntent().getSerializableExtra("topic");
         int position = getIntent().getIntExtra("position", 0);
         mTopicIv.setImageResource(images[position % 5]);
         mTopicTitle.setText(String.format("#%s#", mTopic.getTitle()));
         mJoinCount.setText(String.format("共有%s人参与", mTopic.getJoinCount()));
-        mTopicDesc.setText(mTopic.getContent());
+        mTopicDesc.setText(mTopic.getDesc());
         String[] pageTitle = getResources().getStringArray(R.array.topic);
         List<Fragment> fragments = new ArrayList<>();
-        //fragments.add(TweetTopicFragment.newInstance(mTopic, HOT_TYPE));
+        //   fragments.add(TweetTopicFragment.newInstance(mTopic, HOT_TYPE));
         fragments.add(TweetTopicFragment.newInstance(mTopic, UP_TYPE));
         TopicPagerAdapter adapter = new TopicPagerAdapter(getSupportFragmentManager(), pageTitle, fragments);
         mViewPager.setAdapter(adapter);
@@ -72,7 +73,7 @@ public class TopicDetailActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
         }
-//        StatusBarUtil.statusBarTranslucent(this);
+        StatusBarUtil.statusBarTranslucent(this);
     }
 
     @OnClick(R.id.iv_share)

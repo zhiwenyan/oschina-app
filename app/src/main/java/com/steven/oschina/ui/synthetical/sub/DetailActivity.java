@@ -65,6 +65,7 @@ public abstract class DetailActivity extends BaseActivity {
             public void onSuccess(SubBean result) {
                 super.onSuccess(result);
                 mSubBean = result;
+                System.out.println("mSubBean="+mSubBean.toString());
                 mDetailFragment = getDetailFragment();
                 addFragment(R.id.lay_container, mDetailFragment);
                 mDetailFragment.setOnCompleteListener(() -> {

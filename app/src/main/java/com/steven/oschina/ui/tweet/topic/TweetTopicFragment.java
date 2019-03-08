@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.tweet.Topic;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.ui.adapter.TweetAdapter;
@@ -18,10 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TweetTopicFragment extends BaseRecyclerFragment1<Tweet, TweetTopicViewModel> {
+public class TweetTopicFragment extends BaseRefreshFragment<Tweet, TweetTopicViewModel> {
     private Topic mTopic;
     private int mType;
-    private List<Tweet> mTweets;
+    private List<Tweet> mTweets = new ArrayList<>();
     //最热话题
     private static final String HOTTEST_CACHE_NAME = "hottest_topic";
     //最新话题
@@ -39,13 +39,14 @@ public class TweetTopicFragment extends BaseRecyclerFragment1<Tweet, TweetTopicV
     @Override
     public void initBundle(Bundle bundle) {
         super.initBundle(bundle);
-        mTopic = ( Topic ) bundle.getSerializable("topic");
+        mTopic = (Topic) bundle.getSerializable("topic");
         mType = bundle.getInt("type");
     }
 
     @Override
     public void initData() {
-        mTweets = new ArrayList<>();
+        mAdapter = new TweetAdapter(mContext, mTweets, R.layout.item_list_tweet);
+        mSwipeRefreshRv.setAdapter(mAdapter);
         super.initData();
     }
 
@@ -72,37 +73,32 @@ public class TweetTopicFragment extends BaseRecyclerFragment1<Tweet, TweetTopicV
         }
         params.put("topicId", mTopic.getId());
         params.put("type", mType);
-        mViewModel.getTweetTopics(params).observe(this, tweet -> {
-            assert tweet != null;
-            mNextPageToken = tweet.getNextPageToken();
-            if (tweet.getItems().size() == 0) {
-                mSwipeRefreshRv.showLoadComplete();
-                return;
-            }
-            showTweetTopicList(tweet.getItems());
-            if (mType == 1) {
-                CacheManager.saveToJson(mContext, UP_CACHE_NAME, tweet.getItems());
-            } else {
-                CacheManager.saveToJson(mContext, HOTTEST_CACHE_NAME, tweet.getItems());
-            }
-        });
-
+        if (mObserver == null) {
+            mObserver = tweet -> {
+                mNextPageToken = tweet.getNextPageToken();
+                showTweetTopicList(tweet.getItems());
+                if (mType == 1) {
+                    CacheManager.saveToJson(mContext, UP_CACHE_NAME, tweet.getItems());
+                } else {
+                    CacheManager.saveToJson(mContext, HOTTEST_CACHE_NAME, tweet.getItems());
+                }
+            };
+        }
+        mViewModel.getTweetTopics(params).observe(this, mObserver);
     }
-
 
     private void showTweetTopicList(List<Tweet> tweets) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mTweets.clear();
+            mSwipeRefreshRv.setRefreshing(false);
+        }
+        if (tweets.size() == 0) {
+            mSwipeRefreshRv.showLoadComplete();
+            return;
         }
         mTweets.addAll(tweets);
-        if (mAdapter == null) {
-            mAdapter = new TweetAdapter(mContext, mTweets, R.layout.item_list_tweet);
-            mSwipeRefreshRv.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
-
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
         mAdapter.setOnItemClickListener(position -> TweetDetailActivity.show(mContext, mTweets.get(position)));
     }
 }

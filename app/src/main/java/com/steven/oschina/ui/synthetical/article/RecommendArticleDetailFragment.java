@@ -1,5 +1,6 @@
 package com.steven.oschina.ui.synthetical.article;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,8 +9,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.oschina.client.recyclerview.adapter.MultiTypeSupport;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
+import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.dialog.DialogHelper;
 import com.steven.oschina.osc.OSCSharedPreference;
@@ -30,13 +33,14 @@ import java.util.Map;
  *
  * @author yanzhiwen
  */
-public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Article, ArticleListViewModel> implements View.OnClickListener {
+public class RecommendArticleDetailFragment extends BaseRefreshFragment<Article, ArticleListViewModel> implements View.OnClickListener {
     private View mHeaderView;
     private Article mArticle;
     private String mIdent;
     private String mKey;
-    private List<Article> mArticles;
+    private List<Article> mArticles = new ArrayList<>();
     private ArticleViewModel mArticleViewModel;
+    protected Observer<PageBean<Article>> mObserver;
 
     public static RecommendArticleDetailFragment newInstance(Article article) {
         Bundle bundle = new Bundle();
@@ -49,17 +53,24 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
     @Override
     public void initBundle(Bundle bundle) {
         super.initBundle(bundle);
-        mArticle = ( Article ) bundle.getSerializable("article");
+        mArticle = (Article) bundle.getSerializable("article");
         mIdent = OSCSharedPreference.getInstance().getDeviceUUID();
         mKey = mArticle.getKey();
     }
 
     @Override
-    public void initData() {
+    public void initView() {
+        super.initView();
         mHeaderView = LayoutInflater.from(mContext).inflate(R.layout.layout_article_header, null);
-        mArticles = new ArrayList<>();
         mHeaderView.findViewById(R.id.btn_read_all).setOnClickListener(this);
         mArticleViewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
+    }
+
+    @Override
+    public void initData() {
+        mAdapter = new ArticleAdapter(mContext, mArticles, mMultiTypeSupport);
+        mSwipeRefreshRv.setAdapter(mAdapter);
+        mSwipeRefreshRv.addHeaderView(mHeaderView);
         super.initData();
     }
 
@@ -68,17 +79,18 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
         super.onRequestData();
         mArticleViewModel.getArticle(mIdent, mKey).observe(this, this::showArticle);
         Map<String, Object> params = new HashMap<>();
-
         params.put("key", mKey);
         params.put("ident", mIdent);
         if (!TextUtils.isEmpty(mNextPageToken)) {
             params.put("pageToken", mNextPageToken);
         }
-        mObserver = result -> {
-            assert result != null;
-            mNextPageToken = result.getNextPageToken();
-            showArticleList(result.getItems());
-        };
+        if (mObserver == null) {
+            mObserver = result -> {
+                assert result != null;
+                mNextPageToken = result.getNextPageToken();
+                showArticleList(result.getItems());
+            };
+        }
         mViewModel.getEnglishArticles(params).observe(this, mObserver);
     }
 
@@ -114,22 +126,22 @@ public class RecommendArticleDetailFragment extends BaseRecyclerFragment1<Articl
             return;
         }
         mArticles.addAll(articles);
-        if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(mContext, mArticles, (article, position) -> {
-                String[] images = article.getImgs();
-                if (images == null || images.length == 0) {
-                    return R.layout.item_article_not_img;
-                }
-                if (images.length < 3)
-                    return R.layout.item_article_one_img;
-                return R.layout.item_article_three_img;
-            });
-            mSwipeRefreshRv.setAdapter(mAdapter);
-            mSwipeRefreshRv.addHeaderView(mHeaderView);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
+
     }
+
+    private MultiTypeSupport<Article> mMultiTypeSupport = (article, position) -> {
+        String[] images = article.getImgs();
+        if (images == null || images.length == 0) {
+            return R.layout.item_article_not_img;
+        }
+        if (images.length < 3)
+            return R.layout.item_article_one_img;
+        return R.layout.item_article_three_img;
+
+    };
+
 
     @Override
     public void onClick(View v) {

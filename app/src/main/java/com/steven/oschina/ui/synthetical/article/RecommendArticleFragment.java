@@ -1,15 +1,18 @@
 package com.steven.oschina.ui.synthetical.article;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.view.LayoutInflater;
 
 import com.oschina.client.base_library.banner.BannerView;
+import com.oschina.client.recyclerview.adapter.MultiTypeSupport;
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.OSCApplication;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.banner.Banner;
+import com.steven.oschina.bean.base.PageBean;
 import com.steven.oschina.bean.sub.Article;
 import com.steven.oschina.osc.OSCSharedPreference;
 import com.steven.oschina.ui.adapter.ArticleAdapter;
@@ -22,13 +25,14 @@ import java.util.List;
 /**
  * 推荐的文章
  */
-public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, ArticleListViewModel> {
-    private List<Article> mArticles;
+public class RecommendArticleFragment extends BaseRefreshFragment<Article, ArticleListViewModel> {
+    private List<Article> mArticles = new ArrayList<>();
     private BannerView mBannerView;
     private static final int CATALOG = 1;
     private static final String BANNER_CACHE_NAME = "article_banner";
     private static final String CACHE_NAME = "article_list";
     private BannerViewModel mBannerViewModel;
+    protected Observer<PageBean<Article>> mObserver;
 
     public static RecommendArticleFragment newInstance() {
         return new RecommendArticleFragment();
@@ -36,8 +40,10 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
 
     @Override
     public void initData() {
-        mArticles = new ArrayList<>();
         mBannerViewModel = ViewModelProviders.of(this).get(BannerViewModel.class);
+        mAdapter = new ArticleAdapter(mContext, mArticles, mMultiTypeSupport);
+        mSwipeRefreshRv.setAdapter(mAdapter);
+        requestBanner();
         super.initData();
     }
 
@@ -55,7 +61,7 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
 
     private void requestBanner() {
         if (mBannerView == null) {
-            mBannerView = ( BannerView ) LayoutInflater.from(mContext)
+            mBannerView = (BannerView) LayoutInflater.from(mContext)
                     .inflate(R.layout.news_banner_layout, mSwipeRefreshRv, false);
             mSwipeRefreshRv.addHeaderView(mBannerView);
             mBannerViewModel.getBanner(CATALOG).observe(this, banners -> {
@@ -69,12 +75,14 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
     @Override
     public void onRequestData() {
         super.onRequestData();
-        mObserver = result -> {
-            assert result != null;
-            mNextPageToken = result.getNextPageToken();
-            showArticleList(result.getItems());
-            CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
-        };
+        if (mObserver == null) {
+            mObserver = result -> {
+                assert result != null;
+                mNextPageToken = result.getNextPageToken();
+                showArticleList(result.getItems());
+                CacheManager.saveToJson(OSCApplication.getInstance(), CACHE_NAME, result.getItems());
+            };
+        }
         mViewModel.getArticles(OSCSharedPreference.getInstance().getDeviceUUID(), mNextPageToken)
                 .observe(this, mObserver);
 
@@ -82,29 +90,25 @@ public class RecommendArticleFragment extends BaseRecyclerFragment1<Article, Art
 
     private void showArticleList(List<Article> articles) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mArticles.clear();
+            mSwipeRefreshRv.setRefreshing(false);
         }
         if (articles.size() == 0) {
             mSwipeRefreshRv.showLoadComplete();
             return;
         }
         mArticles.addAll(articles);
-        if (mAdapter == null) {
-            mAdapter = new ArticleAdapter(mContext, mArticles, (article, position) -> {
-                String[] images = article.getImgs();
-                if (images == null || images.length == 0) {
-                    return R.layout.item_article_not_img;
-                }
-                if (images.length < 3)
-                    return R.layout.item_article_one_img;
-                return R.layout.item_article_three_img;
-            });
-            mSwipeRefreshRv.setAdapter(mAdapter);
-            requestBanner();
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
-
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
     }
+
+    private MultiTypeSupport<Article> mMultiTypeSupport = (article, position) -> {
+        String[] images = article.getImgs();
+        if (images == null || images.length == 0) {
+            return R.layout.item_article_not_img;
+        }
+        if (images.length < 3)
+            return R.layout.item_article_one_img;
+        return R.layout.item_article_three_img;
+    };
 }

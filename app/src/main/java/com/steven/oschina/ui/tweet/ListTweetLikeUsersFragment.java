@@ -3,7 +3,7 @@ package com.steven.oschina.ui.tweet;
 import android.os.Bundle;
 
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.bean.tweet.TweetLike;
 import com.steven.oschina.ui.adapter.TweetLikeAdapter;
@@ -18,9 +18,9 @@ import java.util.List;
  *
  * @author yanzhiwen
  */
-public class ListTweetLikeUsersFragment extends BaseRecyclerFragment1<TweetLike, TweetLikesUserViewModel> {
+public class ListTweetLikeUsersFragment extends BaseRefreshFragment<TweetLike, TweetLikesUserViewModel> {
     private Tweet mTweet;
-    private List<TweetLike> mTweetLikes;
+    private List<TweetLike> mTweetLikes = new ArrayList<>();
 
     public static ListTweetLikeUsersFragment newInstance(Tweet tweet) {
         Bundle args = new Bundle();
@@ -33,13 +33,14 @@ public class ListTweetLikeUsersFragment extends BaseRecyclerFragment1<TweetLike,
     @Override
     public void initBundle(Bundle bundle) {
         super.initBundle(bundle);
-        mTweet = ( Tweet ) bundle.getSerializable("tweet");
+        mTweet = (Tweet) bundle.getSerializable("tweet");
     }
 
     @Override
     public void initData() {
-        mTweetLikes = new ArrayList<>();
         super.initData();
+        mAdapter = new TweetLikeAdapter(mContext, mTweetLikes, R.layout.item_tweet_likes);
+        mSwipeRefreshRv.setAdapter(mAdapter);
     }
 
     @Override
@@ -57,21 +58,16 @@ public class ListTweetLikeUsersFragment extends BaseRecyclerFragment1<TweetLike,
 
     private void showTweetLike(List<TweetLike> tweetLikes) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mTweetLikes.clear();
+            mSwipeRefreshRv.setRefreshing(false);
         }
-
         if (tweetLikes.size() == 0) {
             mSwipeRefreshRv.showLoadComplete();
             return;
         }
         mTweetLikes.addAll(tweetLikes);
-        if (mAdapter == null) {
-            mAdapter = new TweetLikeAdapter(mContext, mTweetLikes, R.layout.item_tweet_likes);
-            mSwipeRefreshRv.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
 
     }
 }

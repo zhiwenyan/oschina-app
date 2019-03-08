@@ -76,11 +76,12 @@
     <style name="App.Theme.Light" parent="Base.App.Theme.Light" />
 
     <!-- 全透明的背景 -->
-    <style name="App.Theme.Transparent" parent="@style/App.Theme.Light">
+    <style name="App.Theme.Transparent" parent="Base.App.Theme">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <!--作用于搜索界面-->
@@ -99,7 +100,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!--新账户中心-->
     <style name="Account_Base.App.Theme.NoTitle" parent="Base.App.Theme.NoTitle">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>

@@ -3,10 +3,11 @@ package com.steven.oschina.ui.tweet;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.steven.oschina.CacheManager;
 import com.steven.oschina.R;
-import com.steven.oschina.base.BaseRecyclerFragment1;
+import com.steven.oschina.base.BaseRefreshFragment;
 import com.steven.oschina.bean.tweet.Tweet;
 import com.steven.oschina.ui.adapter.TweetAdapter;
 import com.steven.oschina.ui.tweet.viewmodel.TweetsViewModel;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TweetFragment extends BaseRecyclerFragment1<Tweet, TweetsViewModel> {
+public class TweetFragment extends BaseRefreshFragment<Tweet, TweetsViewModel> {
 
 
     public static final int CATALOG_NEW = 0X0001;
@@ -37,7 +38,7 @@ public class TweetFragment extends BaseRecyclerFragment1<Tweet, TweetsViewModel>
     public int mReqCatalog;
     //请求参数
     private Map<String, Object> params = new HashMap<>();
-    private List<Tweet> mTweets;
+    private List<Tweet> mTweets = new ArrayList<>();
 
     public static Fragment newInstance(int catalog) {
         Bundle bundle = new Bundle();
@@ -49,7 +50,8 @@ public class TweetFragment extends BaseRecyclerFragment1<Tweet, TweetsViewModel>
 
     @Override
     public void initData() {
-        mTweets = new ArrayList<>();
+        mAdapter = new TweetAdapter(mContext, mTweets, R.layout.item_list_tweet);
+        mSwipeRefreshRv.setAdapter(mAdapter);
         super.initData();
     }
 
@@ -78,7 +80,6 @@ public class TweetFragment extends BaseRecyclerFragment1<Tweet, TweetsViewModel>
         if (tweets != null) {
             showTweetList(tweets);
         }
-
     }
 
 
@@ -100,34 +101,33 @@ public class TweetFragment extends BaseRecyclerFragment1<Tweet, TweetsViewModel>
                 break;
             case CATALOG_MYSELF:
                 break;
-
         }
-        mObserver = tweets -> {
-            assert tweets != null;
-            mNextPageToken = tweets.getNextPageToken();
-            showTweetList(tweets.getItems());
-            CacheManager.saveToJson(mContext, CACHE_NAME, tweets.getItems());
-        };
+        if (mObserver == null) {
+            mObserver = tweets -> {
+                assert tweets != null;
+                mNextPageToken = tweets.getNextPageToken();
+                Log.i("mNextPageToken=", mNextPageToken);
+                showTweetList(tweets.getItems());
+                CacheManager.saveToJson(mContext, CACHE_NAME, tweets.getItems());
+                Log.i("tweets===", tweets.getItems().toString());
+            };
+        }
         mViewModel.getTweets(params).observe(this, mObserver);
-
     }
 
     private void showTweetList(List<Tweet> tweets) {
         if (mSwipeRefreshRv.isRefreshing()) {
-            mSwipeRefreshRv.setRefreshing(false);
             mTweets.clear();
+            mSwipeRefreshRv.setRefreshing(false);
+
         }
         if (tweets.size() == 0) {
             mSwipeRefreshRv.showLoadComplete();
             return;
         }
         mTweets.addAll(tweets);
-        if (mAdapter == null) {
-            mAdapter = new TweetAdapter(mContext, mTweets, R.layout.item_list_tweet);
-            mSwipeRefreshRv.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        mSwipeRefreshRv.setLoading(false);
+        mAdapter.notifyDataSetChanged();
         mAdapter.setOnItemClickListener(position -> TweetDetailActivity.show(mContext, mTweets.get(position)));
     }
 }

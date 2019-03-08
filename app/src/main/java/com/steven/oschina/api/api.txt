@@ -753,7 +753,7 @@ public class OSChinaApi
     ApiHttpClient.get("action/apiv2/tweet_likes", localz, paramag);
   }
 
-  public static void getTweetList(Long paramLong, String paramString1, Integer paramInteger1, Integer paramInteger2, String paramString2, ag paramag)
+  public static void getTList(Long paramLong, String paramString1, Integer paramInteger1, Integer paramInteger2, String paramString2, ag paramag)
   {
     z localz = new z();
     if (paramLong != null)

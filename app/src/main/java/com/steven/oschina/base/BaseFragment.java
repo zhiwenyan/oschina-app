@@ -50,14 +50,16 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //针对fragment多次调用onCreateView的问题
         if (mRootView != null) {
-            ViewGroup parent = ( ViewGroup ) mRootView.getParent();
+            ViewGroup parent = (ViewGroup) mRootView.getParent();
             if (parent != null)
                 parent.removeView(mRootView);
         } else {
             mRootView = inflater.inflate(getLayoutId(), container, false);
+            this.mUnbinder = ButterKnife.bind(this, mRootView);
+            this.initView();
+            this.initData();
+
         }
-        this.mUnbinder = ButterKnife.bind(this, mRootView);
-        this.initData();
         return mRootView;
     }
 
@@ -65,9 +67,14 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
+    public void initView() {
+
+    }
+
     public abstract int getLayoutId();
 
     public abstract void initData();
+
 
 
     public void showToast(String message) {
@@ -80,8 +87,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
         mUnbinder.unbind();
+        super.onDestroy();
     }
 }

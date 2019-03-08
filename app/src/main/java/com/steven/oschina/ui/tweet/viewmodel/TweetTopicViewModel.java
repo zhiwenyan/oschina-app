@@ -31,7 +31,7 @@ public class TweetTopicViewModel extends ViewModel {
 
     public MutableLiveData<PageBean<Tweet>> getTweetTopics(Map<String,Object> params) {
 
-        mServiceApi.getTweetList(params).enqueue(new Callback<ResultBean<PageBean<Tweet>>>() {
+        mServiceApi.getTopicTweets(params).enqueue(new Callback<ResultBean<PageBean<Tweet>>>() {
             @Override
             public void onResponse(@NonNull Call<ResultBean<PageBean<Tweet>>> call,
                                    @NonNull Response<ResultBean<PageBean<Tweet>>> response) {

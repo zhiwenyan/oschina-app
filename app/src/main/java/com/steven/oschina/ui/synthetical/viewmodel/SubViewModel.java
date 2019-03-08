@@ -3,6 +3,7 @@ package com.steven.oschina.ui.synthetical.viewmodel;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.steven.oschina.api.RetrofitClient;
 import com.steven.oschina.api.ServiceApi;
@@ -37,6 +38,8 @@ public class SubViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null && response.body().isOk()) {
                     if (token.equals(SubTab.TOKEN_NEWS)) {
                         mSubNewsLiveData.setValue(response.body().getResult());
+                        Log.i("TAG", "onResponse: " + mSubNewsLiveData.getValue());
+
                     } else if (token.equals(SubTab.TOKEN_QA)) {
                         mSubQuestionsLiveData.setValue(response.body().getResult());
                     } else {
