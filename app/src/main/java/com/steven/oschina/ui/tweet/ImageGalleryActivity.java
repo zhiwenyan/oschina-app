@@ -63,9 +63,11 @@ public class ImageGalleryActivity extends BaseActivity {
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
     }
+
     public static void show(Context context, String images) {
         show(context, images, true);
     }
+
     public static void show(Context context, String images, boolean needSaveLocal) {
         if (images == null)
             return;
@@ -130,7 +132,7 @@ public class ImageGalleryActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 mCurrentPosition = position;
-                mIndexTv.setText(String.format("%s/%s", (position + 1),length));
+                mIndexTv.setText(String.format("%s/%s", (position + 1), length));
                 // 滑动时自动切换当前的下载状态
                 changeSaveButtonStatus(mImageDownloadStatus[position]);
             }
@@ -174,7 +176,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView(( View ) object);
+            container.removeView((View) object);
         }
 
         @Override
@@ -188,13 +190,13 @@ public class ImageGalleryActivity extends BaseActivity {
             mVpImage.isInterceptable(isReached);
 
 
-
         }
 
         private void loadImage(final int position, final String urlOrPath,
                                final ImageView previewView,
                                final ImageView defaultView,
                                final ProgressBar loading) {
+            System.out.println("urlOrPath=" + urlOrPath);
             loadImageDoDownAndGetOverrideSize(urlOrPath, (overrideW, overrideH, isTrue) -> {
                 GlideRequest builder = getImageLoader().load(urlOrPath)
                         .listener(new RequestListener<Drawable>() {
@@ -242,7 +244,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
                     int width = options.outWidth;
                     int height = options.outHeight;
-
+                    System.out.println("width=" + width);
                     BitmapUtil.resetOptions(options);
 
                     if (width > 0 && height > 0) {
@@ -254,14 +256,17 @@ public class ImageGalleryActivity extends BaseActivity {
                         // Init override size
                         final int overrideW, overrideH;
 
-                        if ((width / ( float ) height) > (point.x / ( float ) point.y)) {
-                            overrideW = Math.min(width, maxLen);
+                        if ((width / (float) height) > (point.x / (float) point.y)) {
                             overrideH = Math.min(height, point.y);
+                            overrideW = Math.min(width, maxLen);
                         } else {
                             overrideW = Math.min(width, point.x);
                             overrideH = Math.min(height, maxLen);
                         }
 
+
+                        System.out.println("overrideW=" + overrideW);
+                        System.out.println("overrideH=" + overrideH);
                         // Call back on main thread
                         runOnUiThread(() -> callback.onDone(overrideW, overrideH, true));
                     } else {

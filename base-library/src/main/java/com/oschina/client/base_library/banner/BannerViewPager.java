@@ -66,7 +66,7 @@ public class BannerViewPager extends ViewPager {
         setAdapter(new BannerPagerAdapter());
         this.setCurrentItem(0);
         //管理Activity的生命周期
-        (( Activity ) (getContext())).getApplication().registerActivityLifecycleCallbacks(mDefaultActivityLifecycleCallbacks);
+        ((Activity) (getContext())).getApplication().registerActivityLifecycleCallbacks(mDefaultActivityLifecycleCallbacks);
     }
 
     @SuppressLint("HandlerLeak")
@@ -138,8 +138,8 @@ public class BannerViewPager extends ViewPager {
 
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView(( View ) object);
-            mConvertView.add(( View ) object);
+            container.removeView((View) object);
+            mConvertView.add((View) object);
         }
     }
 

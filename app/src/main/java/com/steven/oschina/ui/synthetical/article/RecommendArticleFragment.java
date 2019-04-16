@@ -3,7 +3,9 @@ package com.steven.oschina.ui.synthetical.article;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.oschina.client.base_library.banner.BannerView;
 import com.oschina.client.recyclerview.adapter.MultiTypeSupport;
@@ -25,7 +27,7 @@ import java.util.List;
 /**
  * 推荐的文章
  */
-public class RecommendArticleFragment extends BaseRefreshFragment<Article, ArticleListViewModel> {
+public class RecommendArticleFragment extends BaseRefreshFragment<Article, ArticleListViewModel> implements BannerView.PageTransformerListener {
     private List<Article> mArticles = new ArrayList<>();
     private BannerView mBannerView;
     private static final int CATALOG = 1;
@@ -33,6 +35,7 @@ public class RecommendArticleFragment extends BaseRefreshFragment<Article, Artic
     private static final String CACHE_NAME = "article_list";
     private BannerViewModel mBannerViewModel;
     protected Observer<PageBean<Article>> mObserver;
+    private static final float MIN_SCALE = 0.8f;
 
     public static RecommendArticleFragment newInstance() {
         return new RecommendArticleFragment();
@@ -44,6 +47,8 @@ public class RecommendArticleFragment extends BaseRefreshFragment<Article, Artic
         mAdapter = new ArticleAdapter(mContext, mArticles, mMultiTypeSupport);
         mSwipeRefreshRv.setAdapter(mAdapter);
         requestBanner();
+        mBannerView.setPageTransformerListener(this);
+        mBannerView.setBottomColor(ContextCompat.getColor(getContext(),R.color.light_grey_500));
         super.initData();
     }
 
@@ -111,4 +116,16 @@ public class RecommendArticleFragment extends BaseRefreshFragment<Article, Artic
             return R.layout.item_article_one_img;
         return R.layout.item_article_three_img;
     };
+
+    @Override
+    public void transformPage(View page, float position) {
+        if (position >= -1.0f && position <= 1.0f) {
+            float scale = 1.0f - Math.abs(position) * (1 - MIN_SCALE);
+            page.setScaleX(scale);
+            page.setScaleY(scale);
+        } else {
+            page.setScaleX(MIN_SCALE);
+            page.setScaleY(MIN_SCALE);
+        }
+    }
 }

@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -47,6 +48,7 @@ public class BannerView extends RelativeLayout {
     private View mBannerBottomView;
     private TextView mBannerTitleTv;
 
+
     public BannerView(Context context) {
         this(context, null);
     }
@@ -80,8 +82,8 @@ public class BannerView extends RelativeLayout {
         if (mIndicatorNormalDrawable == null) {
             mIndicatorNormalDrawable = new ColorDrawable(Color.WHITE);
         }
-        mDotSize = ( int ) typedArray.getDimension(R.styleable.BannerView_dotSize, DensityUtil.dip2px(mContext, 6));
-        mDotDistance = ( int ) typedArray.getDimension(R.styleable.BannerView_dotDistance, DensityUtil.dip2px(mContext, 2));
+        mDotSize = (int) typedArray.getDimension(R.styleable.BannerView_dotSize, DensityUtil.dip2px(mContext, 6));
+        mDotDistance = (int) typedArray.getDimension(R.styleable.BannerView_dotDistance, DensityUtil.dip2px(mContext, 2));
         mBottomColor = typedArray.getColor(R.styleable.BannerView_bottomColor, mBottomColor);
 
         typedArray.recycle();
@@ -96,6 +98,15 @@ public class BannerView extends RelativeLayout {
         mBannerBottomView = findViewById(R.id.bannerBottomView);
         mBannerTitleTv = findViewById(R.id.tv_ad_desc);
         mBannerBottomView.setBackgroundColor(mBottomColor);
+
+        mBannerViewPager.setPageTransformer(true, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                if (mPageTransformerListener != null) {
+                    mPageTransformerListener.transformPage(page, position);
+                }
+            }
+        });
     }
 
     /**
@@ -113,11 +124,11 @@ public class BannerView extends RelativeLayout {
             public void onPageSelected(int position) {
                 //监听下当前的位置
                 super.onPageSelected(position);
-                DotIndicatorView dotIndicatorView = ( DotIndicatorView ) mDotContainerView.
+                DotIndicatorView dotIndicatorView = (DotIndicatorView) mDotContainerView.
                         getChildAt(mCurrentPosition);
                 dotIndicatorView.setDrawable(mIndicatorNormalDrawable);
                 mCurrentPosition = position % mAdapter.getCount();
-                DotIndicatorView mCurrentIndicatorView = ( DotIndicatorView ) mDotContainerView.
+                DotIndicatorView mCurrentIndicatorView = (DotIndicatorView) mDotContainerView.
                         getChildAt(mCurrentPosition);
                 mCurrentIndicatorView.setDrawable(mIndicatorFocusDrawable);
                 mBannerTitleTv.setText(mAdapter.getBannerDesc(mCurrentPosition));
@@ -132,6 +143,12 @@ public class BannerView extends RelativeLayout {
 
     public void setBannerTitle(String bannerTitle) {
         this.mBannerTitleTv.setText(bannerTitle);
+    }
+
+    public void setBottomColor(int bottomColor) {
+        mBottomColor = bottomColor;
+        mBannerBottomView.setBackgroundColor(mBottomColor);
+
     }
 
     public void setScrollerDuration(int scrollerDuration) {
@@ -187,5 +204,15 @@ public class BannerView extends RelativeLayout {
 
     public void setOnBannerItemClickListener(BannerViewPager.BannerItemClickListener listener) {
         mBannerViewPager.setOnBannerItemClickListener(listener);
+    }
+
+    private PageTransformerListener mPageTransformerListener;
+
+    public void setPageTransformerListener(PageTransformerListener pageTransformerListener) {
+        this.mPageTransformerListener = pageTransformerListener;
+    }
+
+    public interface PageTransformerListener {
+        void transformPage(View page, float position);
     }
 }
