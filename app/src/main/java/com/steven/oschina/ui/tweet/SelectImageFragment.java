@@ -251,7 +251,7 @@ public class SelectImageFragment extends BaseFragment implements OnItemClickList
 //                }
 //
 
-//                handleSelectSizeChange(mSelectedImage.size());
+                handleSelectSizeChange(mSelectedImage.size());
             }
         }
 
